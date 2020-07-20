@@ -4,6 +4,20 @@ let lon;
 
 $( document ).ready(function() {
 
+	$('.toast').toast({
+		delay: 2000
+	})
+
+	$('.toggle-auth').change(function() {
+		$("#successToast").toast("hide");
+		if ($(this).is(':checked') == false) {
+			$("#successToast .toast-body span").text("disabilitato");
+		} else {
+			$("#successToast .toast-body span").text("abilitato");
+		}
+		$("#successToast").toast("show");
+  })
+
 	lat = 45.4090842;
 	lon = 11.8946683;
 
@@ -21,15 +35,33 @@ $( document ).ready(function() {
 
 	userPosMarker = L.marker([lat, lon]).addTo(map);
 
-	// Fix
+	// Fix for Leaflet inside Bootstrap Modal
 	$('#edit-place').on('show.bs.modal', function(){
 	  setTimeout(function() {
 	    map.invalidateSize();
 	  }, 400);
 	});
 
-	$("button").click(function(e) {
-		
+	// Open Delete Building modal
+	$(".openDeleteBuildingModal").click(function() {
+		let buildingId = $(this).attr("data-building-id");
+		// Copy building id to modal
+		$('#deleteBuildingModal').attr("data-building-id", buildingId);
+		$('#deleteBuildingModal').modal('show');
+
+	});
+
+	$("#openCreatePlaceModal").click(function() {
+		$('#create-place').modal('show');
+	})
+
+	$(".deleteBuilding").click(function() {
+		$('#deleteBuildingModal').modal('hide');
+
+		let buildingIdToDelete = $('#deleteBuildingModal').attr("data-building-id")
+		console.log(buildingIdToDelete);
+		// Add Building Delete
+		$('#deleteBuildingModal').modal('hide');
 	})
 
 });

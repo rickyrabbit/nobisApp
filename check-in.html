@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="check.css">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,19 @@
 	  		<img class="unipd-logo small-img" src="img/Logo_Universita_Padova.png">
 	  	</div>
 	  	<div class="row">
+	  		<h5>Biblioteca "Giovanni Someda"</h5>
+	  	</div>
+	  	<div class="row">
+	  		<h6>DEI</h6>
+	  	</div>
+	  	<hr>
+	  	<div class="row">
+	  		<div id="session-expired" class="alert alert-danger" role="alert">
+			  <h4 class="alert-heading">Sessione Scaduta</h4>
+			  <p>Chiudere la pagina ed effettuare nuovamente la scansione del codice QR.</p>
+			</div>
+	  	</div>
+	  	<div class="row">
 	  		<svg id="checkmark" class="checkmark showCheckIn" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
 	  		<svg id="closemark" class="closemark showCheckInStopped" height="329pt" viewBox="0 0 329.26933 329" width="329pt" xmlns="http://www.w3.org/2000/svg"><circle class="closemark__circle" cx="26" cy="26" r="25" fill="none"/><path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0"/></svg>
 	  	</div>
@@ -25,10 +38,10 @@
 	  		<h3 class="showCheckIn">Check-in Completato</h3>
 	  		<h3 class="showCheckInStopped">Check-in Annullato</h3>
 	  	</div>
-	  	<div class="row hideCheckIn">
-	  		<p>Entro 5 secondi il check-in sarà permanente. Premi sul bottone per annullare l'operazione.</p>
+	  	<div class="row">
+	  		<p id="info">Entro 5 secondi il check-in sarà permanente. Premi sul bottone per annullare.</p>
 	  	</div>
-	  	<div class="row hideCheckIn">
+	  	<div class="row">
 				<div id="countdown">
 				  <div id="countdown-number"></div>
 				  <svg>
@@ -36,11 +49,35 @@
 				  </svg>
 				</div>
 			</div>
-			<div class="row hideCheckIn">
+			<div class="row">
 				<div class="col text-center">
 					<button id="stop-check-in" type="button" class="btn btn-danger">Annulla Check-in</button>
 				</div>
 			</div>
+			<hr class="report-problem-group">
+		  	<div class="row question">
+		  		<p class="report-problem-group">Il codice QR non è nel luogo giusto?</p>
+		  	</div>
+		  	<div class="row">
+		  		<div class="col">
+		  			<button id="report-problem" type="button" class="btn btn-secondary btn-sm report-problem-group">Segnala un problema</button>
+		  		</div>
+		  	</div>
+		  	<div class="row">
+		  		<form id="form-report-problem">
+	              <div class="form-label-group">
+	              	<label for="inputEmail">Indirizzo Email</label>
+	                <input type="email" id="inputEmail" class="form-control" placeholder="Opzionale" autofocus>
+	              </div>
+	              <div class="form-label-group">
+	              	<label for="inputProblem">Problema</label>
+	                <textarea id="inputProblem" name="inputProblem" class="form-control" rows="4" cols="50" required placeholder="Descrivi il problema"></textarea>
+	              </div>
+	              <div class="form-label-group">
+	              	<button id="send-problem" type="button" class="btn btn-secondary btn-sm">Invia</button>
+	              </div>
+	            </form>
+		  	</div>
 		</div>
 	</div>
 	</div>

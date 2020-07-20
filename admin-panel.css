@@ -23,6 +23,14 @@ header h2{
   float: right;
 }
 
+#successToast{
+  z-index: 10000;
+  position: fixed; 
+  bottom: 20px; 
+  right: 20px;
+  min-width: 300px;
+}
+
 .unipd-logo{
   width: 200px;
   height: 200px;

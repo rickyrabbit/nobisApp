@@ -14,7 +14,6 @@ body {
 }
 
 .card p{
-  margin-top: 10px;
   margin-bottom: 0;
 }
 
@@ -88,6 +87,30 @@ body {
 h3{
   width: 200px;
   margin: 0 auto;
+  margin-bottom: 39px !important;
+}
+
+h4{
+  width: 200px;
+  margin: 0 auto;
+}
+
+h5{
+  margin: 15px auto !important;
+  margin-bottom: 0 !important;
+  line-height: 1em !important;
+}
+
+h6{
+  margin: 5px auto !important;
+  margin-bottom: 0 !important;
+  line-height: 1em !important;
+}
+
+.question p{
+  margin: 0 auto;
+  margin-top: 0;
+  margin-bottom: 15px;
 }
 
 .checkmark__circle {
@@ -104,11 +127,10 @@ h3{
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  display: none;
   stroke-width: 2;
   stroke: #fff;
   stroke-miterlimit: 10;
-  margin: 30px auto 10px;
+  margin: 35px auto 10px;
   box-shadow: inset 0px 0px 0px #28a745;
   animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
 }
@@ -150,6 +172,23 @@ h3{
   stroke-dasharray: 48;
   stroke-dashoffset: 48;
   animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+#session-expired{
+  display: none;
+  margin-bottom: 0;
+}
+
+#form-report-problem{
+  display: none;
+}
+
+#send-problem{
+  margin-top: 20px;
+}
+
+#inputEmail{
+  margin-bottom: 10px;
 }
 
 @keyframes stroke {

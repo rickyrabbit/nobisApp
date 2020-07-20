@@ -1,12 +1,13 @@
-var countdownNumberEl = $("#countdown-number");
-var countdown = 5;
+let countdownNumberEl = $("#countdown-number");
+let countdown = 5;
+let countdownInterval;
 
 
 $( document ).ready(function() {
 
 	$("#countdown-number").text(countdown);
 
-  var countdownInterval = setInterval(function() {
+  countdownInterval = setInterval(function() {
 	  countdown = --countdown;
 	  $("#countdown-number").text(countdown);
 	  if ($("#countdown-number").text() == 0) {
@@ -15,20 +16,46 @@ $( document ).ready(function() {
 	  }
 	}, 1000);
 
+	if (sessionStorage.getItem("sessionTimestamp") == null) {
+		sessionStorage.setItem('sessionTimestamp', Date.now());
+	} else {
+		stopCountdown();
+		$("#session-expired").fadeIn(600);
+	}
+
 	$("#stop-check-in").click(function() {
-		clearInterval(countdownInterval);
-		$(".hideCheckIn").hide();
+		stopCountdown();
 		$(".showCheckInStopped").show();
+		closeWindow(5000);
+	})
+
+	$("#report-problem").click(function() {
+		$(".report-problem-group").remove();
+		stopCountdown();
+		$("#form-report-problem").fadeIn(600);
 	})
 
 });
 
-
+function stopCountdown() {
+	clearInterval(countdownInterval);
+	$("#stop-check-in").remove();
+	$("#info").remove();
+	$("#countdown").remove();
+}
 
 function checkIn() {
 
-	//Inserire qui la chiamata ajax
-
-	$(".hideCheckIn").hide();
+	// Chiamata per il check-in
+	
+	stopCountdown();
 	$(".showCheckIn").show();
+
+	closeWindow(2000);
+}
+
+function closeWindow(timeout) {
+	setTimeout(function() {
+		window.close();
+	}, timeout);
 }
