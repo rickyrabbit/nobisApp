@@ -1,0 +1,217 @@
+body {
+  height: 100%;
+  width: 100%;
+  background-color: #f5f5f5 !important;
+}
+
+.card{
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.card p{
+  margin-bottom: 0;
+}
+
+.unipd-logo{
+  width: 200px;
+  height: 200px;
+  margin: 0px auto;
+  display: block;
+}
+
+.unipd-logo.small-img{
+  width: 100px;
+  height: 100px;
+}
+
+#countdown {
+  position: relative;
+  margin: 20px auto;
+  height: 80px;
+  width: 80px;
+  text-align: center;
+}
+
+#countdown-number {
+  color: #343a40;
+  display: inline-block;
+  line-height: 80px;
+  font-size: 22px;
+}
+
+#countdown svg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  transform: rotateY(-180deg) rotateZ(-90deg);
+}
+
+#countdown svg circle {
+  stroke-dasharray: 226px;
+  stroke-dashoffset: 0px;
+  stroke-linecap: round;
+  stroke-width: 3px;
+  stroke: #343a40;
+  fill: none;
+  animation: countdown 5s linear infinite forwards;
+}
+
+@keyframes countdown {
+  from {
+    stroke-dashoffset: 0px;
+  }
+  to {
+    stroke-dashoffset: 226px;
+  }
+}
+
+.showCheckIn{
+  display: none;
+}
+
+.showCheckInStopped{
+  display: none;
+}
+
+.showCheckOut{
+  display: none;
+}
+
+h3{
+  width: 200px;
+  margin: 0 auto;
+  margin-bottom: 39px !important;
+}
+
+h4{
+  width: 200px;
+  margin: 0 auto;
+}
+
+h5{
+  margin: 15px auto !important;
+  margin-bottom: 0 !important;
+  line-height: 1em !important;
+}
+
+h6{
+  margin: 5px auto !important;
+  margin-bottom: 0 !important;
+  line-height: 1em !important;
+}
+
+.question p{
+  margin: 0 auto;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: #28a745;
+  fill: none;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  stroke-width: 2;
+  stroke: #fff;
+  stroke-miterlimit: 10;
+  margin: 35px auto 10px;
+  box-shadow: inset 0px 0px 0px #28a745;
+  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+}
+
+.checkmark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+.closemark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2;
+  stroke-miterlimit: 10;
+  stroke: #dc3545;
+  fill: none;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.closemark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: none;
+  stroke-width: 2;
+  padding: 15px;
+  stroke: #fff;
+  fill: #fff;
+  stroke-miterlimit: 10;
+  margin: 30px auto 10px;
+  box-shadow: inset 0px 0px 0px #dc3545;
+  animation: fillred .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+}
+
+.closemark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+#session-expired{
+  display: none;
+  margin-bottom: 0;
+}
+
+#form-report-problem{
+  display: none;
+}
+
+#send-problem{
+  margin-top: 20px;
+}
+
+#inputEmail{
+  margin-bottom: 10px;
+}
+
+@keyframes stroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes scale {
+  0%, 100% {
+    transform: none;
+  }
+  50% {
+    transform: scale3d(1.1, 1.1, 1);
+  }
+}
+@keyframes fill {
+  100% {
+    box-shadow: inset 0px 0px 0px 30px #28a745;
+  }
+}
+@keyframes fillred {
+  100% {
+    box-shadow: inset 0px 0px 0px 30px #dc3545;
+  }
+}
+
