@@ -1,0 +1,64 @@
+body {
+background-color: #f5f5f5 !important;
+}
+
+header{
+  width: 100%;
+  height: 120px;
+  background-color: #fff;
+  margin-bottom: 30px;
+}
+
+header p{
+  line-height: 120px;
+}
+
+header h2{
+  line-height: 120px;
+  float: right;
+}
+
+#interactive_map {
+  min-height: 300px;
+  height: 600px;
+}
+
+.form-inline{
+  width: inherit;
+}
+
+.unipd-logo{
+  width: 200px;
+  height: 200px;
+  float: left;
+  margin: 10px;
+}
+
+.unipd-logo.small-img{
+  width: 100px;
+  height: 100px;
+}
+
+.building-name{
+  font-size: 1.3em;
+  margin-left: 30px !important;
+  padding: 5px;
+  
+}
+
+.capacityinfo{
+  font-size: 1.3em;
+}
+
+.badge-custom{
+  background-color: #9b0014 !important;
+  color: #fff !important;
+}
+
+.results_info{
+  max-width: inherit !important;
+}
+
+.alert-container{
+  width: 100%;
+}

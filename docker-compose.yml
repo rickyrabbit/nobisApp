@@ -1,18 +1,13 @@
 version: "3.4"
 services:
     postgres:
-        build: 
-            context: ./database
-            args:
-                - hostplatform=${HOST_PLATFORM}
-                - pgversion=${PG_VERSION}
-        image: postgres_img:test
+        image: kartoza/postgis:12.0
         container_name: nobis_postgres_cont
         environment:
             - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-            - POSTGRES_DB=${POSTGRES_DB}
-            - PGDATA=${PGDATA}
+            - POSTGRES_PASS=${POSTGRES_PASSWORD}
+            - POSTGRES_DBNAME=${POSTGRES_DB}
+            - DATADIR=${PGDATA}
         ports:
             - "${POSTGRES_PORT}:5432"
         volumes: 
