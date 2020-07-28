@@ -26,7 +26,6 @@ $( document ).ready(function() {
 	$("#stop-check-in").click(function() {
 		stopCountdown();
 		$(".showCheckInStopped").show();
-		closeWindow(5000);
 	})
 
 	$("#report-problem").click(function() {
@@ -51,11 +50,4 @@ function checkIn() {
 	stopCountdown();
 	$(".showCheckIn").show();
 
-	closeWindow(2000);
-}
-
-function closeWindow(timeout) {
-	setTimeout(function() {
-		window.close();
-	}, timeout);
 }

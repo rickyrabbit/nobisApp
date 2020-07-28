@@ -25,7 +25,6 @@ $( document ).ready(function() {
   $("#stop-check-out").click(function() {
 		stopCountdown();
 		$(".showCheckInStopped").show();
-		closeWindow(2000);
 	})
 
 });
@@ -41,14 +40,6 @@ function checkOut() {
 
 	//Inserire qui la chiamata ajax
 
-	closeWindow(2000);
-
 	$(".hideCheckIn").hide();
 	$(".showCheckIn").removeClass("showCheckIn");
-}
-
-function closeWindow(timeout) {
-	setTimeout(function() {
-		//window.close();
-	}, timeout);
 }
