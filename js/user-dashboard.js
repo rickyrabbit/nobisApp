@@ -1,4 +1,4 @@
-let jsondataURI = './js/fakejsonmapdata.json';
+let jsondataURI = '../js/fakejsonmapdata.json';
 
 let occupancyThreshold = {
     "medium": 40,
@@ -98,7 +98,7 @@ async function inSurroundings(resultsjson) {
 
 }
 
-function matchPlace(searchedPlace, placeName){
+function matchPlace(searchedPlace, placeName) {
     let rgx = RegExp(`^.*${searchedPlace}.*$`);
     return rgx.test(placeName);
 }
@@ -176,7 +176,7 @@ async function searchByInput(resultsjson, searchstring) {
 
     });
 
-    showSearchResulsInfo(scandidate,filteredPlaces.length);
+    showSearchResulsInfo(scandidate, filteredPlaces.length);
 
 
 }
@@ -344,16 +344,16 @@ function addToList(placeObj, listitemid, placeBuildingObj) {
 
 }
 
-function showSearchResulsInfo(stringSearched,numResults){
+function showSearchResulsInfo(stringSearched, numResults) {
     let t = `You searched <strong>${stringSearched}</strong>: `;
     $("#search-alert").hide();
     $("#search-alert").removeClass();
     $("#search-alert").addClass("alert");
-    if(numResults!==0){
+    if (numResults !== 0) {
         t = `<strong>${numResults}</strong> results found`;
         $("#search-alert").addClass("alert-success");
 
-    }else{
+    } else {
         t = t + `and nothing was found`;
         $("#search-alert").addClass("alert-danger");
     }
@@ -362,16 +362,16 @@ function showSearchResulsInfo(stringSearched,numResults){
     return t;
 }
 
-function showSurroundingsResulsInfo(numResults){
+function showSurroundingsResulsInfo(numResults) {
     let t = ``;
     $("#search-alert").hide();
     $("#search-alert").removeClass();
     $("#search-alert").addClass("alert");
-    if(numResults!==0){
+    if (numResults !== 0) {
         t = `<strong>${numResults}</strong> results found`;
         $("#search-alert").addClass("alert-success");
 
-    }else{
+    } else {
         t = t + `Nothing found here`;
         $("#search-alert").addClass("alert-danger");
     }
@@ -383,7 +383,7 @@ function showSurroundingsResulsInfo(numResults){
 
 
 
-$(document).ready(function() {
+$(document).ready(function () {
     $("#search-alert").hide();
 
     $("#search-btn").on("click", function (e) {
@@ -391,16 +391,16 @@ $(document).ready(function() {
         clearResults();
         let userinput = $("#searchbar-input").val();
         searchByInput(jsondataURI, userinput);
-    
+
     });
-    
+
     $("#searchsurr-btn").on("click", function (e) {
         e.preventDefault();
         clearResults();
         inSurroundings(jsondataURI);
-    
+
     });
-  });
+});
 
 // DEMO
 
