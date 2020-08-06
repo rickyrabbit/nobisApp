@@ -181,7 +181,7 @@ async function searchByInput(resultsjson, searchstring) {
 
 }
 
-async function tryFly() {
+/* async function tryFly() {
 
     await new Promise((resolve, reject) => setTimeout(resolve, 3000));
     // Zoom on Aula Be
@@ -195,7 +195,7 @@ async function tryFly() {
     await new Promise((resolve, reject) => setTimeout(resolve, 3000));
     // Zoom on DEI
     zoomOnBuilding(jsondataURI, 1);
-}
+} */
 
 
 
@@ -282,29 +282,11 @@ function addToList(placeObj, listitemid, placeBuildingObj) {
     bname_cont.appendTo(lip);
 
 
-    //lip.append("h5").addClass("mb-1").html(`${placeObj.name}`);
-    //lip.append("small").html(`${findPlaceBuilding(jsondataURI, placeObj.building)}`);
-
     let lic = $("<div></div>", {
         "class": "capacityinfo",
         id: `listitem-${listitemid}-capacityinfo`
     });
 
-
-    /* li.add("div").attr("id", `listitem-${listitemid}-capacityinfo`);
-
-    let lic = $(`#listitem-${listitemid}-capacityinfo`);
-    lic.addClass("capacityinfo"); */
-
-    /* let licp = $( "<span></span>", {
-        "class":"badge badge-pill",
-        id: `listitem-${listitemid}-capacitypill`
-        }
-    ) */
-
-    /* lic.append("span").attr("id", `listitem-${listitemid}-capacitypill`);
-    let licp = $(`#listitem-${listitemid}-capacitypill`);
-    licp.addClass("badge badge-pill"); */
 
 
     let badge = {
@@ -404,14 +386,16 @@ function showSurroundingsResulsInfo(numResults){
 $(document).ready(function() {
     $("#search-alert").hide();
 
-    $("#search-btn").on("click", function () {
+    $("#search-btn").on("click", function (e) {
+        e.preventDefault();
         clearResults();
         let userinput = $("#searchbar-input").val();
         searchByInput(jsondataURI, userinput);
     
     });
     
-    $("#searchsurr-btn").on("click", function () {
+    $("#searchsurr-btn").on("click", function (e) {
+        e.preventDefault();
         clearResults();
         inSurroundings(jsondataURI);
     
