@@ -1,0 +1,38 @@
+{
+  "name": "nobisapp",
+  "version": "0.0.1",
+  "description": "QR project in order to track flow of people in public/private places",
+  "main": "index.js",
+  "scripts": {
+    "devbabel": "nodemon --exec babel-node index.js",
+    "dev": "env $(cat .env.dev | grep -v \"#\" | xargs) npm run devbabel",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rickyrabbit/nobisApp.git"
+  },
+  "author": "Riccardo Coniglio",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rickyrabbit/nobisApp/issues"
+  },
+  "homepage": "https://github.com/rickyrabbit/nobisApp#readme",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.1.0",
+    "helmet": "^4.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.3.0",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.4"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.4"
+  }
+}

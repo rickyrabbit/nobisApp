@@ -4,6 +4,7 @@
 ### Custom ###
 #Docker
 .env
+.env.dev
 
 ### DBeaver ###
 # ide config file
