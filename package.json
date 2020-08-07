@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "devbabel": "nodemon --exec babel-node index.js",
+    "devclean": "nodemon  index.js",
     "dev": "env $(cat .env.dev | grep -v \"#\" | xargs) npm run devbabel",
+    "devc": "env $(cat .env.dev | grep -v \"#\" | xargs) npm run devclean",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
