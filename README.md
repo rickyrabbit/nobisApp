@@ -32,5 +32,5 @@ QR project in order to track flow of people in public/private places
 [tutorial alibaba](https://medium.com/@Alibaba_Cloud/building-a-restful-api-with-express-postgresql-and-node-using-es6-1de2b3b06c64)
 ### Altro
 [modulo pg di node](https://node-postgres.com)
-[]()
+[query spaziali di postgis in sequelize](https://galxzx.github.io/blog/2017/03/15/Distance-Based-Queries-with-PostgreSQL-PostGIS-and-Sequelize/)
 []()
