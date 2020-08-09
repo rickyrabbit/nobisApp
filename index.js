@@ -1,4 +1,5 @@
 const express = require("express");
+const router = express.Router();
 const bodyParser = require("body-parser");
 
 const apiVersion = process.env.API_VERSION || 'v1';
@@ -26,3 +27,5 @@ const PORT = process.env.NOBIS_APP_PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+module.exports = router;

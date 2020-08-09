@@ -23,7 +23,7 @@ const admin = (sequelize, DataTypes) => {
           notEmpty: true,
         }
       },
-      mail: {
+      email: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
