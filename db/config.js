@@ -8,16 +8,16 @@ const pool = new Pool({
 })
 
 const getAdminByEmail = (request) => {
-    console.log(request);
+    console.log(request.body);
 
-  const email = parseInt(request.body.email)
+    const email = request.body.email;
 
-  pool.query('SELECT * FROM admin WHERE email = $1', [id], (error, results) => {
-    if (error) {
-      throw error
-    }
-    console.log(results.rows);
-    return results.rows[0];
+    pool.query('SELECT * FROM admin WHERE email = $1', [email], (error, results) => {
+        if (error) {
+            throw error
+        }
+        console.log(results.rows);
+        return results.rows[0];
   })
 }
 
