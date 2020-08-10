@@ -2,7 +2,8 @@ const router = require("express").Router();
 
 //const db = require("../db/config");
 
-let public = path.join(__dirname, 'public');
+const path = require('path');
+const public = path.join(__dirname, 'public');
 
 
 router.get('/login', async (req, res) => {
