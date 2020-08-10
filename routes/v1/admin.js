@@ -34,7 +34,7 @@ router.get('/api/login', async (req, res) => {
     });
 });
 
-router.get('/panel', async (req, res) => {
+router.post('/panel', async (req, res) => {
 
     const token = req.cookies.admin_token;
     // TODO: SECRET should be an env variable
