@@ -7,7 +7,7 @@ const pool = new Pool({
   port: 5432,
 })
 
-const getAdminById = (request) => {
+const getAdminByEmail = (request) => {
   const email = parseInt(request.body.email)
 
   pool.query('SELECT * FROM admin WHERE email = $1', [id], (error, results) => {
