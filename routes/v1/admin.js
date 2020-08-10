@@ -16,34 +16,31 @@ router.post('/api/login', async (req, res) => {
 
     // TODO: access to DB
     const mail = "m8.avanzi@gmail.com";
-    let hashPsw;
+
 
     bcrypt.hash("abaco", 10, function(err, hash) {
-        hashPsw = hash;
-    });
-
-    console.log(hashPsw);
-
-    bcrypt.compare("abaco", hashPsw, function(err, result) { //req.body.password
-        console.log(err);
-        console.log(result);
-        if(err) {
-            console.log("bcrypt comparison failed");
-            //handle
-        } 
-        if (result) {
-            let payload = "m8.avanzi@gmail.com"; //req.body.email
-            const token = JWT.token(payload, process.env.ADMIN_SECRET);
-            console.log(token);
-            res.cookie("admin_token", token, {
-                maxAge: 3600,
-                httpOnly: true,
-                sameSite: true
-            });
-            res.sendFile(path.join(__dirname, '../../public/html/admin-panel.html'));     
-        } else {
-            console.log("bcrypt: password not valid");
-        }
+        console.log(hash);
+        bcrypt.compare("abaco", hash, function(err, result) { //req.body.password
+            console.log(err);
+            console.log(result);
+            if(err) {
+                console.log("bcrypt comparison failed");
+                //handle
+            } 
+            if (result) {
+                let payload = "m8.avanzi@gmail.com"; //req.body.email
+                const token = JWT.token(payload, process.env.ADMIN_SECRET);
+                console.log(token);
+                res.cookie("admin_token", token, {
+                    maxAge: 3600,
+                    httpOnly: true,
+                    sameSite: true
+                });
+                res.sendFile(path.join(__dirname, '../../public/html/admin-panel.html'));     
+            } else {
+                console.log("bcrypt: password not valid");
+            }
+        });
     });
 });
 
