@@ -19,6 +19,8 @@ router.post('/api/login', async (req, res) => {
     const psw = "$2y$10$qk3QI2LPlf1EH6.rou1Q5.PaM4/gqyoUjDQYpIjxWRnzUWnpMK/fm";
 
     bcrypt.compare("abaco", psw, function(err, resp) { //req.body.password
+        console.log(err);
+        console.log(resp);
         if(err) {
             console.log("bcrypt comparison failed");
             //handle
