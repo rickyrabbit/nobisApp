@@ -4,15 +4,16 @@ const pool = new Pool({
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
   password: process.env.DB_PSW,
-  port: 5432,
+  port: 5432
 })
 
 const getAdminByEmail = (request) => {
-    console.log(request.body);
 
     const email = request.body.email;
 
     pool.query('SELECT * FROM admin WHERE email = $1', [email], (error, results) => {
+        console.log("error");
+        console.log(error);
         if (error) {
             throw error
         }
