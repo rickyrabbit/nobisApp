@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const path = require('path')
 const bcrypt = require('bcrypt')
+const JWT = require('jsonwebtoken');
 const bodyParser = require("body-parser");
 
 const db = require("../../db/config");

@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const JWT = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')
 
 const apiVersion = process.env.API_VERSION || 'v1';
