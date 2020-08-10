@@ -16,9 +16,15 @@ router.post('/api/login', async (req, res) => {
 
     // TODO: access to DB
     const mail = "m8.avanzi@gmail.com";
-    const hash = "$2y$10$qk3QI2LPlf1EH6.rou1Q5.PaM4/gqyoUjDQYpIjxWRnzUWnpMK/fm";
+    let hashPsw;
 
-    bcrypt.compare("abaco", hash).then(function(err, result) { //req.body.password
+    bcrypt.hash("abaco", 10, function(err, hash) {
+        hashPsw = hash;
+    });
+
+    console.log(hashPsw);
+
+    bcrypt.compare("abaco", hashPsw, function(err, result) { //req.body.password
         console.log(err);
         console.log(result);
         if(err) {
