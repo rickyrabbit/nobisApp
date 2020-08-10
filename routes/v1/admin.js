@@ -15,6 +15,9 @@ router.post('/api/login', async (req, res) => {
 
     let admin = db.getAdminByEmail(req);
 
+    console.log("req.body"+req.body);
+    console.log("admin.password"+admin.body);
+
     bcrypt.compare(req.body.password, admin.password, function(err, result) { //req.body.password
             console.log(err);
             console.log(result);

@@ -12,8 +12,6 @@ const getAdminByEmail = (request) => {
     const email = request.body.email;
 
     pool.query('SELECT * FROM admin WHERE email = $1', [email], (error, results) => {
-        console.log("error");
-        console.log(error);
         if (error) {
             throw error
         }
