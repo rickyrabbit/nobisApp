@@ -18,13 +18,14 @@ router.post('/api/login', async (req, res) => {
     const mail = "m8.avanzi@gmail.com";
     const psw = "$2y$10$qk3QI2LPlf1EH6.rou1Q5.PaM4/gqyoUjDQYpIjxWRnzUWnpMK/fm";
 
-    bcrypt.compare("abaco", psw, function(err, resp) { //req.body.password
+    bcrypt.compare("abaco", psw, function(err, result) { //req.body.password
         console.log(err);
-        console.log(resp);
+        console.log(result);
         if(err) {
             console.log("bcrypt comparison failed");
             //handle
-        } else if (resp) {
+        } 
+        if (result) {
             let payload = "m8.avanzi@gmail.com"; //req.body.email
             const token = JWT.token(payload, process.env.ADMIN_SECRET);
             console.log(token);
@@ -34,6 +35,8 @@ router.post('/api/login', async (req, res) => {
                 sameSite: true
             });
             res.sendFile(path.join(__dirname, '../../public/html/admin-panel.html'));     
+        } else {
+            console.log("bcrypt: password not valid");
         }
     });
 });
