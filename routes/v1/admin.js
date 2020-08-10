@@ -1,8 +1,5 @@
 const router = require("express").Router();
-const JWT = require('jsonwebtoken');
-const cookieParser = require('cookie-parser')
 
-app.use(cookieParser())
 //const db = require("../db/config");
 
 

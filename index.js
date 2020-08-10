@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const JWT = require('jsonwebtoken');
+const cookieParser = require('cookie-parser')
 
 const apiVersion = process.env.API_VERSION || 'v1';
 
@@ -9,6 +11,8 @@ const app = express();
 
 mountRoutes(app);
 
+// parse cookies into req.cookies.***
+app.use(cookieParser())
 
 // parse requests of content-type - application/json
 app.use(express.json());
