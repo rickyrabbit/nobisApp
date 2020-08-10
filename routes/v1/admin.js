@@ -2,9 +2,11 @@ const router = require("express").Router();
 
 //const db = require("../db/config");
 
+let public = path.join(__dirname, 'public');
+
 
 router.get('/login', async (req, res) => {
-    res.sendFile('../../public/html/admin-login.html');
+    res.sendFile(path.join(public, 'admin-login.html'));
 });
 
 router.get('/api/login', async (req, res) => {
@@ -20,7 +22,7 @@ router.get('/api/login', async (req, res) => {
         httpOnly: true,
         sameSite: true
     });
-    res.sendFile('../../public/html/admin-panel.html');
+    res.sendFile(path.join(public, 'admin-panel.html'));
 });
 
 router.get('/panel', async (req, res) => {
@@ -30,7 +32,7 @@ router.get('/panel', async (req, res) => {
     const SECRET = "eqflkbjch9143iuc!";
     const decoded = JWT.verify(token, SECRET);
 
-    res.sendFile('../../public/html/admin-panel.html');
+    res.sendFile(path.join(public, 'admin-panel.html'));
 });
 
 module.exports = router;
