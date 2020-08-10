@@ -2,10 +2,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const JWT = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')
+const path = require('path')
 
 const apiVersion = process.env.API_VERSION || 'v1';
 
 const mountRoutes = require(`./routes/${apiVersion}/handler`);
+
+const public = path.join(__dirname, 'public');
 
 const app = express();
 

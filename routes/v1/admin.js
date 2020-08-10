@@ -2,9 +2,6 @@ const router = require("express").Router();
 
 //const db = require("../db/config");
 
-const path = require('path');
-const public = path.join(__dirname, 'public');
-
 
 router.get('/login', async (req, res) => {
     res.sendFile(path.join(public, 'admin-login.html'));
