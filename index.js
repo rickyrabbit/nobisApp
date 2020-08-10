@@ -8,8 +8,6 @@ const mountRoutes = require(`./routes/${apiVersion}/handler`);
 
 const app = express();
 
-mountRoutes(app);
-
 // parse cookies into req.cookies.***
 app.use(cookieParser())
 
@@ -18,6 +16,8 @@ app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+
+mountRoutes(app);
 
 // simple route
 /* app.get("/", (req, res) => {
