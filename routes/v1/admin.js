@@ -1,9 +1,11 @@
 const router = require("express").Router();
+const path = require('path')
 
 //const db = require("../db/config");
 
 
 router.get('/login', async (req, res) => {
+    console.log(public);
     res.sendFile(path.join(public, 'admin-login.html'));
 });
 
