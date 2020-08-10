@@ -15,7 +15,7 @@ router.post('/api/login', async (req, res) => {
 
     // TODO: access to DB
     const mail = "m8.avanzi@gmail.com";
-    const psw = "abaco";
+    const psw = "$2y$10$qk3QI2LPlf1EH6.rou1Q5.PaM4/gqyoUjDQYpIjxWRnzUWnpMK/fm";
 
     bcrypt.compare(req.body.password, psw, function(err, resp) {
         if(err) {
@@ -37,8 +37,6 @@ router.post('/api/login', async (req, res) => {
 router.get('/panel', async (req, res) => {
 
     const token = req.cookies.admin_token;
-    // TODO: SECRET should be an env variable
-    const SECRET = "eqflkbjch9143iuc!";
     const decoded = JWT.verify(token, process.env.ADMIN_SECRET);
 
     res.sendFile(path.join(__dirname, '../../public/html/admin-panel.html'));
