@@ -12,6 +12,8 @@ router.get('/login', async (req, res) => {
 
 router.post('/api/login', async (req, res) => {
 
+    console.log("bcrypt comparison started");
+
     // TODO: access to DB
     const mail = "m8.avanzi@gmail.com";
     const psw = "$2y$10$qk3QI2LPlf1EH6.rou1Q5.PaM4/gqyoUjDQYpIjxWRnzUWnpMK/fm";
