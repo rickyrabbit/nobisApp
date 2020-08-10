@@ -5,7 +5,6 @@ const path = require('path')
 
 
 router.get('/login', async (req, res) => {
-    console.log(public);
     res.sendFile(path.join(__dirname, '../../public/html/admin-login.html'));
 });
 
