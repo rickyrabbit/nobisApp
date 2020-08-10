@@ -20,5 +20,5 @@ const getAdminByEmail = (request) => {
 }
 
 module.exports = {
-    getAdminById
+    getAdminByEmail
 };
