@@ -30,7 +30,8 @@ router.post('/api/login', async (req, res) => {
             } 
             if (result) {
                 let payload = "m8.avanzi@gmail.com"; //req.body.email
-                const token = JWT.token(payload, process.env.ADMIN_SECRET);
+                console.log(process.env.ADMIN_SECRET);
+                const token = JWT.sign(payload, process.env.ADMIN_SECRET);
                 console.log(token);
                 res.cookie("admin_token", token, {
                     maxAge: 3600,
