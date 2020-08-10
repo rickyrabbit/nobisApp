@@ -6,7 +6,6 @@ const bodyParser = require("body-parser");
 
 const db = require("../../db/config");
 
-
 router.get('/login', async (req, res) => {
     res.sendFile(path.join(__dirname, '../../public/html/admin-login.html'));
 });
@@ -15,13 +14,9 @@ router.post('/api/login', async (req, res) => {
 
     console.log("bcrypt comparison started");
 
-    // TODO: access to DB
-    const mail = "m8.avanzi@gmail.com";
+    let admin = db.getAdminByEmail(req);
 
-
-    bcrypt.hash("abaco", 10, function(err, hash) {
-        console.log(hash);
-        bcrypt.compare("abaco", hash, function(err, result) { //req.body.password
+    bcrypt.compare(req.body.password, admin.password, function(err, result) { //req.body.password
             console.log(err);
             console.log(result);
             if(err) {
@@ -29,7 +24,7 @@ router.post('/api/login', async (req, res) => {
                 //handle
             } 
             if (result) {
-                let payload = "m8.avanzi@gmail.com"; //req.body.email
+                let payload = admin.email; //req.body.email
                 console.log(process.env.ADMIN_SECRET);
                 const token = JWT.sign(payload, process.env.ADMIN_SECRET);
                 console.log(token);
@@ -38,11 +33,10 @@ router.post('/api/login', async (req, res) => {
                     httpOnly: true,
                     sameSite: true
                 });
-                res.sendFile(path.join(__dirname, '../../public/html/admin-panel.html'));     
+                res.status(200).sendFile(path.join(__dirname, '../../public/html/admin-panel.html'));     
             } else {
                 console.log("bcrypt: password not valid");
             }
-        });
     });
 });
 
