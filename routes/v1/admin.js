@@ -4,10 +4,12 @@ const router = require("express").Router();
 
 
 router.get('/login', async (req, res) => {
-    res.send('../../public/html/admin-login.html');
+    res.sendFile('../../public/html/admin-login.html');
 });
 
 router.get('/api/login', async (req, res) => {
+
+
 
     // TODO: SECRET should be an env variable
     const SECRET = "eqflkbjch9143iuc!";
@@ -18,7 +20,7 @@ router.get('/api/login', async (req, res) => {
         httpOnly: true,
         sameSite: true
     });
-    res.send('../../public/html/admin-panel.html');
+    res.sendFile('../../public/html/admin-panel.html');
 });
 
 router.get('/panel', async (req, res) => {
@@ -28,7 +30,7 @@ router.get('/panel', async (req, res) => {
     const SECRET = "eqflkbjch9143iuc!";
     const decoded = JWT.verify(token, SECRET);
 
-    res.send('../../public/html/admin-panel.html');
+    res.sendFile('../../public/html/admin-panel.html');
 });
 
 module.exports = router;
