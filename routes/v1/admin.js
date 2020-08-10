@@ -11,7 +11,7 @@ router.get('/login', async (req, res) => {
     res.sendFile(path.join(__dirname, '../../public/html/admin-login.html'));
 });
 
-router.get('/api/login', async (req, res) => {
+router.post('/api/login', async (req, res) => {
 
     // TODO: access to DB
     const mail = "m8.avanzi@gmail.com";
@@ -34,7 +34,7 @@ router.get('/api/login', async (req, res) => {
     });
 });
 
-router.post('/panel', async (req, res) => {
+router.get('/panel', async (req, res) => {
 
     const token = req.cookies.admin_token;
     // TODO: SECRET should be an env variable
