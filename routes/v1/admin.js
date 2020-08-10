@@ -18,10 +18,12 @@ router.post('/api/login', async (req, res) => {
 
     bcrypt.compare("abaco", psw, function(err, resp) { //req.body.password
         if(err) {
+            console.log("bcrypt comparison failed");
             //handle
         } else if (resp) {
             let payload = "m8.avanzi@gmail.com"; //req.body.email
             const token = JWT.token(payload, process.env.ADMIN_SECRET);
+            console.log(token);
             res.cookie("admin_token", token, {
                 maxAge: 3600,
                 httpOnly: true,
