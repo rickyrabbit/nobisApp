@@ -1,8 +1,7 @@
 const router = require("express").Router();
 const path = require('path')
 const bcrypt = require('bcrypt')
-
-const saltRounds = 10;
+const bodyParser = require("body-parser");
 
 const db = require("../../db/config");
 
@@ -17,12 +16,11 @@ router.post('/api/login', async (req, res) => {
     const mail = "m8.avanzi@gmail.com";
     const psw = "$2y$10$qk3QI2LPlf1EH6.rou1Q5.PaM4/gqyoUjDQYpIjxWRnzUWnpMK/fm";
 
-    bcrypt.compare(req.body.password, psw, function(err, resp) {
+    bcrypt.compare("abaco", psw, function(err, resp) { //req.body.password
         if(err) {
             //handle
         } else if (resp) {
-            // TODO: SECRET should be an env variable
-            let payload = req.body.email;
+            let payload = "m8.avanzi@gmail.com"; //req.body.email
             const token = JWT.token(payload, process.env.ADMIN_SECRET);
             res.cookie("admin_token", token, {
                 maxAge: 3600,
