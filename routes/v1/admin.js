@@ -22,7 +22,7 @@ router.post('/api/login', async (req, res) => {
 
     admin_row.then(
         function(res) {console.log(res);}
-        ):
+        );
 
     bcrypt.compare(req.body.password, admin_row.password, function(err, result) { 
             console.log(err);
