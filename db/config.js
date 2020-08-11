@@ -7,6 +7,11 @@ const pool = new Pool({
   port: 5432
 })
 
+module.exports = {
+  query: (text, params) => pool.query(text, params)
+}
+
+/*
 const getAdminByEmail = (request) => {
 
     const email = request.body.email;
@@ -22,16 +27,18 @@ const getAdminByEmail = (request) => {
             }
         })
     })
-/*
+
     pool.query('SELECT * FROM admin WHERE email = $1', [email], (error, results) => {
         if (error) {
             throw error
         }
         return results.rows[0];
   })
-*/
+
 }
 
 module.exports = {
     getAdminByEmail
 };
+
+*/

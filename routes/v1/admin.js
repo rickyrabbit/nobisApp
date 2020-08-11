@@ -1,4 +1,5 @@
-const router = require("express").Router();
+//const router = require("express").Router();
+const router = require('express-promise-router');
 const path = require('path')
 const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken');
@@ -13,9 +14,10 @@ router.post('/api/login', async (req, res) => {
 
     console.log("bcrypt comparison started");
 
-    let admin = db.getAdminByEmail(req);
+    //let admin = db.getAdminByEmail(req);
+    const admin_row = await db.query('SELECT * FROM admin WHERE email = $1', [req.body.email]);
 
-    bcrypt.compare(req.body.password, admin.password, function(err, result) { //req.body.password
+    bcrypt.compare(req.body.password, admin_row.password, function(err, result) { 
             console.log(err);
             console.log(result);
             if(err) {
@@ -23,7 +25,7 @@ router.post('/api/login', async (req, res) => {
                 //handle
             } 
             if (result) {
-                let payload = admin.email; //req.body.email
+                let payload = admin_row.email; //req.body.email
                 console.log(process.env.ADMIN_SECRET);
                 const token = JWT.sign(payload, process.env.ADMIN_SECRET);
                 console.log(token);
