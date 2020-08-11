@@ -17,6 +17,9 @@ router.post('/api/login', async (req, res) => {
     //let admin = db.getAdminByEmail(req);
     const admin_row = await db.query('SELECT * FROM admin WHERE email = $1', [req.body.email]);
 
+    console.log(req.body.password);
+    console.log(admin_row.password);
+
     bcrypt.compare(req.body.password, admin_row.password, function(err, result) { 
             console.log(err);
             console.log(result);
