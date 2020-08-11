@@ -20,6 +20,10 @@ router.post('/api/login', async (req, res) => {
     console.log(req.body.password);
     console.log(admin_row.password);
 
+    admin_row.then(
+        function(res) {console.log(res);}
+        ):
+
     bcrypt.compare(req.body.password, admin_row.password, function(err, result) { 
             console.log(err);
             console.log(result);
