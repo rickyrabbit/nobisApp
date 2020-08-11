@@ -15,9 +15,6 @@ router.post('/api/login', async (req, res) => {
 
     let admin = db.getAdminByEmail(req);
 
-    console.log("req.body"+req.body);
-    console.log("admin.password"+admin.body);
-
     bcrypt.compare(req.body.password, admin.password, function(err, result) { //req.body.password
             console.log(err);
             console.log(result);
@@ -35,7 +32,8 @@ router.post('/api/login', async (req, res) => {
                     httpOnly: true,
                     sameSite: true
                 });
-                res.status(200).sendFile(path.join(__dirname, '../../public/html/admin-panel.html'));     
+                res.redirect(200, '/admin/panel')
+                //res.status(200).sendFile(path.join(__dirname, '../../public/html/admin-panel.html'));     
             } else {
                 console.log("bcrypt: password not valid");
             }
@@ -44,9 +42,11 @@ router.post('/api/login', async (req, res) => {
 
 router.get('/panel', async (req, res) => {
 
-    const token = req.cookies.admin_token;
-    const decoded = JWT.verify(token, process.env.ADMIN_SECRET);
+    const admin_token = req.cookies.admin_token;
+    console.log(admin_token);;
+    const decoded = JWT.verify(admin_token, process.env.ADMIN_SECRET);
 
+    console.log("decoded "+decoded)
     res.sendFile(path.join(__dirname, '../../public/html/admin-panel.html'));
 });
 
