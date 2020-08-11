@@ -1,5 +1,5 @@
-//const router = require("express").Router();
-const router = require('express-promise-router');
+const router = require("express").Router();
+//const router = require('express-promise-router');
 const path = require('path')
 const bcrypt = require('bcrypt')
 const JWT = require('jsonwebtoken');
