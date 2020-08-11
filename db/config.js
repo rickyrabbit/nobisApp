@@ -8,7 +8,7 @@ const pool = new Pool({
 })
 
 module.exports = {
-  query: (text, params) => pool.query(text, params)
+  query: async (text, params) => pool.query(text, params)
 }
 
 /*
