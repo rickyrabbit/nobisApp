@@ -23,6 +23,11 @@ header h2{
   margin: 20px 0 10px;
 }
 
+#place-modal-map-create {
+  height: 180px;
+  margin: 20px 0 10px;
+}
+
 .btn-success.new-place, .btn-success.new-building{
   margin-bottom: 30px;
 }

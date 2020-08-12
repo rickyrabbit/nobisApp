@@ -1,12 +1,21 @@
-const express = require("express");
+const express = require("express")
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser')
+const path = require('path')
+var exphbs  = require('express-handlebars')
 
 const apiVersion = process.env.API_VERSION || 'v1';
 
 const mountRoutes = require(`./routes/${apiVersion}/handler`);
 
 const app = express();
+
+// Handlebars
+app.engine('handlebars', exphbs( {defaultLayout: 'default'} ));
+app.set('view engine', 'handlebars');
+
+// allow access to static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 // parse cookies into req.cookies.***
 app.use(cookieParser())

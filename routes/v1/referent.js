@@ -1,9 +1,100 @@
 const router = require("express").Router();
+const JWT = require('jsonwebtoken');
 
-//const db = require("../db/config");
+const db = require("../../db/referent-db");
+const admindb = require("../../db/admin-db");
+const placedb = require("../../db/place-db");
+const categorydb = require("../../db/category-db");
+const buildingdb = require("../../db/building-db");
 
 router.get('/login', async (req, res) => {
-    // completare con query #3
+    res.render('ref-login', {
+        layout: 'access.handlebars',
+        pageTitle: 'Accesso Referente'
+    });
+});
+
+router.get('/register', async (req, res) => {
+    res.render('ref-register', {
+        layout: 'access.handlebars',
+        pageTitle: 'Registrazione Referente'
+    });
+});
+
+router.post('/create', async (req, res) => {
+    try {
+        // TODO: email già presente?
+        if (await db.createReferent(req.body.firstname, req.body.lastname, req.body.email, req.body.password)) {
+            res.redirect('/referent/login');
+        } else {
+            res.status(500).redirect('/referent/register');
+        }
+    } catch (err) {
+        res.status(500).redirect('/referent/register');
+    }
+});
+
+router.post('/checkCredentials', async (req, res) => {
+    try {
+        let login = await db.checkReferentCredentials(req.body.email, req.body.password);
+        if (login.valid) {
+            let multiplier = 1;
+            if (req.body.remember == "on") 
+                multiplier = 24;
+            res.cookie("referent_token", JWT.sign({id: login.id}, process.env.REFERENT_SECRET), {
+                maxAge: 3600000*multiplier,
+                httpOnly: true,
+                sameSite: true
+            });
+            res.redirect('/referent/dashboard');
+        } else {
+            res.status(401).redirect('/referent/login');
+        }
+    } catch (err) {
+        res.status(401).redirect('/referent/login');
+    }
+});
+
+router.get('/dashboard', async (req, res) => {
+    try {
+        JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
+        let id = JWT.decode(req.cookies.referent_token).id;
+        let places = await placedb.listPlacesByReferentId(id);
+        let categories = await categorydb.listCategories();
+        let buildings = await buildingdb.listBuildings();
+        res.render('ref-dashboard', {
+            pageTitle: 'Dashboard Referente',
+            loadMap: true,
+            css: ['ref-dashboard'],
+            places: places,
+            categories: categories,
+            buildings: buildings
+        });
+    } catch (error) {
+        res.status(401).redirect('/referent/login');
+    }
+});
+
+router.post('/:id/enable', async (req, res) => {
+    try {
+        JWT.verify(req.cookies.admin_token, process.env.ADMIN_SECRET);
+        let result = await admindb.enableReferent(req.params.id);
+        if(result)
+            res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(401);
+    }
+});
+
+router.post('/:id/disable', async (req, res) => {
+    try {
+        JWT.verify(req.cookies.admin_token, process.env.ADMIN_SECRET);
+        let result = await admindb.disableReferent(req.params.id);
+        if(result)
+            res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(401);
+    }
 });
 
 module.exports = router;
