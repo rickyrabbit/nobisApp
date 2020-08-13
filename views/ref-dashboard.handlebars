@@ -34,7 +34,9 @@
               <div class="col">
                 <label for="place-building">Edificio</label>
                 <select class="form-control" id="place-building" name="place-building">
-                  <option>DEI</option>
+                  {{#each buildings}}
+                    <option building-id="{{id}}">{{name}}</option>
+                  {{/each}}
                 </select>
               </div>
             </div>
@@ -63,28 +65,25 @@
               </div>
               <div class="col">
                 <label for="place-visit-time">Tempo Medio Visita</label>
-                <input type="text" class="form-control" id="place-name" name="place-visit-time" placeholder="Minuti">
+                <input type="text" class="form-control" id="place-visit-time" name="place-visit-time" placeholder="Minuti">
               </div>
             </div>
             <div class="row">
               <div class="col">
                 <label for="place-category">Categoria</label>
                 <select class="form-control" id="place-category" name="place-category">
-                  <option>Edificio</option>
-                  <option>Aula Studio</option>
-                  <option selected="">Aula Didattica</option>
-                  <option>Laboratorio</option>
-                  <option>Biblioteca</option>
-                  <option>Mensa</option>
+                  {{#each categories}}
+                    <option category-id="{{id}}">{{name}}</option>
+                  {{/each}}
                 </select>
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger">Elimina Luogo</button>
+          <button type="button" id="delete-place" class="btn btn-danger">Elimina Luogo</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
-          <button type="button" class="btn btn-primary">Salva</button>
+          <button type="button" id="save-edit-place" class="btn btn-primary">Salva</button>
         </div>
       </div>
     </div>
@@ -260,8 +259,8 @@
               <td>{{counter}}</td>
               <td><input class="toggle-auth" type="checkbox" {{#if enable}} checked {{/if}} data-toggle="toggle" data-on="Abilitato"
                   data-off="Disabilitato" data-size="sm"></td>
-              <td><a href="/place/{{uuid}}/qrcodes" target="_blank"><button type="button" class="btn btn-primary btn-sm">Download</button></a></td>
-              <td><button type="button" class="btn btn-success btn-sm" data-toggle="modal"
+              <td><a href="/place/{{uuid}}/qrcodes"><button type="button" class="btn btn-primary btn-sm">Download</button></a></td>
+              <td><button type="button" class="btn btn-success btn-sm edit-place-button" data-toggle="modal"
                   data-target="#edit-place">Modifica</button></td>
             </tr>
             {{else}}

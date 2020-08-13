@@ -31,7 +31,29 @@ $(document).ready(function () {
 	$("#report-problem").click(function () {
 		$(".report-problem-group").remove();
 		stopCountdown();
+		$(".showCheckInStopped").show();
 		$("#form-report-problem").fadeIn(600);
+	})
+
+	$("#send-problem").click(function() {
+		let email = $("#inputEmail").val();
+		let problem = $("#inputProblem").val();
+		let placeUUID = $("#place").attr("place-uuid");
+		$.ajax({
+			url: `/report/create`,
+			method: "POST",
+			data: {
+				email: email,
+				problem: problem,
+				placeUUID: placeUUID
+			},
+			statusCode: {
+				200: function() {
+					$("#form-report-problem").fadeOut(600);
+				}
+			  }
+		});
+
 	})
 
 });
@@ -44,10 +66,21 @@ function stopCountdown() {
 }
 
 function checkIn() {
-
+	let placeUUID = $("#place").attr("place-uuid");
 	// Chiamata per il check-in
-
-	stopCountdown();
-	$(".showCheckIn").show();
+	$.ajax({
+		url: `/place/${placeUUID}/check-in`,
+		method: "POST",
+		statusCode: {
+			200: function() {
+				stopCountdown();
+				$(".showCheckIn").show();
+			},
+			500: function() {
+				stopCountdown();
+				alert("Errore: si prega di riprovare!");
+			}
+		  }
+	});
 
 }

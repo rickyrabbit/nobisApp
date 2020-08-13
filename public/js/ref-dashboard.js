@@ -1,6 +1,9 @@
 let map;
+let mapCreate;
 let lat;
 let lon;
+let userPosMarker;
+let userPosMarkerCreate;
 
 $(document).ready(function () {
 
@@ -10,8 +13,10 @@ $(document).ready(function () {
 
 	$('.toggle-auth').change(function () {
 		$("#successToast").toast("hide");
+
 		let uuid = $(this).closest('tr').attr("place-uuid");
 		let action;
+
 		if ($(this).is(':checked') == false) {
 			$("#successToast .toast-body span").text("disabilitato");
 			action = "disable";
@@ -29,6 +34,7 @@ $(document).ready(function () {
 				}
 			  }
 		});
+
 		setTimeout(function () {
 			$("#successToast").hide();
 		}, 2000);
@@ -37,8 +43,8 @@ $(document).ready(function () {
 	lat = 45.4090842;
 	lon = 11.8946683;
 
-	map = L.map('place-modal-map').setView([lat, lon], 15);
-	mapCreate = L.map('place-modal-map-create').setView([lat, lon], 15);
+	map = L.map('place-modal-map');
+	mapCreate = L.map('place-modal-map-create').setView([lat, lon], 13);
 
 	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYXZhOGMiLCJhIjoiY2s5MXJ3eDNkMDBwMzNmb3lod3EzbTYzYiJ9.ZztuSpL_L1iy10DaeODVhQ', {
 		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -60,16 +66,96 @@ $(document).ready(function () {
 
 	mapCreate.on('click', onMapCreateClick);
 
-	userPosMarker = L.marker([lat, lon]).addTo(map);
-
-	userPosMarkerCreate = L.marker([lat, lon]).addTo(mapCreate);
-
 	// Fix for Leaflet inside Bootstrap Modal
-	$('#edit-place').on('show.bs.modal', function () {
+	$('#create-place').on('show.bs.modal', function () {
+		setTimeout(function () {
+			mapCreate.invalidateSize();
+		}, 400);
+	});
+
+	$(".edit-place-button").click(function() {
 		setTimeout(function () {
 			map.invalidateSize();
 		}, 400);
-	});
+		let placeUUID = $(this).closest("tr").attr("place-uuid");
+		$("#edit-place").attr("place-uuid", placeUUID);
+		$.ajax({
+			url: `/place/${placeUUID}/get`,
+			method: "POST",
+			statusCode: {
+				200: function(res) {
+					$("#place-name").val(res.name);
+					$(`#place-building option[building-id='${res.building_id}']`).prop('selected', true);
+					$("#place-latitude").val(res.latitude);
+					$("#place-longitude").val(res.longitude);
+					if (userPosMarker != undefined) {
+						map.removeLayer(userPosMarker);
+					}
+					userPosMarker = L.marker([res.latitude, res.longitude]).addTo(map);
+					map.setView([res.latitude, res.longitude], 15);
+					$("#place-capacity").val(res.capacity);
+					$("#place-visit-time").val(res.visit_time);
+					$(`#place-category option[category-id='${res.category_id}']`).prop('selected', true);
+				}
+			  }
+		});
+	})
+
+	$("#save-edit-place").click(function() {
+
+		let placeUUID = $("#edit-place").attr("place-uuid");
+
+		let tds = $(`#luoghi tr[place-uuid='${placeUUID}']`).children();
+
+		let placeName = $("#place-name").val();
+		let placeBuilding = $("#place-building option:selected").attr('building-id');
+		let placeLatitude = $("#place-latitude").val();
+		let placeLongitude = $("#place-longitude").val();
+		let placeCapacity = $("#place-capacity").val();
+		let placeVisitTime = $("#place-visit-time").val();
+		let placeCategory = $("#place-category option:selected").attr('category-id');
+
+		$.ajax({
+			url: `/place/${placeUUID}/update`,
+			method: "POST",
+			data:{
+				placeName: placeName,
+				placeBuilding: placeBuilding,
+				placeLatitude: placeLatitude,
+				placeLongitude: placeLongitude,
+				placeCapacity: placeCapacity,
+				placeVisitTime: placeVisitTime,
+				placeCategory: placeCategory
+			},
+			statusCode: {
+				200: function() {
+					$('#edit-place').modal('hide');
+					tds[1].innerHTML = placeName;
+					tds[2].innerHTML = $(`#place-building option[building-id='${placeBuilding}']`).text();
+					tds[3].innerHTML = $(`#place-category option[category-id='${placeCategory}']`).text();
+					tds[4].innerHTML = placeCapacity;
+					tds[5].innerHTML = placeVisitTime;
+				}
+			  }
+		});
+
+	})
+
+	$("#delete-place").click(function() {
+
+		let placeUUID = $("#edit-place").attr("place-uuid");
+
+		$.ajax({
+			url: `/place/${placeUUID}`,
+			method: "DELETE",
+			statusCode: {
+				200: function() {
+					$(`#luoghi tr[place-uuid='${placeUUID}']`).remove();
+					$('#edit-place').modal('hide');
+				}
+			  }
+		});
+	})
 
 	// Open Delete Building modal
 	$(".openDeleteBuildingModal").click(function () {
@@ -107,6 +193,7 @@ $(document).ready(function () {
 			statusCode: {
 				200: function() {
 					$('#create-place').modal('hide');
+					location.reload();
 				}
 			  }
 		});
