@@ -67,8 +67,9 @@ const deletePlace = async (uuid) => {
         // TODO: maybe a transaction?
         let queryCategory = await db.pool.query("DELETE FROM have WHERE place_uuid = $1;", [uuid]);
         let queryReferent = await db.pool.query("DELETE FROM manage WHERE place_uuid = $1;", [uuid]);
+        let queryReport = await db.pool.query("DELETE FROM report WHERE place_uuid = $1;", [uuid]);
         let queryPlace = await db.pool.query("DELETE FROM place WHERE uuid = $1;", [uuid]);
-        if(queryPlace && queryCategory && queryReferent)
+        if(queryPlace && queryCategory && queryReferent && queryReport)
             return true;
     } catch(e) {
         console.error(e.stack);
@@ -109,9 +110,6 @@ const checkIn = async (personUUID, placeUUID) => {
         let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp) VALUES (true, to_timestamp($1)) RETURNING id;", [now]);
         let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]);
 
-        //UPDATE place SET counter = counter + 1 WHERE uuid = '550e8400-e29b-41d4-a716-446655440000';
-        //INSERT INTO log (is_in, timestamp) VALUES (true, ???);
-        //INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ('550e8400-e29b-41d4-a716-446655440000', 1, '550e8400-e29b-41d4-a716-446655444839');
         if(queryPlace && queryLog && queryVisit)
             return true;
     } catch(e) {

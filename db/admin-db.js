@@ -20,56 +20,7 @@ const checkAdminCredentials = async (email, password) => {
     }
 }
 
-// TODO: to put inside referent-db?
-const listNewReferents = async () => {
-
-    try {
-        let query = await db.pool.query("SELECT * FROM referent WHERE new = true ORDER BY id ASC");
-        return query.rows;
-    } catch(e) {
-
-    }
-}
-
-// TODO: to put inside referent-db?
-const listOldReferents = async () => {
-
-    try {
-        let query = await db.pool.query("SELECT * FROM referent WHERE new = false ORDER BY id ASC");
-        return query.rows;
-    } catch(e) {
-
-    }
-}
-
-// TODO: to put inside referent-db?
-const enableReferent = async (id) => {
-
-    try {
-        let query = await db.pool.query("UPDATE referent SET enable = true, new = false WHERE id = $1;", [id]);
-        console.log(query);
-        return query;
-    } catch(e) {
-
-    }
-}
-
-// TODO: to put inside referent-db?
-const disableReferent = async (id) => {
-
-    try {
-        let query = await db.pool.query("UPDATE referent SET enable = false WHERE id = $1;", [id]);
-        return query.rows;
-    } catch(e) {
-
-    }
-}
-
 module.exports = {
     getAdminByEmail,
-    checkAdminCredentials,
-    listNewReferents,
-    listOldReferents,
-    enableReferent,
-    disableReferent
+    checkAdminCredentials
 };
