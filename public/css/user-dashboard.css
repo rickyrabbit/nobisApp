@@ -57,6 +57,8 @@ header h2{
 
 .results_info{
   max-width: inherit !important;
+  height: 480px;
+  overflow-y: scroll;
 }
 
 .alert-container{

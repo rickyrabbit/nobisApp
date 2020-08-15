@@ -15,8 +15,11 @@ module.exports = app => {
 
   // forse bisogna utilizzare nuovamente router e in index usare app.use(/,./handler.js);
 
-  // etc..
   app.get("/", (req, res) => {
-    res.json({ message: "Test" });
+    res.render('user-dashboard', {
+      pageTitle: 'Dashboard Utente',
+      loadMap: true,
+      css: ['user-dashboard']
+    });
   });
 }
