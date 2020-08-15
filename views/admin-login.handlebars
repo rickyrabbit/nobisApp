@@ -5,6 +5,12 @@
           <div class="card-body">
             <img id="unipd-logo" src="../img/Logo_Universita_Padova.png">
             <h5 class="card-title text-center">Accesso Amministratore</h5>
+            {{#if errorMessage}}
+            <div id="login-error" class="alert alert-danger" role="alert">
+              <h4 class="alert-heading">Accesso non effettuato</h4>
+              <p>{{errorMessage}}</p>
+            </div>
+            {{/if}}
             <form class="form-signin" method="POST" action="/admin/checkCredentials">
               <div class="form-label-group">
                 <input type="email" id="inputEmail" class="form-control" name="email" placeholder="Email address" required autofocus>

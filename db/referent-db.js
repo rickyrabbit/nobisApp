@@ -64,11 +64,22 @@ const disableReferent = async (id) => {
     }
 }
 
+const getEmailByReferentId = async (id) => {
+
+    try {
+        let query = await db.pool.query("SELECT email FROM referent WHERE id = $1;", [id]);
+        return query.rows[0].email;
+    } catch(e) {
+        console.error(e.stack);
+    }
+}
+
 module.exports = {
     checkReferentCredentials,
     createReferent,
     listNewReferents,
     listOldReferents,
     enableReferent,
-    disableReferent
+    disableReferent,
+    getEmailByReferentId
 };

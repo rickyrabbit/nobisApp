@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const JWT = require('jsonwebtoken');
+const nodemailer = require("nodemailer");
 
 const db = require("../../db/referent-db");
 const placedb = require("../../db/place-db");
@@ -9,7 +10,8 @@ const buildingdb = require("../../db/building-db");
 router.get('/login', async (req, res) => {
     res.render('ref-login', {
         layout: 'access.handlebars',
-        pageTitle: 'Accesso Referente'
+        pageTitle: 'Accesso Referente',
+        errorMessage: req.query.error
     });
 });
 
@@ -54,10 +56,12 @@ router.post('/checkCredentials', async (req, res) => {
             });
             res.redirect('/referent/dashboard');
         } else {
-            res.status(401).redirect('/referent/login');
+            let message = "Account non abilitato, aspetta la mail di conferma attivazione.";
+            res.status(401).redirect(`/referent/login?error=${message}`);
         }
     } catch (err) {
-        res.status(401).redirect('/referent/login');
+        let message = "Credenziali non valide, per favore riprova.";
+        res.status(401).redirect(`/referent/login?error=${message}`);
     }
 });
 
@@ -78,8 +82,15 @@ router.post('/:id/enable', async (req, res) => {
     try {
         JWT.verify(req.cookies.admin_token, process.env.ADMIN_SECRET);
         let result = await db.enableReferent(req.params.id);
-        if(result)
+        if (result) {
+            let email = await db.getEmailByReferentId(req.params.id);
+            sendMail(
+                email, 
+                "Referente Abilitato", 
+                "Il tuo account da referente è stato abilitato. Puoi ora creare luoghi e ottenere i codici QR per il check-in e check-out."
+            );
             res.sendStatus(200);
+        }
     } catch (error) {
         res.sendStatus(401);
     }
@@ -89,11 +100,43 @@ router.post('/:id/disable', async (req, res) => {
     try {
         JWT.verify(req.cookies.admin_token, process.env.ADMIN_SECRET);
         let result = await db.disableReferent(req.params.id);
-        if(result)
+        if(result) {
+            let email = await db.getEmailByReferentId(req.params.id);
+            sendMail(
+                email, 
+                "Referente Disabilitato", 
+                "Il tuo account da referente è stato disabilitato."
+            );
             res.sendStatus(200);
+        }
     } catch (error) {
         res.sendStatus(401);
     }
 });
+
+async function sendMail(email, subject, text) {
+    let testAccount = await nodemailer.createTestAccount();
+
+    // TODO: chiedere ed usare credenziali DEI
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+        user: testAccount.user, // generated ethereal user
+        pass: testAccount.pass, // generated ethereal password
+        },
+    });
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+        from: '"Nobis" <nobis@nobis.dei.unipd.it>', // sender address
+        to: email, // list of receivers
+        subject: subject, // Subject line
+        text: text, // plain text body
+        html: `<p>${text}</p>`, // html body
+    });
+}
 
 module.exports = router;

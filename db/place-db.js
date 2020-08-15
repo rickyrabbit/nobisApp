@@ -65,6 +65,7 @@ const updatePlace = async (name, lon, lat, capacity, visitTime, buildingId, cate
 const deletePlace = async (uuid) => {
     try {
         // TODO: maybe a transaction?
+        // TODO: remove also in visit relation? maybe a place should not be deleted..
         let queryCategory = await db.pool.query("DELETE FROM have WHERE place_uuid = $1;", [uuid]);
         let queryReferent = await db.pool.query("DELETE FROM manage WHERE place_uuid = $1;", [uuid]);
         let queryReport = await db.pool.query("DELETE FROM report WHERE place_uuid = $1;", [uuid]);

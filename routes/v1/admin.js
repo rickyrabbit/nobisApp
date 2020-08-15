@@ -7,7 +7,8 @@ const referentdb = require("../../db/referent-db");
 router.get('/login', async (req, res) => {
     res.render('admin-login', {
         layout: 'access.handlebars',
-        pageTitle: 'Accesso Amministratore'
+        pageTitle: 'Accesso Amministratore',
+        errorMessage: req.query.error
     });
 });
 
@@ -40,10 +41,12 @@ router.post('/checkCredentials', async (req, res) => {
             });
             res.redirect('/admin/panel');
         } else {
-            res.status(401).redirect('/admin/login');
+            let message = "Credenziali non valide, per favore riprova.";
+            res.status(401).redirect(`/admin/login?error=${message}`);
         }
     } catch (err) {
-        res.status(401).redirect('/admin/login');
+        let message = "Credenziali non valide, per favore riprova.";
+        res.status(401).redirect(`/admin/login?error=${message}`);
     }
 });
 
