@@ -47,7 +47,7 @@ const listOldReferents = async () => {
 const isReferentEnabled = async (id) => {
 
     try {
-        let query = await db.pool.query("SELECT enable FROM referent WHERE id = $1", id);
+        let query = await db.pool.query("SELECT enable FROM referent WHERE id = $1", [id]);
         return query.rows[0].enable;
     } catch(e) {
         console.error(e.stack);
@@ -89,6 +89,7 @@ module.exports = {
     createReferent,
     listNewReferents,
     listOldReferents,
+    isReferentEnabled,
     enableReferent,
     disableReferent,
     getEmailByReferentId

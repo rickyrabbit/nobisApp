@@ -26,7 +26,7 @@ router.get('/dashboard', async (req, res) => {
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
         let id = JWT.decode(req.cookies.referent_token).id;
-        if (db.isReferentEnabled(id)) {
+        if (await db.isReferentEnabled(id)) {
             let places = await placedb.listPlacesByReferentId(id);
             let categories = await categorydb.listCategories();
             let buildings = await buildingdb.listBuildings();
