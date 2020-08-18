@@ -34,10 +34,6 @@ $(document).ready(function () {
 				}
 			  }
 		});
-
-		setTimeout(function () {
-			$("#successToast").hide();
-		}, 2000);
 	})
 
 	lat = 45.4090842;
