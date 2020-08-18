@@ -26,17 +26,22 @@ router.get('/dashboard', async (req, res) => {
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
         let id = JWT.decode(req.cookies.referent_token).id;
-        let places = await placedb.listPlacesByReferentId(id);
-        let categories = await categorydb.listCategories();
-        let buildings = await buildingdb.listBuildings();
-        res.render('ref-dashboard', {
-            pageTitle: 'Dashboard Referente',
-            loadMap: true,
-            css: ['ref-dashboard'],
-            places: places,
-            categories: categories,
-            buildings: buildings
-        });
+        if (db.isReferentEnabled(id)) {
+            let places = await placedb.listPlacesByReferentId(id);
+            let categories = await categorydb.listCategories();
+            let buildings = await buildingdb.listBuildings();
+            res.render('ref-dashboard', {
+                pageTitle: 'Dashboard Referente',
+                loadMap: true,
+                css: ['ref-dashboard'],
+                places: places,
+                categories: categories,
+                buildings: buildings
+            });
+        } else {
+            let message = "Account non abilitato, aspetta la mail di conferma attivazione.";
+            res.status(401).redirect(`/referent/login?error=${message}`);
+        }
     } catch (error) {
         res.status(401).redirect('/referent/login');
     }
