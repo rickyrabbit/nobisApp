@@ -186,7 +186,6 @@ router.get('/check-out', async (req, res) => {
 });
 
 router.post('/:placeUUID/check-in', async (req, res) => {
-    // FIXME: Cookie not set
     try {
         if(await db.isEnabled(req.params.placeUUID)) {
             let personUUID;

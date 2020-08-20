@@ -139,7 +139,7 @@ async function sendMail(email, subject, text) {
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-        from: '"Nobis" <nobis@nobis.dei.unipd.it>', // sender address
+        from: '"Nobis" <hello@nobis.dei.unipd.it>', // sender address
         to: email, // list of receivers
         subject: subject, // Subject line
         text: text, // plain text body
