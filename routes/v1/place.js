@@ -217,7 +217,45 @@ router.post('/:placeUUID/check-in', async (req, res) => {
 });
 
 router.post('/:placeUUID/check-out', async (req, res) => {
+    try {
+        if(await db.isEnabled(req.params.placeUUID)) {
+            let personUUID;
+            if (req.cookies.person_identifier != undefined) {
+                JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET);
+                personUUID = JWT.decode(req.cookies.person_identifier).uuid;
+                db.checkOut(personUUID, req.params.placeUUID);
+                res.sendStatus(200);
+            } else {
+                res.sendStatus(500);
+            }
+        } else {
+            res.sendStatus(404);
+        }
+    } catch (error) {
+        res.sendStatus(500);
+    }
+});
 
+router.post('/:placeUUID/feedback', async (req, res) => {
+    try {
+        console.log(await db.isEnabled(req.params.placeUUID))
+        if(await db.isEnabled(req.params.placeUUID)) {
+            let personUUID;
+            if (req.cookies.person_identifier != undefined) {
+                JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET);
+                personUUID = JWT.decode(req.cookies.person_identifier).uuid;
+                console.log(req.body);
+                db.createFeedback(personUUID, req.params.placeUUID, req.body.feedback);
+                res.sendStatus(200);
+            } else {
+                res.sendStatus(500);
+            }
+        } else {
+            res.sendStatus(404);
+        }
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
 function validateReferentSession(req, res) {

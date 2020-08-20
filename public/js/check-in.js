@@ -49,7 +49,7 @@ $(document).ready(function () {
 			},
 			statusCode: {
 				200: function() {
-					$("#form-report-problem").fadeOut(600);
+					$("#form-report-problem").slideDown(600);
 				}
 			  }
 		});

@@ -1,4 +1,5 @@
-<div class="container">
+<div id="place" place-uuid="{{placeUUID}}">
+	<div class="container">
 		<div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
 			<div class="card">
 				<div class="row">
@@ -27,33 +28,35 @@
 						<circle class="closemark__circle" cx="26" cy="26" r="25" fill="none" />
 						<path
 							d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0" />
-						</svg>
+					</svg>
 				</div>
 				<div class="row">
 					<h3 class="showCheckIn">Check-out Completato</h3>
 					<h3 class="showCheckInStopped">Check-out Annullato</h3>
 				</div>
 				<hr class="showCheckIn">
-				<div class="row">
-					<h4 class="showCheckIn">Feedback</h4>
-				</div>
-				<div class="row question">
-					<p class="showCheckIn">Come valuti lo stato di affollamento del luogo?</p>
-				</div>
-				<div class="row">
-					<div class="col">
-						<div class="showCheckIn">
-							<button type="button" class="btn btn-secondary btn-sm">Basso</button>
-						</div>
+				<div id="feedback">
+					<div class="row">
+						<h4 class="showCheckIn">Feedback</h4>
 					</div>
-					<div class="col">
-						<div class="showCheckIn">
-							<button type="button" class="btn btn-secondary btn-sm showCheckIn">Medio</button>
-						</div>
+					<div class="row question">
+						<p class="showCheckIn">Come valuti lo stato di affollamento del luogo?</p>
 					</div>
-					<div class="col">
-						<div class="showCheckIn">
-							<button type="button" class="btn btn-secondary btn-sm showCheckIn">Alto</button>
+					<div class="row">
+						<div class="col">
+							<div class="showCheckIn">
+								<button type="button" data-feedback="1" class="btn btn-secondary btn-sm send-feedback">Basso</button>
+							</div>
+						</div>
+						<div class="col">
+							<div class="showCheckIn">
+								<button type="button" data-feedback="2" class="btn btn-secondary btn-sm send-feedback">Medio</button>
+							</div>
+						</div>
+						<div class="col">
+							<div class="showCheckIn">
+								<button type="button" data-feedback="3" class="btn btn-secondary btn-sm send-feedback">Alto</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -77,4 +80,5 @@
 			</div>
 		</div>
 	</div>
-	<script src="../js/check-out.js"></script>
+</div>
+<script src="../js/check-out.js"></script>

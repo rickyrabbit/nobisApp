@@ -109,10 +109,28 @@ const checkIn = async (personUUID, placeUUID) => {
     }
 }
 
-const checkOut = async (uuid) => {
+const checkOut = async (personUUID, placeUUID) => {
     try {
-        let query = await db.pool.query("UPDATE place SET enable = false WHERE uuid = $1;", [uuid]);
-        return query;
+        let now = Date.now()/1000.0;
+        let queryPlace = await db.pool.query("UPDATE place SET counter = counter - 1 WHERE uuid = $1;", [placeUUID]);
+        let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp) VALUES (false, to_timestamp($1)) RETURNING id;", [now]);
+        let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]);
+
+        if(queryPlace && queryLog && queryVisit)
+            return true;
+            
+    } catch(e) {
+        console.error(e.stack);
+    }
+}
+
+const createFeedback = async (personUUID, placeUUID, feedback) => {
+    try {
+        let queryLog = await db.pool.query("SELECT MAX(log_id) FROM visit WHERE place_uuid = $1 AND person_uuid = $2;", [placeUUID, personUUID]);
+        let queryFeedback = await db.pool.query("INSERT INTO feedback (id, rating, log_id) VALUES (nextval('feedback_id_seq'), $1, $2);", [feedback, queryLog.rows[0].max]);
+
+        if(queryLog && queryFeedback)
+            return true;
     } catch(e) {
         console.error(e.stack);
     }
@@ -129,5 +147,6 @@ module.exports = {
     isEnabled,
     disablePlace,
     checkIn,
-    checkOut
+    checkOut,
+    createFeedback
 };
