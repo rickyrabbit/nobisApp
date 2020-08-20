@@ -6,6 +6,14 @@ const referent = require('./referent');
 const report = require('./report');
 
 module.exports = app => {
+
+  /*
+  app.all('/auth', function (req, res, next) {
+    //Controllare il JWT
+    next(); // pass control to the next handler
+  });
+  */
+
   app.use('/admin', admin);
   app.use('/building', building);
   app.use('/feedback', feedback);

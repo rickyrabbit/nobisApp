@@ -4,6 +4,7 @@ let lat;
 let lon;
 let userPosMarker;
 let userPosMarkerCreate;
+let userPosMarkerCreateBuilding;
 
 $(document).ready(function () {
 
@@ -41,6 +42,7 @@ $(document).ready(function () {
 
 	map = L.map('place-modal-map');
 	mapCreate = L.map('place-modal-map-create').setView([lat, lon], 13);
+	mapCreateBuilding = L.map('building-modal-map-create').setView([lat, lon], 13);
 
 	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYXZhOGMiLCJhIjoiY2s5MXJ3eDNkMDBwMzNmb3lod3EzbTYzYiJ9.ZztuSpL_L1iy10DaeODVhQ', {
 		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -58,14 +60,28 @@ $(document).ready(function () {
 		zoomOffset: -1,
 	}).addTo(mapCreate);
 
-	map.on('click', onMapClick);
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYXZhOGMiLCJhIjoiY2s5MXJ3eDNkMDBwMzNmb3lod3EzbTYzYiJ9.ZztuSpL_L1iy10DaeODVhQ', {
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		maxZoom: 18,
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1,
+	}).addTo(mapCreateBuilding);
 
+	map.on('click', onMapClick);
 	mapCreate.on('click', onMapCreateClick);
+	mapCreateBuilding.on('click', onMapCreateBuildingClick);
 
 	// Fix for Leaflet inside Bootstrap Modal
 	$('#create-place').on('show.bs.modal', function () {
 		setTimeout(function () {
 			mapCreate.invalidateSize();
+		}, 400);
+	});
+
+	$('#create-building').on('show.bs.modal', function () {
+		setTimeout(function () {
+			mapCreateBuilding.invalidateSize();
 		}, 400);
 	});
 
@@ -156,6 +172,8 @@ $(document).ready(function () {
 	// Open Delete Building modal
 	$(".openDeleteBuildingModal").click(function () {
 		let buildingId = $(this).attr("data-building-id");
+		let buildingName = $(this).closest("tr").find("td")[0].innerHTML;
+		$("#deleteBuildingName").text(buildingName);
 		// Copy building id to modal
 		$('#deleteBuildingModal').attr("data-building-id", buildingId);
 		$('#deleteBuildingModal').modal('show');
@@ -164,6 +182,10 @@ $(document).ready(function () {
 
 	$("#openCreatePlaceModal").click(function () {
 		$('#create-place').modal('show');
+	})
+
+	$("#openCreateBuildingModal").click(function () {
+		$('#create-building').modal('show');
 	})
 
 	$("#create-place-button").click(function() {
@@ -195,23 +217,68 @@ $(document).ready(function () {
 		});
 	})
 
-	$(".deleteBuilding").click(function () {
-		$('#deleteBuildingModal').modal('hide');
+	$("#create-building-button").click(function() {
+		let buildingName = $("#building-name-create").val();
+		let buildingLatitude = $("#building-latitude-create").val();
+		let buildingLongitude = $("#building-longitude-create").val();
+		let buildingAddress = $("#building-address-create").val();
+		let buildingNumber = $("#building-number-create").val();
+		let buildingProvince = $("#building-province-create").val();
+		$.ajax({
+			url: `/building/create`,
+			method: "POST",
+			data:{
+				buildingName: buildingName,
+				buildingLatitude: buildingLatitude,
+				buildingLongitude: buildingLongitude,
+				buildingAddress: buildingAddress,
+				buildingNumber: buildingNumber,
+				buildingProvince: buildingProvince
+			},
+			statusCode: {
+				200: function() {
+					$('#create-building').modal('hide');
+					location.reload();
+				}
+			  }
+		});
+	})
 
-		let buildingIdToDelete = $('#deleteBuildingModal').attr("data-building-id")
-		console.log(buildingIdToDelete);
-		// Add Building Delete
-		$('#deleteBuildingModal').modal('hide');
+	$(".deleteBuilding").click(function () {
+		let buildingIdToDelete = $('#deleteBuildingModal').attr("data-building-id");
+		$.ajax({
+			url: `/building/${buildingIdToDelete}`,
+			method: "DELETE",
+			statusCode: {
+				200: function() {
+					$(`#buildings tr[building-id='${buildingIdToDelete}']`).remove();
+					// Add Building Delete
+					$('#deleteBuildingModal').modal('hide');
+				}
+			  }
+		});
 	})
 
 	$(".openResolveProblemModal").click(function () {
+		let reportId = $(this).attr("data-report-id");
+		$('#resolveProblemModal').attr("data-report-id", reportId);
 		$('#resolveProblemModal').modal('show');
-		//take id from table row and put it inside modal
 	})
 
 	$("#resolveProblem").click(function () {
+		let reportIdToDelete = $('#resolveProblemModal').attr("data-report-id");
 		//take id from modal and resolve
-		$('#deleteBuildingModal').modal('hide');
+		$.ajax({
+			url: `/report/${reportIdToDelete}/resolve`,
+			method: "POST",
+			statusCode: {
+				200: function() {
+					$(`#reports tr[report-id='${reportIdToDelete}']`).remove();
+					// Add Building Delete
+					$('#resolveProblemModal').modal('hide');
+				}
+			  }
+		});
 	})
 
 });
@@ -238,4 +305,16 @@ function onMapCreateClick(e) {
 	}
 	userPosMarkerCreate = L.marker([lat, lon]);
 	mapCreate.addLayer(userPosMarkerCreate);
+}
+
+function onMapCreateBuildingClick(e) {
+	lat = e.latlng.lat;
+	lon = e.latlng.lng;
+	$("#building-latitude-create").val(lat);
+	$("#building-longitude-create").val(lon);
+	if (userPosMarkerCreateBuilding != undefined) {
+		mapCreateBuilding.removeLayer(userPosMarkerCreateBuilding);
+	}
+	userPosMarkerCreateBuilding = L.marker([lat, lon]);
+	mapCreateBuilding.addLayer(userPosMarkerCreateBuilding);
 }

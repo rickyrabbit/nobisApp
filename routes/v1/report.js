@@ -12,4 +12,14 @@ router.post('/create', async (req, res) => {
     }
 });
 
+router.post('/:id/resolve', async (req, res) => {
+    try {
+        let result = await db.resolveReport(req.params.id);
+        if (result)
+            res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500);
+    }
+});
+
 module.exports = router;

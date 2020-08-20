@@ -8,6 +8,7 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 
 const db = require("../../db/place-db");
+const buildingdb = require("../../db/building-db");
 const persondb = require("../../db/person-db");
 
 router.post('/create', async (req, res) => {
@@ -105,7 +106,7 @@ router.get('/:uuid/qrcodes', async (req, res) => {
 
     try {
         let placeName = await db.getPlaceNameByUUID(req.params.uuid);
-        let buildingName = await db.getBuildingNameByPlaceUUID(req.params.uuid);
+        let buildingName = await buildingdb.getBuildingNameByPlaceUUID(req.params.uuid);
         const options = {unsafeCleanup: true};
         tmp.dir(options, function _tempDirCreated(dirErr, path, cleanupCallback) {
             if (dirErr) throw dirErr;
@@ -116,7 +117,7 @@ router.get('/:uuid/qrcodes', async (req, res) => {
                     // TODO: Code refactoring needed 
                     const doc = new PDFDocument();
                     // TODO: Better place for the PDF? Why temporary ${path} doesn't work?
-                    let out = fs.createWriteStream(`printable.pdf`)
+                    let out = fs.createWriteStream(`${path}/printable.pdf`)
                     doc.pipe(out);
                     doc.font('public/fonts/Roboto-Medium.ttf');
                     doc.image('public/img/Logo_Universita_Padova.png', 216, 72, { fit: [180, 180] });
@@ -138,11 +139,11 @@ router.get('/:uuid/qrcodes', async (req, res) => {
                     doc.end();
                     out.on('finish', function() {
                         res.zip([
-                            { path: `${path}/${req.params.uuid}-check-in.png`, name: `/${placeName}/check-in.png`,},
-                            { path: `${path}/${req.params.uuid}-check-out.png`, name: `/${placeName}/check-out.png`},
-                            { path: `printable.pdf`, name: `/${placeName}/printable.pdf`}
-                          ], `QR Codes - ${placeName}`);
-                        cleanupCallback();
+                            { path: `${path}/${req.params.uuid}-check-in.png`, name: `check-in.png`},
+                            { path: `${path}/${req.params.uuid}-check-out.png`, name: `check-out.png`},
+                            { path: `${path}/printable.pdf`, name: `printable.pdf`}
+                          ], `QR Codes - ${placeName}`, cleanupCallback);
+                          //setTimeout(cleanupCallback, 1000);
                     });
                 })
             })
@@ -156,7 +157,7 @@ router.get('/check-in', async (req, res) => {
 
     let placeUUID = req.query.placeUUID;
     let placeName = await db.getPlaceNameByUUID(placeUUID);
-    let buildingName = await db.getBuildingNameByPlaceUUID(placeUUID);
+    let buildingName = await buildingdb.getBuildingNameByPlaceUUID(placeUUID);
 
     res.render('check-in', {
         layout: 'check.handlebars',
@@ -172,7 +173,7 @@ router.get('/check-out', async (req, res) => {
 
     let placeUUID = req.query.placeUUID;
     let placeName = await db.getPlaceNameByUUID(placeUUID);
-    let buildingName = await db.getBuildingNameByPlaceUUID(placeUUID);
+    let buildingName = await buildingdb.getBuildingNameByPlaceUUID(placeUUID);
 
     res.render('check-out', {
         layout: 'check.handlebars',
@@ -185,6 +186,7 @@ router.get('/check-out', async (req, res) => {
 });
 
 router.post('/:placeUUID/check-in', async (req, res) => {
+    // FIXME: Cookie not set
     try {
         if(await db.isEnabled(req.params.placeUUID)) {
             let personUUID;

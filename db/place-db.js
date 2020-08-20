@@ -19,15 +19,6 @@ const getPlaceByUUID = async (uuid) => {
     }
 }
 
-const getBuildingNameByPlaceUUID = async (uuid) => {
-    try {
-        let query = await db.pool.query("SELECT b.name FROM place AS p LEFT JOIN building AS b ON b.id = p.building_id WHERE p.uuid = $1", [uuid]);
-        return query.rows[0].name;
-    } catch(e) {
-        console.error(e.stack);
-    }
-}
-
 const listPlacesByReferentId = async (refId) => {
     try {
         // TODO: check INNER or LEFT
@@ -130,7 +121,6 @@ const checkOut = async (uuid) => {
 module.exports = {
     getPlaceNameByUUID,
     getPlaceByUUID,
-    getBuildingNameByPlaceUUID,
     listPlacesByReferentId,
     createPlace,
     updatePlace,

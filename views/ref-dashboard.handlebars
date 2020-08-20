@@ -167,6 +167,69 @@
     </div>
   </div>
 
+  <!--MODAL CREA EDIFICIO-->
+
+  <div id="create-building" class="modal fade bd-example-modal-lg" id="exampleModalCenter" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Crea un nuovo Edificio</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="row">
+              <div class="col">
+                <label for="building-name-create">Nome</label>
+                <input type="text" class="form-control" id="building-name-create" name="building-name-create" placeholder="Nome">
+              </div>
+              <div class="col">
+                <label for="building-address-create">Indirizzo</label>
+                <input type="text" class="form-control" id="building-address-create" name="building-address-create"
+                  placeholder="Indirizzo">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="building-number-create">Civico</label>
+                <input type="text" class="form-control" id="building-number-create" name="building-number-create"
+                  placeholder="Civico">
+              </div>
+              <div class="col">
+                <label for="building-province-create"></label>
+                <input type="text" class="form-control" id="building-province-create" name="building-province-create" placeholder="Provincia">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <label for="building-latitude-create">Latitudine</label>
+                <input type="text" class="form-control" id="building-latitude-create" name="plbuildingace-latitude-create"
+                  placeholder="Latitudine">
+              </div>
+              <div class="col">
+                <label for="building-longitude-create">Longitudine</label>
+                <input type="text" class="form-control" id="building-longitude-create" name="building-longitude-create"
+                  placeholder="Longitudine">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div id="building-modal-map-create"></div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+          <button type="button" id="create-building-button" class="btn btn-success">Crea Luogo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal ELIMINAZIONE EDIFICIO -->
 
   <div class="modal fade" id="deleteBuildingModal" data-building-id="" tabindex="-1" role="dialog"
@@ -180,7 +243,7 @@
           </button>
         </div>
         <div class="modal-body">
-          Sei sicuro di voler eliminare l'edificio ""? Questa azione è irreversibile ed <strong>eliminerà anche tutti i
+          Sei sicuro di voler eliminare l'edificio "<span id="deleteBuildingName"></span>"? Questa azione è irreversibile ed <strong>eliminerà anche tutti i
             luoghi associati.</strong>
         </div>
         <div class="modal-footer">
@@ -193,7 +256,7 @@
 
   <!-- Modal RISOLVI PROBLEMA -->
 
-  <div class="modal fade" id="resolveProblemModal" data-building-id="" tabindex="-1" role="dialog"
+  <div class="modal fade" id="resolveProblemModal" data-report-id="" tabindex="-1" role="dialog"
     aria-labelledby="resolveProblemModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -301,7 +364,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <table class="table">
+        <table id="buildings" class="table">
           <thead class="thead-dark">
             <tr>
               <th scope="col">#</th>
@@ -314,19 +377,32 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>DEI</td>
-              <td>(45.4090842, 11.8946683)</td>
-              <td>Via Giovanni Gradenigo</td>
-              <td>6</td>
-              <td>Padova</td>
-              <td><button type="button" class="btn btn-danger btn-sm openDeleteBuildingModal"
-                  data-building-id="dnjelscjdsi">Elimina</button></td>
-            </tr>
+            {{#each buildings}}
+              <tr building-id="{{id}}">
+                <!-- TODO: remove id? it is useless because we do not show uuid -->
+                <th scope="row">{{@index}}</th>
+                <td>{{name}}</td>
+                <td>({{lon}}, {{lat}})</td>
+                <td>{{address}}</td>
+                <td>{{addr_num}}</td>
+                <td>{{city}}</td>
+                <td><button type="button" class="btn btn-danger btn-sm openDeleteBuildingModal"
+                  data-building-id="{{id}}">Elimina</button></td>
+              </tr>
+              {{else}}
+                  <tr>
+                      <th scope="row">-</th>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                  </tr>
+              {{/each}}
           </tbody>
         </table>
-        <button type="button" class="btn btn-success new-building btn-sm">Crea un nuovo Edificio</button>
+        <button id="openCreateBuildingModal" type="button" class="btn btn-success new-building btn-sm">Crea un nuovo Edificio</button>
       </div>
     </div>
   </div>
@@ -347,7 +423,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <table class="table">
+        <table id="reports" class="table">
           <thead class="thead-dark">
             <tr>
               <th scope="col">#</th>
@@ -359,24 +435,28 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>DEI</td>
-              <td>Biblioteca "Giovanni Someda"</td>
-              <td>Il codice QR non funziona.</td>
-              <td>-</td>
-              <td><button type="button" class="btn btn-success btn-sm openResolveProblemModal"
-                  data-problem-id="sdjnndls">Risolvi</button></td>
-            </tr>
-            <tr>
-              <th scope="row">1</th>
-              <td>DEI</td>
-              <td>Aula AE</td>
-              <td>Il codice QR è stato spostato all'interno dell'aula.</td>
-              <td>m8.avanzi@gmail.com</td>
-              <td><button type="button" class="btn btn-success btn-sm openResolveProblemModal"
-                  data-problem-id="fffffscds">Risolvi</button></td>
-            </tr>
+
+            {{#each reports}}
+              <tr report-id="{{id}}">
+                <!-- TODO: remove id? it is useless because we do not show uuid -->
+                <th scope="row">{{@index}}</th>
+                <td>{{building_name}}</td>
+                <td>{{place_name}}</td>
+                <td>{{description}}</td>
+                <td>{{email}}</td>
+                <td><button type="button" class="btn btn-success btn-sm openResolveProblemModal"
+                  data-report-id="{{id}}">Risolvi</button></td>
+              </tr>
+              {{else}}
+                  <tr>
+                      <th scope="row">-</th>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                  </tr>
+              {{/each}}
           </tbody>
         </table>
       </div>

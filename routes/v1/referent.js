@@ -6,6 +6,7 @@ const db = require("../../db/referent-db");
 const placedb = require("../../db/place-db");
 const categorydb = require("../../db/category-db");
 const buildingdb = require("../../db/building-db");
+const reportdb = require("../../db/report-db");
 
 router.get('/login', async (req, res) => {
     res.render('ref-login', {
@@ -30,13 +31,15 @@ router.get('/dashboard', async (req, res) => {
             let places = await placedb.listPlacesByReferentId(id);
             let categories = await categorydb.listCategories();
             let buildings = await buildingdb.listBuildings();
+            let reports = await reportdb.listReports(id);
             res.render('ref-dashboard', {
                 pageTitle: 'Dashboard Referente',
                 loadMap: true,
                 css: ['ref-dashboard'],
                 places: places,
                 categories: categories,
-                buildings: buildings
+                buildings: buildings,
+                reports: reports
             });
         } else {
             let message = "Account non abilitato, aspetta la mail di conferma attivazione.";
