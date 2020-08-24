@@ -23,7 +23,6 @@
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
-    "bcrypt": "^5.0.0",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "express-handlebars": "^5.1.0",
@@ -37,7 +36,6 @@
     "pg": "^8.3.0",
     "pg-hstore": "^2.3.3",
     "qrcode": "^1.4.4",
-    "sequelize": "^6.3.4",
     "tmp": "^0.2.1",
     "uuid": "^8.3.0"
   },

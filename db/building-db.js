@@ -24,7 +24,9 @@ const createBuilding = async (name, lon, lat, address, num, province) => {
         if(query)
             return true;
     } catch(e) {
-        console.error(e.stack);
+        //console.error(e.stack);
+        //console.error(e.name);
+        console.error(e.message);
     }
 }
 

@@ -28,10 +28,17 @@ router.get('/dashboard', async (req, res) => {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
         let id = JWT.decode(req.cookies.referent_token).id;
         if (await db.isReferentEnabled(id)) {
-            let places = await placedb.listPlacesByReferentId(id);
-            let categories = await categorydb.listCategories();
-            let buildings = await buildingdb.listBuildings();
-            let reports = await reportdb.listReports(id);
+
+            // const [places, categories, buildings, reports] = await Promise.allSettled([
+            //     placedb.listPlacesByReferentId(id),
+            //     categorydb.listCategories(),
+            //     buildingdb.listBuildings(),
+            //     reportdb.listReports(id)
+            // ]);
+             let places = await placedb.listPlacesByReferentId(id);
+             let categories = await categorydb.listCategories();
+             let buildings = await buildingdb.listBuildings();
+             let reports = await reportdb.listReports(id);
             res.render('ref-dashboard', {
                 pageTitle: 'Dashboard Referente',
                 loadMap: true,
