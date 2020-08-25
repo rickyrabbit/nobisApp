@@ -1,4 +1,5 @@
 const db = require("./config");
+const { QueryError, InsertError, DeleteError, UpdateError } = require("../routes/errors");
 
 const checkReferentCredentials = async (email, password) => {
     try {
@@ -6,9 +7,15 @@ const checkReferentCredentials = async (email, password) => {
             "SELECT id, enable, (password = crypt($2, password)) AS valid FROM referent WHERE email = $1",
             [email, password]
         );
-        return query.rows[0];
+        ///console.log(`vediamo cos'è => checkReferentCredentials: ${JSON.stringify(query.rows[0])}`);
+        if(query.rows[0] !== undefined){
+            return query.rows[0];
+        }else{
+            return {"id":undefined,"enable":false,"valid":false};
+        }
     } catch(e) {
         console.error(e.stack);
+        throw new QueryError();
     }
 }
 
@@ -21,6 +28,7 @@ const createReferent = async (firstname, lastname, email, password) => {
         return query;
     } catch(e) {
         console.error(e.stack);
+        throw new InsertError();
     }
 }
 
@@ -31,6 +39,7 @@ const listNewReferents = async () => {
         return query.rows;
     } catch(e) {
         console.error(e.stack);
+        throw new QueryError();
     }
 }
 
@@ -41,6 +50,7 @@ const listOldReferents = async () => {
         return query.rows;
     } catch(e) {
         console.error(e.stack);
+        throw new QueryError();
     }
 }
 
@@ -51,6 +61,9 @@ const isReferentEnabled = async (id) => {
         return query.rows[0].enable;
     } catch(e) {
         console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason('REFNOTENABLED'); 
+        throw qe;
     }
 }
 
@@ -61,6 +74,7 @@ const enableReferent = async (id) => {
         return query;
     } catch(e) {
         console.error(e.stack);
+        throw new UpdateError();
     }
 }
 
@@ -71,16 +85,17 @@ const disableReferent = async (id) => {
         return query.rows;
     } catch(e) {
         console.error(e.stack);
+        throw new UpdateError();
     }
 }
 
 const getEmailByReferentId = async (id) => {
-
     try {
         let query = await db.pool.query("SELECT email FROM referent WHERE id = $1;", [id]);
         return query.rows[0].email;
     } catch(e) {
         console.error(e.stack);
+        throw new QueryError();
     }
 }
 

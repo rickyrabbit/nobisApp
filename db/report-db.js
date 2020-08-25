@@ -1,4 +1,5 @@
 const db = require("./config");
+const { QueryError, InsertError, DeleteError, UpdateError } = require("../routes/errors");
 
 const listReports = async (refID) => {
     try {
@@ -6,6 +7,7 @@ const listReports = async (refID) => {
         return query.rows;
     } catch(e) {
         console.error(e.stack);
+        throw new QueryError();
     }
 }
 
@@ -14,7 +16,9 @@ const resolveReport = async (reportId) => {
         let query = await db.pool.query("UPDATE report SET resolve = true WHERE id = $1;", [reportId]);
         return query;
     } catch(e) {
+        
         console.error(e.stack);
+        throw new UpdateError();
     }
 }
 
@@ -23,7 +27,9 @@ const createReport = async (email, description, placeUUID) => {
         let query = await db.pool.query("INSERT INTO report (email, description, place_uuid) VALUES ($1, $2, $3);", [email, description, placeUUID]);
         return query;
     } catch(e) {
+        
         console.error(e.stack);
+        throw new InsertError();
     }
 }
 

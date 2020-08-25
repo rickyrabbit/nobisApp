@@ -239,8 +239,12 @@ $(document).ready(function () {
 				200: function() {
 					$('#create-building').modal('hide');
 					location.reload();
+				},
+				500: function() {
+					alert('Building creation didn\'t go as planned. Try again');
+
 				}
-			  }
+			}
 		});
 	})
 
@@ -254,10 +258,16 @@ $(document).ready(function () {
 					$(`#buildings tr[building-id='${buildingIdToDelete}']`).remove();
 					// Add Building Delete
 					$('#deleteBuildingModal').modal('hide');
+					//location.reload();
+				},
+				401: function() {
+					$('#deleteBuildingModal').modal('hide');
+					//location.reload();
 				}
 			  }
 		});
-	})
+		location.reload();
+	});
 
 	$(".openResolveProblemModal").click(function () {
 		let reportId = $(this).attr("data-report-id");

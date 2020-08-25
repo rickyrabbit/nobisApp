@@ -3,43 +3,110 @@ class HTTPError extends Error {
       super(message);
       this.name = "HTTPError";
       this.statusCode = statusCode;
+      this.reason = '';
+    }
+    setReason(reason){
+        this.reason = reason;
     }
 }
 
 
-class DBError extends Error {
-    constructor(message,type) {
-      super(message);
-      this.name = "DBError";
-      this.type = type;
+class BadRequestError extends HTTPError {
+    constructor() {
+        super("Request has invalid syntax", 400);
+        this.name = 'BadRequestError';
     }
 }
 
-// HTTP errors
-const badRequest = new HTTPError("Request has invalid syntax", 400);
-const unAuthenticated = new HTTPError("Client is not authenticated", 401);
-const forbiddenAccess = new HTTPError("Client doesn't have rights to access the content", 403);
-const notFound = new HTTPError("Resource not found", 404);
+class UnAuthenticatedError extends HTTPError {
+    constructor() {
+        super("Client is not authenticated", 401);
+        this.name = 'UnAuthenticatedError';
+    }
+}
 
-const internalServerError = new HTTPError("Internal Server Error", 500);
-const badGateway = new HTTPError("Bad Gateway", 502);
+class ForbiddenAccessError extends HTTPError {
+    constructor() {
+        super("Client doesn't have rights to access the content", 403);
+        this.name = 'ForbiddenAccessError';
+    }
+}
+
+class NotFoundError extends HTTPError {
+    constructor() {
+        super("Resource not found", 404);
+        this.name = 'NotFoundError';
+    }
+}
+
+class InternalServerError extends HTTPError {
+    constructor() {
+        super("Internal Server Error", 500);
+        this.name = 'InternalServerError';
+    }
+}
+
+class BadGatewayError extends HTTPError {
+    constructor() {
+        super("Bad Gateway", 502);
+        this.name = 'BadGatewayError';
+    }
+}
+
 
 
 // Database errors
-const queryError = new DBError("Query syntax is incorrect", "DBERROR_QUERY");
-const insertError = new DBError("Insert went wrong", "DBERROR_INSERT");
-const updateError = new DBError("Update went wrong", "DBERROR_UPDATE");
+
+class DBError extends Error {
+    constructor(message) {
+      super(message);
+      this.name = "DBError";
+      this.reason = '';
+    }
+    setReason(reason){
+        this.reason = reason;
+    }
+
+}
+
+class QueryError extends DBError {
+    constructor(){
+        super("Query syntax is incorrect");
+        this.name = 'QueryError';
+    }
+}    
+class InsertError extends DBError {
+    constructor(){
+        super("Insert went wrong");
+        this.name = 'InsertError';
+    }
+}    
+class UpdateError extends DBError {
+    constructor(){
+        super("Update went wrong");
+        this.name = 'UpdateError';
+    }
+}    
+class DeleteError extends DBError {
+    constructor(){
+        super("Delete went wrong");
+        this.name = 'DeleteError';
+    }
+}    
 
 
 
 module.exports = { 
-    badRequest,
-    unAuthenticated,
-    forbiddenAccess,
-    notFound,
-    internalServerError,
-    badGateway,
-    queryError,
-    insertError,
-    updateError
+    HTTPError,
+    DBError,
+    BadRequestError,
+    UnAuthenticatedError,
+    ForbiddenAccessError,
+    NotFoundError,
+    InternalServerError,
+    BadGatewayError,
+    QueryError,
+    InsertError,
+    UpdateError,
+    DeleteError
 }

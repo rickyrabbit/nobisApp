@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const db = require("./config");
+const { UpdateError, DeleteError, InsertError, QueryError } = require('../routes/errors');
 
 const getPlaceNameByUUID = async (uuid) => {
     try {
@@ -7,6 +8,7 @@ const getPlaceNameByUUID = async (uuid) => {
         return query.rows[0].name;
     } catch(e) {
         console.error(e.stack);
+        throw new QueryError();
     }
 }
 
@@ -16,6 +18,7 @@ const getPlaceByUUID = async (uuid) => {
         return query.rows[0];
     } catch(e) {
         console.error(e.stack);
+        throw new QueryError();
     }
 }
 
@@ -26,6 +29,7 @@ const listPlacesByReferentId = async (refId) => {
         return query.rows;
     } catch(e) {
         console.error(e.stack);
+        throw new QueryError();
     }
 }
 
@@ -39,6 +43,7 @@ const createPlace = async (name, lon, lat, capacity, visitTime, buildingId, cate
             return true;
     } catch(e) {
         console.error(e.stack);
+        throw new InsertError();
     }
 }
 
@@ -50,6 +55,7 @@ const updatePlace = async (name, lon, lat, capacity, visitTime, buildingId, cate
             return true;
     } catch(e) {
         console.error(e.stack);
+        throw new UpdateError();
     }
 }
 
@@ -65,6 +71,7 @@ const deletePlace = async (uuid) => {
             return true;
     } catch(e) {
         console.error(e.stack);
+        throw new DeleteError();
     }
 }
 
@@ -74,6 +81,7 @@ const enablePlace = async (uuid) => {
         return query;
     } catch(e) {
         console.error(e.stack);
+        throw new UpdateError();
     }
 }
 
@@ -83,6 +91,7 @@ const isEnabled = async (uuid) => {
         return query.rows[0].enable;
     } catch(e) {
         console.error(e.stack);
+        throw new QueryError();
     }
 }
 
@@ -92,6 +101,7 @@ const disablePlace = async (uuid) => {
         return query;
     } catch(e) {
         console.error(e.stack);
+        throw new UpdateError();
     }
 }
 
@@ -106,6 +116,7 @@ const checkIn = async (personUUID, placeUUID) => {
             return true;
     } catch(e) {
         console.error(e.stack);
+        throw new InsertError();
     }
 }
 
@@ -121,6 +132,7 @@ const checkOut = async (personUUID, placeUUID) => {
             
     } catch(e) {
         console.error(e.stack);
+        throw new InsertError();
     }
 }
 
@@ -133,6 +145,7 @@ const createFeedback = async (personUUID, placeUUID, feedback) => {
             return true;
     } catch(e) {
         console.error(e.stack);
+        throw new InsertError();
     }
 }
 

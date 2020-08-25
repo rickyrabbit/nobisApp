@@ -1,465 +1,472 @@
 <!-- TOAST ABILITAZIONE LUOGHI -->
 
-  <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-header">
-      <strong class="mr-auto">Preferenza Aggiornata</strong>
-      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="toast-body">
-      Il luogo è stato <span></span>.
-    </div>
+<div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-header">
+    <strong class="mr-auto">Preferenza Aggiornata</strong>
+    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
+  <div class="toast-body">
+    Il luogo è stato <span></span>.
+  </div>
+</div>
 
-  <!--MODAL MODIFICA LUOGO-->
+<!--MODAL MODIFICA LUOGO-->
 
-  <div id="edit-place" class="modal fade bd-example-modal-lg" id="exampleModalCenter" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Modifica Luogo</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="row">
-              <div class="col">
-                <label for="place-name">Nome</label>
-                <input type="text" class="form-control" id="place-name" name="place-name" placeholder="Nome">
-              </div>
-              <div class="col">
-                <label for="place-building">Edificio</label>
-                <select class="form-control" id="place-building" name="place-building">
-                  {{#each buildings}}
-                    <option building-id="{{id}}">{{name}}</option>
-                  {{/each}}
-                </select>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <label for="place-latitude">Latitudine</label>
-                <input type="text" class="form-control" id="place-latitude" name="place-latitude"
-                  placeholder="Latitudine">
-              </div>
-              <div class="col">
-                <label for="place-latitude">Longitudine</label>
-                <input type="text" class="form-control" id="place-longitude" name="place-longitude"
-                  placeholder="Longitudine">
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <div id="place-modal-map"></div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <label for="place-capacity">Capacità</label>
-                <input type="text" class="form-control" id="place-capacity" name="place-capacity"
-                  placeholder="Capacità">
-              </div>
-              <div class="col">
-                <label for="place-visit-time">Tempo Medio Visita</label>
-                <input type="text" class="form-control" id="place-visit-time" name="place-visit-time" placeholder="Minuti">
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <label for="place-category">Categoria</label>
-                <select class="form-control" id="place-category" name="place-category">
-                  {{#each categories}}
-                    <option category-id="{{id}}">{{name}}</option>
-                  {{/each}}
-                </select>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="delete-place" class="btn btn-danger">Elimina Luogo</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
-          <button type="button" id="save-edit-place" class="btn btn-primary">Salva</button>
-        </div>
+<div id="edit-place" class="modal fade bd-example-modal-lg" id="exampleModalCenter" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modifica Luogo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    </div>
-  </div>
-
-  <!--MODAL CREA LUOGO-->
-
-  <div id="create-place" class="modal fade bd-example-modal-lg" id="exampleModalCenter" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Crea un nuovo Luogo</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="row">
-              <div class="col">
-                <label for="place-name-create">Nome</label>
-                <input type="text" class="form-control" id="place-name-create" name="place-name-create" placeholder="Nome">
-              </div>
-              <div class="col">
-                <label for="place-building">Edificio</label>
-                <select class="form-control" id="place-building-create" name="place-building-create">
-                  <option building-id="-">-</option>
-                  {{#each buildings}}
-                    <option building-id="{{id}}">{{name}}</option>
-                  {{/each}}
-                </select>
-              </div>
+      <div class="modal-body">
+        <form>
+          <div class="row">
+            <div class="col">
+              <label for="place-name">Nome</label>
+              <input type="text" class="form-control" id="place-name" name="place-name" placeholder="Nome">
             </div>
-            <div class="row">
-              <div class="col">
-                <label for="place-latitude-create">Latitudine</label>
-                <input type="text" class="form-control" id="place-latitude-create" name="place-latitude-create"
-                  placeholder="Latitudine">
-              </div>
-              <div class="col">
-                <label for="place-longitude-create">Longitudine</label>
-                <input type="text" class="form-control" id="place-longitude-create" name="place-longitude-create"
-                  placeholder="Longitudine">
-              </div>
+            <div class="col">
+              <label for="place-building">Edificio</label>
+              <select class="form-control" id="place-building" name="place-building">
+                {{#each buildings}}
+                <option building-id="{{id}}">{{name}}</option>
+                {{/each}}
+              </select>
             </div>
-            <div class="row">
-              <div class="col">
-                <div id="place-modal-map-create"></div>
-              </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="place-latitude">Latitudine</label>
+              <input type="text" class="form-control" id="place-latitude" name="place-latitude"
+                placeholder="Latitudine">
             </div>
-            <div class="row">
-              <div class="col">
-                <label for="place-capacity-create">Capacità</label>
-                <input type="text" class="form-control" id="place-capacity-create" name="place-capacity-create"
-                  placeholder="Capacità">
-              </div>
-              <div class="col">
-                <label for="place-visit-time-create">Tempo Medio Visita</label>
-                <input type="text" class="form-control" id="place-visit-time-create" name="place-visit-time-create" placeholder="Minuti">
-              </div>
+            <div class="col">
+              <label for="place-latitude">Longitudine</label>
+              <input type="text" class="form-control" id="place-longitude" name="place-longitude"
+                placeholder="Longitudine">
             </div>
-            <div class="row">
-              <div class="col">
-                <label for="place-category-create">Categoria</label>
-                <select class="form-control" id="place-category-create" name="place-category-create">
-                  <option category-id="-">-</option>
-                  {{#each categories}}
-                    <option category-id="{{id}}">{{name}}</option>
-                  {{/each}}
-                </select>
-              </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div id="place-modal-map"></div>
             </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
-          <button type="button" id="create-place-button" class="btn btn-success">Crea Luogo</button>
-        </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="place-capacity">Capacità</label>
+              <input type="text" class="form-control" id="place-capacity" name="place-capacity" placeholder="Capacità">
+            </div>
+            <div class="col">
+              <label for="place-visit-time">Tempo Medio Visita</label>
+              <input type="text" class="form-control" id="place-visit-time" name="place-visit-time"
+                placeholder="Minuti">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="place-category">Categoria</label>
+              <select class="form-control" id="place-category" name="place-category">
+                {{#each categories}}
+                <option category-id="{{id}}">{{name}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="delete-place" class="btn btn-danger">Elimina Luogo</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+        <button type="button" id="save-edit-place" class="btn btn-primary">Salva</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!--MODAL CREA EDIFICIO-->
+<!--MODAL CREA LUOGO-->
 
-  <div id="create-building" class="modal fade bd-example-modal-lg" id="exampleModalCenter" tabindex="-1" role="dialog"
-    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Crea un nuovo Edificio</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="row">
-              <div class="col">
-                <label for="building-name-create">Nome</label>
-                <input type="text" class="form-control" id="building-name-create" name="building-name-create" placeholder="Nome">
-              </div>
-              <div class="col">
-                <label for="building-address-create">Indirizzo</label>
-                <input type="text" class="form-control" id="building-address-create" name="building-address-create"
-                  placeholder="Indirizzo">
-              </div>
+<div id="create-place" class="modal fade bd-example-modal-lg" id="exampleModalCenter" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Crea un nuovo Luogo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row">
+            <div class="col">
+              <label for="place-name-create">Nome</label>
+              <input type="text" class="form-control" id="place-name-create" name="place-name-create"
+                placeholder="Nome">
             </div>
-            <div class="row">
-              <div class="col">
-                <label for="building-number-create">Civico</label>
-                <input type="text" class="form-control" id="building-number-create" name="building-number-create"
-                  placeholder="Civico">
-              </div>
-              <div class="col">
-                <label for="building-province-create"></label>
-                <input type="text" class="form-control" id="building-province-create" name="building-province-create" placeholder="Provincia">
-              </div>
+            <div class="col">
+              <label for="place-building">Edificio</label>
+              <select class="form-control" id="place-building-create" name="place-building-create">
+                <option building-id="-">-</option>
+                {{#each buildings}}
+                <option building-id="{{id}}">{{name}}</option>
+                {{/each}}
+              </select>
             </div>
-            <div class="row">
-              <div class="col">
-                <label for="building-latitude-create">Latitudine</label>
-                <input type="text" class="form-control" id="building-latitude-create" name="plbuildingace-latitude-create"
-                  placeholder="Latitudine">
-              </div>
-              <div class="col">
-                <label for="building-longitude-create">Longitudine</label>
-                <input type="text" class="form-control" id="building-longitude-create" name="building-longitude-create"
-                  placeholder="Longitudine">
-              </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="place-latitude-create">Latitudine</label>
+              <input type="text" class="form-control" id="place-latitude-create" name="place-latitude-create"
+                placeholder="Latitudine">
             </div>
-            <div class="row">
-              <div class="col">
-                <div id="building-modal-map-create"></div>
-              </div>
+            <div class="col">
+              <label for="place-longitude-create">Longitudine</label>
+              <input type="text" class="form-control" id="place-longitude-create" name="place-longitude-create"
+                placeholder="Longitudine">
             </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
-          <button type="button" id="create-building-button" class="btn btn-success">Crea Luogo</button>
-        </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div id="place-modal-map-create"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="place-capacity-create">Capacità</label>
+              <input type="text" class="form-control" id="place-capacity-create" name="place-capacity-create"
+                placeholder="Capacità">
+            </div>
+            <div class="col">
+              <label for="place-visit-time-create">Tempo Medio Visita</label>
+              <input type="text" class="form-control" id="place-visit-time-create" name="place-visit-time-create"
+                placeholder="Minuti">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="place-category-create">Categoria</label>
+              <select class="form-control" id="place-category-create" name="place-category-create">
+                <option category-id="-">-</option>
+                {{#each categories}}
+                <option category-id="{{id}}">{{name}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+        <button type="button" id="create-place-button" class="btn btn-success">Crea Luogo</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Modal ELIMINAZIONE EDIFICIO -->
+<!--MODAL CREA EDIFICIO-->
 
-  <div class="modal fade" id="deleteBuildingModal" data-building-id="" tabindex="-1" role="dialog"
-    aria-labelledby="deleteBuildingModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Eliminazione Edificio</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Sei sicuro di voler eliminare l'edificio "<span id="deleteBuildingName"></span>"? Questa azione è irreversibile ed <strong>eliminerà anche tutti i
-            luoghi associati.</strong>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
-          <button type="button" class="btn btn-danger deleteBuilding">Elimina</button>
-        </div>
+<div id="create-building" class="modal fade bd-example-modal-lg" id="exampleModalCenter" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Crea un nuovo Edificio</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="row">
+            <div class="col">
+              <label for="building-name-create">Nome</label>
+              <input type="text" class="form-control" id="building-name-create" name="building-name-create"
+                placeholder="Nome">
+            </div>
+            <div class="col">
+              <label for="building-address-create">Indirizzo</label>
+              <input type="text" class="form-control" id="building-address-create" name="building-address-create"
+                placeholder="Indirizzo">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="building-number-create">Civico</label>
+              <input type="text" class="form-control" id="building-number-create" name="building-number-create"
+                placeholder="Civico">
+            </div>
+            <div class="col">
+              <label for="building-province-create"></label>
+              <input type="text" class="form-control" id="building-province-create" name="building-province-create"
+                placeholder="Provincia">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="building-latitude-create">Latitudine</label>
+              <input type="text" class="form-control" id="building-latitude-create" name="plbuildingace-latitude-create"
+                placeholder="Latitudine">
+            </div>
+            <div class="col">
+              <label for="building-longitude-create">Longitudine</label>
+              <input type="text" class="form-control" id="building-longitude-create" name="building-longitude-create"
+                placeholder="Longitudine">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div id="building-modal-map-create"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+        <button type="button" id="create-building-button" class="btn btn-success">Crea Luogo</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Modal RISOLVI PROBLEMA -->
+<!-- Modal ELIMINAZIONE EDIFICIO -->
 
-  <div class="modal fade" id="resolveProblemModal" data-report-id="" tabindex="-1" role="dialog"
-    aria-labelledby="resolveProblemModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Risolvi Problema</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          Sei sicuro di voler contrassegnare il problema come risolto?</strong>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
-          <button type="button" id="resolveProblem" class="btn btn-success">Risolvi</button>
-        </div>
+<div class="modal fade" id="deleteBuildingModal" data-building-id="" tabindex="-1" role="dialog"
+  aria-labelledby="deleteBuildingModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Eliminazione Edificio</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Sei sicuro di voler eliminare l'edificio "<span id="deleteBuildingName"></span>"? Questa azione è irreversibile
+        ed <strong>eliminerà anche tutti i
+          luoghi associati.</strong>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+        <button type="button" class="btn btn-danger deleteBuilding">Elimina</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!--LUOGHI-->
+<!-- Modal RISOLVI PROBLEMA -->
 
-  <div class="container">
-
-    <div class="row">
-      <div class="col">
-        <h3><i class="fas fa-map-marked-alt"></i> Luoghi</h3>
+<div class="modal fade" id="resolveProblemModal" data-report-id="" tabindex="-1" role="dialog"
+  aria-labelledby="resolveProblemModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Risolvi Problema</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <p>Questa sezione elenca tutti i luoghi che gestisci e permette la creazione di nuovi luoghi, la modifica o
-          l'eliminazione. Puoi inoltre scaricare i codici QR di check-in e check-out di ogni luogo inserito.</p>
+      <div class="modal-body">
+        Sei sicuro di voler contrassegnare il problema come risolto?</strong>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <table id="luoghi" class="table">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Nome</th>
-              <th scope="col">Edificio</th>
-              <th scope="col">Categoria</th>
-              <th scope="col">Capacità</th>
-              <th scope="col">Visita</th>
-              <th scope="col">Contatore</th>
-              <th scope="col">Pubblico</th>
-              <th scope="col">Codici QR</th>
-              <th scope="col">Modifica</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each places}}
-            <tr place-uuid="{{uuid}}">
-              <!-- TODO: remove id? it is useless because we do not show uuid -->
-              <th scope="row">{{@index}}</th>
-              <td>{{place_name}}</td>
-              <td>{{building_name}}</td>
-              <td>{{category_name}}</td>
-              <td>{{capacity}}</td>
-              <td>{{visit_time}}</td>
-              <td>{{counter}}</td>
-              <td><input class="toggle-auth" type="checkbox" {{#if enable}} checked {{/if}} data-toggle="toggle" data-on="Abilitato"
-                  data-off="Disabilitato" data-size="sm"></td>
-              <td><a href="/place/{{uuid}}/qrcodes"><button type="button" class="btn btn-primary btn-sm">Download</button></a></td>
-              <td><button type="button" class="btn btn-success btn-sm edit-place-button" data-toggle="modal"
-                  data-target="#edit-place">Modifica</button></td>
-            </tr>
-            {{else}}
-                <tr>
-                    <th scope="row">-</th>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-            {{/each}}
-          </tbody>
-        </table>
-        <button id="openCreatePlaceModal" type="button" class="btn btn-success new-place btn-sm">Crea un nuovo
-          Luogo</button>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+        <button type="button" id="resolveProblem" class="btn btn-success">Risolvi</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!--Edifici-->
+<!--LUOGHI-->
 
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <h3><i class="fas fa-building"></i> Edifici</h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <p>Questa sezione elenca tutti gli edifici che gestisci e permette la creazione di nuovi edifici oppure
-          l'eliminazione.</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <table id="buildings" class="table">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Nome</th>
-              <th scope="col">Coordinate</th>
-              <th scope="col">Indirizzo</th>
-              <th scope="col">Civico</th>
-              <th scope="col">Città</th>
-              <th scope="col">Elimina</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each buildings}}
-              <tr building-id="{{id}}">
-                <!-- TODO: remove id? it is useless because we do not show uuid -->
-                <th scope="row">{{@index}}</th>
-                <td>{{name}}</td>
-                <td>({{lon}}, {{lat}})</td>
-                <td>{{address}}</td>
-                <td>{{addr_num}}</td>
-                <td>{{city}}</td>
-                <td><button type="button" class="btn btn-danger btn-sm openDeleteBuildingModal"
-                  data-building-id="{{id}}">Elimina</button></td>
-              </tr>
-              {{else}}
-                  <tr>
-                      <th scope="row">-</th>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>-</td>
-                  </tr>
-              {{/each}}
-          </tbody>
-        </table>
-        <button id="openCreateBuildingModal" type="button" class="btn btn-success new-building btn-sm">Crea un nuovo Edificio</button>
-      </div>
+<div class="container">
+
+  <div class="row">
+    <div class="col">
+      <h3><i class="fas fa-map-marked-alt"></i> Luoghi</h3>
     </div>
   </div>
-
-  <!--Problemi-->
-
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <h3><i class="fas fa-exclamation-circle"></i> Problemi Segnalati</h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <p>Questa sezione elenca i problemi segnalati dagli utenti relativi a codici QR non funzionanti o posizionati in
-          un luogo errato.</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <table id="reports" class="table">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Edificio</th>
-              <th scope="col">Luogo</th>
-              <th scope="col">Descrizione</th>
-              <th scope="col">Email</th>
-              <th scope="col">Risolto</th>
-            </tr>
-          </thead>
-          <tbody>
-
-            {{#each reports}}
-              <tr report-id="{{id}}">
-                <!-- TODO: remove id? it is useless because we do not show uuid -->
-                <th scope="row">{{@index}}</th>
-                <td>{{building_name}}</td>
-                <td>{{place_name}}</td>
-                <td>{{description}}</td>
-                <td>{{email}}</td>
-                <td><button type="button" class="btn btn-success btn-sm openResolveProblemModal"
-                  data-report-id="{{id}}">Risolvi</button></td>
-              </tr>
-              {{else}}
-                  <tr>
-                      <th scope="row">-</th>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>-</td>
-                  </tr>
-              {{/each}}
-          </tbody>
-        </table>
-      </div>
+  <div class="row">
+    <div class="col">
+      <p>Questa sezione elenca tutti i luoghi che gestisci e permette la creazione di nuovi luoghi, la modifica o
+        l'eliminazione. Puoi inoltre scaricare i codici QR di check-in e check-out di ogni luogo inserito.</p>
     </div>
   </div>
-  <script src="../js/ref-dashboard.js"></script>
+  <div class="row">
+    <div class="col">
+      <table id="luoghi" class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Edificio</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Capacità</th>
+            <th scope="col">Visita</th>
+            <th scope="col">Contatore</th>
+            <th scope="col">Pubblico</th>
+            <th scope="col">Codici QR</th>
+            <th scope="col">Modifica</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each places}}
+          <tr place-uuid="{{uuid}}">
+            <!-- TODO: remove id? it is useless because we do not show uuid -->
+            <th scope="row">{{@index}}</th>
+            <td>{{place_name}}</td>
+            <td>{{building_name}}</td>
+            <td>{{category_name}}</td>
+            <td>{{capacity}}</td>
+            <td>{{visit_time}}</td>
+            <td>{{counter}}</td>
+            <td><input class="toggle-auth" type="checkbox" {{#if enable}} checked {{/if}} data-toggle="toggle"
+                data-on="Abilitato" data-off="Disabilitato" data-size="sm"></td>
+            <td><a href="/place/{{uuid}}/qrcodes"><button type="button"
+                  class="btn btn-primary btn-sm">Download</button></a></td>
+            <td><button type="button" class="btn btn-success btn-sm edit-place-button" data-toggle="modal"
+                data-target="#edit-place">Modifica</button></td>
+          </tr>
+          {{else}}
+          <tr>
+            <th scope="row">-</th>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      <button id="openCreatePlaceModal" type="button" class="btn btn-success new-place btn-sm">Crea un nuovo
+        Luogo</button>
+    </div>
+  </div>
+</div>
+
+<!--Edifici-->
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3><i class="fas fa-building"></i> Edifici</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <p>Questa sezione elenca tutti gli edifici che gestisci e permette la creazione di nuovi edifici oppure
+        l'eliminazione.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <table id="buildings" class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Coordinate</th>
+            <th scope="col">Indirizzo</th>
+            <th scope="col">Civico</th>
+            <th scope="col">Città</th>
+            <th scope="col">Elimina</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each buildings}}
+          <tr building-id="{{id}}">
+            <!-- TODO: remove id? it is useless because we do not show uuid -->
+            <th scope="row">{{@index}}</th>
+            <td>{{name}}</td>
+            <td>({{lon}}, {{lat}})</td>
+            <td>{{address}}</td>
+            <td>{{addr_num}}</td>
+            <td>{{city}}</td>
+            <td><button type="button" class="btn btn-danger btn-sm openDeleteBuildingModal"
+                data-building-id="{{id}}">Elimina</button></td>
+          </tr>
+          {{else}}
+          <tr>
+            <th scope="row">-</th>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      <button id="openCreateBuildingModal" type="button" class="btn btn-success new-building btn-sm">Crea un nuovo
+        Edificio</button>
+    </div>
+  </div>
+</div>
+
+<!--Problemi-->
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3><i class="fas fa-exclamation-circle"></i> Problemi Segnalati</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <p>Questa sezione elenca i problemi segnalati dagli utenti relativi a codici QR non funzionanti o posizionati in
+        un luogo errato.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <table id="reports" class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Edificio</th>
+            <th scope="col">Luogo</th>
+            <th scope="col">Descrizione</th>
+            <th scope="col">Email</th>
+            <th scope="col">Risolto</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {{#each reports}}
+          <tr report-id="{{id}}">
+            <!-- TODO: remove id? it is useless because we do not show uuid -->
+            <th scope="row">{{@index}}</th>
+            <td>{{building_name}}</td>
+            <td>{{place_name}}</td>
+            <td>{{description}}</td>
+            <td>{{email}}</td>
+            <td><button type="button" class="btn btn-success btn-sm openResolveProblemModal"
+                data-report-id="{{id}}">Risolvi</button></td>
+          </tr>
+          {{else}}
+          <tr>
+            <th scope="row">-</th>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="../js/ref-dashboard.js"></script>

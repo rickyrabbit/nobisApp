@@ -1,11 +1,13 @@
 const db = require("./config");
+const { QueryError, InsertError, DeleteError } = require("../routes/errors");
 
 const listBuildings = async () => {
     try {
         let query = await db.pool.query("SELECT id, name, address, addr_num, city, ST_Y(geometry) AS lat, ST_X(geometry) AS lon FROM building ORDER BY name;");
         return query.rows;
     } catch(e) {
-
+        console.error(e.stack);
+        throw new QueryError();
     }
 }
 
@@ -15,6 +17,7 @@ const getBuildingNameByPlaceUUID = async (uuid) => {
         return query.rows[0].name;
     } catch(e) {
         console.error(e.stack);
+        throw new QueryError();
     }
 }
 
@@ -24,9 +27,8 @@ const createBuilding = async (name, lon, lat, address, num, province) => {
         if(query)
             return true;
     } catch(e) {
-        //console.error(e.stack);
-        //console.error(e.name);
-        console.error(e.message);
+        console.error(e.stack);
+        throw new InsertError();
     }
 }
 
@@ -39,6 +41,7 @@ const deleteBuilding = async (id) => {
             return true;
     } catch(e) {
         console.error(e.stack);
+        throw new DeleteError();
     }
 }
 
