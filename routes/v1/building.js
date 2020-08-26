@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const JWT = require('jsonwebtoken');
-const { UnAuthenticatedError, InternalServerError, InsertError, DeleteError } = require("../errors");
+const { UnAuthenticatedError, QueryError, InsertError, UpdateError, DeleteError, InternalServerError ,ModuleError, InternalOperationError } = require("../errors");
 
 const db = require("../../db/building-db");
 

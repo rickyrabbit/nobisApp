@@ -7,7 +7,7 @@ const placedb = require("../../db/place-db");
 const categorydb = require("../../db/category-db");
 const buildingdb = require("../../db/building-db");
 const reportdb = require("../../db/report-db");
-const { UnAuthenticatedError, QueryError, InsertError, InternalServerError } = require("../errors");
+const { UnAuthenticatedError, QueryError, InsertError, UpdateError, DeleteError, InternalServerError ,ModuleError, InternalOperationError } = require("../errors");
 
 let wrap = fn => (...args) => fn(...args).catch(args[2]);
 
@@ -28,6 +28,7 @@ router.get('/register', async (req, res) => {
 
 router.get('/dashboard', wrap(async (req, res, next) => {
     try {
+        //throw new JWT.JsonWebTokenError();
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
         let id = JWT.decode(req.cookies.referent_token).id;
         let refenabled = await db.isReferentEnabled(id);
@@ -51,6 +52,7 @@ router.get('/dashboard', wrap(async (req, res, next) => {
                 buildings: buildings,
                 reports: reports
             });
+
         } else {
             let unauth = new UnAuthenticatedError();
             let message2 = "Account non abilitato, aspetta la mail di conferma attivazione.";
@@ -62,10 +64,26 @@ router.get('/dashboard', wrap(async (req, res, next) => {
         }
     } catch (err) {
         console.debug(err);
-        if (err instanceof UpdateError ||err instanceof DeleteError || err instanceof InsertError || err instanceof QueryError ){
+        //console.debug(JSON.stringify(typeof err));
+        /* if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError){
+            // Problems with jwt verify
+            console.log(`problems with jwt token, error: ${err.name}`);
+            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+
+            let unauth = new UnAuthenticatedError();
+            let message = "JWTERROR";
+            //let message = "GotoLogin";
+            unauth.setReason(message);
+            next(unauth);
+        } */
+        if (err instanceof UpdateError || err instanceof DeleteError || err instanceof InsertError || err instanceof QueryError) {
             let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
             next(ise);
-        }else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
+        }
+        if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError){
             // Problems with jwt verify
             console.log(`problems with jwt token, error: ${err.name}`);
             console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
@@ -76,9 +94,10 @@ router.get('/dashboard', wrap(async (req, res, next) => {
             unauth.setReason(message);
             next(unauth);
         }
-            /* res.status(401).redirect('/referent/login');
-            next(err); */
-    
+        console.log(`vediamo la prova ${err instanceof JWT.JsonWebTokenError}`);
+        /* res.status(401).redirect('/referent/login');
+        next(err); */
+
         next(err);
     }
 }));
@@ -95,7 +114,8 @@ router.post('/checkCredentials', wrap(async (req, res, next) => {
                 httpOnly: true,
                 sameSite: true
             });
-            res.status(200).redirect('/referent/dashboard');
+            res.redirect('/referent/dashboard');
+            console.debug('arrivi qui?sdfsdfsdfsdf');
         } else if (login.valid && !login.enable) {
             // login isn't  enabled
             console.log("NOT login.enable");
@@ -117,11 +137,15 @@ router.post('/checkCredentials', wrap(async (req, res, next) => {
             /* 
             res.status(401).redirect(`/referent/login?error=${message}`); */
         }
+        return;
     } catch (err) {
         /* let message = "Credenziali non valide, per favore riprova.";
         res.status(401).redirect(`/referent/login?error=${message}`); */
         if (err instanceof QueryError) {
             let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
             next(ise);
         }
         next(err);
@@ -131,7 +155,7 @@ router.post('/checkCredentials', wrap(async (req, res, next) => {
 router.post('/create', wrap(async (req, res, next) => {
     try {
         // TODO: email già presente?
-        let refCreated = await db.createReferent(req.body.firstname, req.body.lastname, req.body.email, req.body.password); 
+        let refCreated = await db.createReferent(req.body.firstname, req.body.lastname, req.body.email, req.body.password);
         if (refCreated) {
             res.redirect('/referent/login');
         } else {
@@ -144,6 +168,9 @@ router.post('/create', wrap(async (req, res, next) => {
         // createReferent - database query mulfunction
         if (err instanceof InsertError) {
             let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
             next(ise);
         }
         // Internal Server Exception - Referent is not created
@@ -167,10 +194,13 @@ router.post('/:id/enable', wrap(async (req, res, next) => {
         }
     } catch (err) {
         console.debug(err);
-        if (err instanceof UpdateError ||err instanceof DeleteError || err instanceof InsertError || err instanceof QueryError ){
+        if (err instanceof UpdateError || err instanceof DeleteError || err instanceof InsertError || err instanceof QueryError) {
             let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
             next(ise);
-        }else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
+        } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
             console.log(`problems with jwt token, error: ${err.name}`);
             console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
@@ -180,7 +210,7 @@ router.post('/:id/enable', wrap(async (req, res, next) => {
             unauth.setReason(message);
             next(unauth);
         }
-    
+
         next(err);
         /* res.sendStatus(401); */
     }
@@ -201,10 +231,13 @@ router.post('/:id/disable', wrap(async (req, res, next) => {
         }
     } catch (err) {
         console.debug(err);
-        if (err instanceof UpdateError ||err instanceof DeleteError || err instanceof InsertError || err instanceof QueryError ){
+        if (err instanceof UpdateError || err instanceof DeleteError || err instanceof InsertError || err instanceof QueryError) {
             let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
             next(ise);
-        }else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
+        } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
             console.log(`problems with jwt token, error: ${err.name}`);
             console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
@@ -214,7 +247,7 @@ router.post('/:id/disable', wrap(async (req, res, next) => {
             unauth.setReason(message);
             next(unauth);
         }
-    
+
         next(err);
     }/* res.sendStatus(401); */
 }));
@@ -250,29 +283,33 @@ router.use(function (err, req, res, next) {
         console.log(`arriva qui?UnAuthenticatedError`);
         res.clearCookie("referent_token");
         res.status(err.statusCode);
-        if(err.reason == 'REFNOTENABLED'){
+        if (err.reason == 'REFNOTENABLED') {
             let message2 = "Account non abilitato, aspetta la mail di conferma attivazione.";
             res.redirect(`/referent/login?error=${message2}`);
-            return;
         }
-        else if(err.reason == 'JWTERROR'){
+        else if (err.reason == 'JWTERROR') {
+            console.debug('quiiiiiiiiiii');
             res.redirect('/referent/login');
-            return;
         }
-        else if(err.reason == 'WRONGREFCREDENTIALS'){
+        else if (err.reason == 'WRONGREFCREDENTIALS') {
             let message2 = "Credenziali non valide, per favore riprova.";
             res.redirect(`/referent/login?error=${message2}`);
         }
-
+        res.end();
         console.log(`UnAuthenticated Error: error ${err.statusCode}`);
-        return;
+
     }
-    else if(err instanceof InternalServerError) {
+    else if (err instanceof InternalServerError) {
         res.sendStatus(err.statusCode);
         console.log(`arriva qui?InternalServerError`);
         console.log(`Internal server error: error ${err.statusCode}`);
-        if(err.reason == 'REFNOTCREATED'){
+        if (err.reason == 'CREATEREF' || err.reason == 'REFNOTCREATED') {
             res.redirect(`/referent/register`);
+            return;
+        }
+        if (err.reason == 'CHECKREFCREDENTIALS') {
+            let message = "Validazione non riuscita, per favore riprova.";
+            res.redirect(`/referent/login?error=${message}`);
             return;
         }
         return;
