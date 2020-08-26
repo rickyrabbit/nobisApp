@@ -32,6 +32,9 @@ router.get('/panel', wrap(async (req, res) => {
         console.debug(err);
         if (err instanceof UpdateError ||err instanceof DeleteError || err instanceof InsertError || err instanceof QueryError ){
             let ise = new InternalServerError();
+            if(err.reason !== ""){
+                ise.setReason(err.reason);
+            }
             next(ise);
         }else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify

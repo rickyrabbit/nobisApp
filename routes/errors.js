@@ -1,3 +1,5 @@
+
+// HTTP Errors
 class HTTPError extends Error {
     constructor(message,statusCode) {
       super(message);
@@ -92,13 +94,32 @@ class DeleteError extends DBError {
         super("Delete went wrong");
         this.name = 'DeleteError';
     }
-}    
+}   
+
+// Server operations errors
+
+class InternalOperationError extends Error {
+    constructor() {
+        super(`Internal Server Operation Error`);
+        this.name = "InternalOperationError";
+        this.reason = '';
+      }
+      setReason(reason){
+          this.reason = reason;
+      }
+}
+
+class ModuleError extends InternalOperationError {
+    constructor(module) {
+        super();
+        this.name = 'ModuleError';
+        this.module = module;
+    }
+}
 
 
 
 module.exports = { 
-    HTTPError,
-    DBError,
     BadRequestError,
     UnAuthenticatedError,
     ForbiddenAccessError,
@@ -108,5 +129,7 @@ module.exports = {
     QueryError,
     InsertError,
     UpdateError,
-    DeleteError
+    DeleteError,
+    InternalOperationError,
+    ModuleError
 }
