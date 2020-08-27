@@ -1,3 +1,4 @@
+const user = require('./user');
 const admin = require('./admin');
 const building = require('./building');
 const feedback = require('./feedback');
@@ -14,6 +15,7 @@ module.exports = app => {
   });
   */
 
+  app.use('/', user);
   app.use('/admin', admin);
   app.use('/building', building);
   app.use('/feedback', feedback);
@@ -23,11 +25,11 @@ module.exports = app => {
 
   // forse bisogna utilizzare nuovamente router e in index usare app.use(/,./handler.js);
 
-  app.get("/", (req, res) => {
+  /* app.get("/", (req, res) => {
     res.render('user-dashboard', {
       pageTitle: 'Dashboard Utente',
       loadMap: true,
       css: ['user-dashboard']
     });
-  });
+  }); */
 }

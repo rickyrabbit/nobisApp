@@ -9,6 +9,9 @@ QR project in order to track flow of people in public/private places
 
 [Rest API e query](https://docs.google.com/spreadsheets/d/1aP1Zy_fpITg1BmygYzu-MRDhjQ1CS-bWYsDUuMl_zug/edit#gid=0)
 
+[POSTGRES STOREED PROCEDURES con TRANSAZIONI](https://www.enterprisedb.com/postgres-tutorials/10-examples-postgresql-stored-procedures)
+
+
 ### Express
 [start express](https://expressjs.com/it/starter/installing.html)
 
