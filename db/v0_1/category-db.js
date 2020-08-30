@@ -1,5 +1,5 @@
-const db = require("./config");
-const { QueryError } = require("../routes/errors");
+const db = require(`./config`);
+const { QueryError } = require("../../routes/errors");
 
 const listCategories = async () => {
     try {

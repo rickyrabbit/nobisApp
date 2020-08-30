@@ -1,5 +1,5 @@
-const db = require("./config");
-const { InsertError } = require("../routes/errors");
+const db = require(`./config`);
+const { InsertError } = require("../../routes/errors");
 
 const createPerson = async (personUUID) => {
     try {

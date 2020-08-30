@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
-const db = require("../../db/report-db");
+const API_VERSION = process.env.API_VERSION;
+const db = require(`../../db/${API_VERSION}/report-db`);
 
 router.post('/create', async (req, res) => {
     try {

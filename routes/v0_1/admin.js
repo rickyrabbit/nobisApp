@@ -3,8 +3,9 @@ const JWT = require('jsonwebtoken');
 
 const { UnAuthenticatedError, InternalServerError, InsertError, DeleteError, UpdateError, QueryError } = require("../errors");
 
-const db = require("../../db/admin-db");
-const referentdb = require("../../db/referent-db");
+const API_VERSION = process.env.API_VERSION;
+const db = require(`../../db/${API_VERSION}/admin-db`);
+const referentdb = require(`../../db/${API_VERSION}/referent-db`);
 
 let wrap = fn => (...args) => fn(...args).catch(args[2]);
 

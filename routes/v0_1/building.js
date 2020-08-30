@@ -2,7 +2,8 @@ const router = require("express").Router();
 const JWT = require('jsonwebtoken');
 const { UnAuthenticatedError, QueryError, InsertError, UpdateError, DeleteError, InternalServerError ,ModuleError, InternalOperationError } = require("../errors");
 
-const db = require("../../db/building-db");
+const API_VERSION = process.env.API_VERSION;
+const db = require(`../../db/${API_VERSION}/building-db`);
 
 let wrap = fn => (...args) => fn(...args).catch(args[2]);
 

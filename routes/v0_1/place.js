@@ -8,9 +8,10 @@ const { createZip, pdfGraphicalDetails, saveQRImagetoPath, saveQRPDFtoPath } = r
 
 const { UnAuthenticatedError, QueryError, InsertError, UpdateError, DeleteError, InternalServerError ,ModuleError, InternalOperationError } = require("../errors");
 
-const db = require("../../db/place-db");
-const buildingdb = require("../../db/building-db");
-const persondb = require("../../db/person-db");
+const API_VERSION = process.env.API_VERSION;
+const buildingdb = require(`../../db/${API_VERSION}/building-db`);
+const placedb = require(`../../db/${API_VERSION}/place-db`);
+const persondb = require(`../../db/${API_VERSION}/person-db`);
 
 let wrap = fn => (...args) => fn(...args).catch(args[2]);
 
@@ -27,7 +28,7 @@ router.post('/create', wrap(async (req, res, next) => {
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
         let refId = JWT.decode(req.cookies.referent_token).id;
-        let result = await db.createPlace(
+        let result = await placedb.createPlace(
             req.body.placeName,
             req.body.placeLongitude,
             req.body.placeLatitude,
@@ -73,7 +74,7 @@ router.post('/:uuid/update', wrap(async (req, res, next) => {
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
         let placeUUID = req.params.uuid;
-        let result = await db.updatePlace(req.body.placeName, req.body.placeLongitude, req.body.placeLatitude, req.body.placeCapacity, req.body.placeVisitTime, req.body.placeBuilding, req.body.placeCategory, placeUUID);
+        let result = await placedb.updatePlace(req.body.placeName, req.body.placeLongitude, req.body.placeLatitude, req.body.placeCapacity, req.body.placeVisitTime, req.body.placeBuilding, req.body.placeCategory, placeUUID);
         if (result) res.sendStatus(200);
     } catch (err) {
         console.debug(err);
@@ -109,7 +110,7 @@ router.delete('/:uuid', wrap(async (req, res, next) => {
 
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
-        let result = await db.deletePlace(req.params.uuid);
+        let result = await placedb.deletePlace(req.params.uuid);
         if (result) res.sendStatus(200);
     } catch (err) {
         console.debug(err);
@@ -144,7 +145,7 @@ router.post('/:uuid/enable', wrap(async (req, res, next) => {
 
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
-        let result = await db.enablePlace(req.params.uuid);
+        let result = await placedb.enablePlace(req.params.uuid);
         if (result) res.sendStatus(200);
     } catch (err) {
         console.debug(err);
@@ -178,7 +179,7 @@ router.post('/:uuid/disable', wrap(async (req, res, next) => {
 
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
-        let result = await db.disablePlace(req.params.uuid);
+        let result = await placedb.disablePlace(req.params.uuid);
         if (result) res.sendStatus(200);
     } catch (err) {
         console.debug(err);
@@ -213,7 +214,7 @@ router.post('/:uuid/get', wrap(async (req, res, next) => {
 
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
-        let result = await db.getPlaceByUUID(req.params.uuid);
+        let result = await placedb.getPlaceByUUID(req.params.uuid);
         if (result) res.status(200).json(result);
 
     } catch (err) {
@@ -249,7 +250,7 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
 
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
-        let placeName = await db.getPlaceNameByUUID(req.params.uuid);
+        let placeName = await placedb.getPlaceNameByUUID(req.params.uuid);
         let buildingName = await buildingdb.getBuildingNameByPlaceUUID(req.params.uuid);
         const options = { unsafeCleanup: true };
 
@@ -325,7 +326,7 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
 router.get('/check-in', async (req, res) => {
 
     let placeUUID = req.query.placeUUID;
-    let placeName = await db.getPlaceNameByUUID(placeUUID);
+    let placeName = await placedb.getPlaceNameByUUID(placeUUID);
     let buildingName = await buildingdb.getBuildingNameByPlaceUUID(placeUUID);
 
     res.render('check-in', {
@@ -335,13 +336,12 @@ router.get('/check-in', async (req, res) => {
         buildingName: buildingName,
         placeUUID: placeUUID
     });
-
 });
 
 router.get('/check-out', async (req, res) => {
 
     let placeUUID = req.query.placeUUID;
-    let placeName = await db.getPlaceNameByUUID(placeUUID);
+    let placeName = await placedb.getPlaceNameByUUID(placeUUID);
     let buildingName = await buildingdb.getBuildingNameByPlaceUUID(placeUUID);
 
     res.render('check-out', {
@@ -356,7 +356,7 @@ router.get('/check-out', async (req, res) => {
 
 router.post('/:placeUUID/check-in', wrap(async (req, res, next) => {
     try {
-        if (await db.isEnabled(req.params.placeUUID)) {
+        if (await placedb.isEnabled(req.params.placeUUID)) {
             let personUUID;
             if (req.cookies.person_identifier == undefined) {
                 personUUID = uuidv4();
@@ -372,7 +372,7 @@ router.post('/:placeUUID/check-in', wrap(async (req, res, next) => {
                 JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET);
                 personUUID = JWT.decode(req.cookies.person_identifier).uuid;
             }
-            db.checkIn(personUUID, req.params.placeUUID);
+            placedb.checkIn(personUUID, req.params.placeUUID);
 
             res.sendStatus(200);
         } else {
@@ -386,12 +386,12 @@ router.post('/:placeUUID/check-in', wrap(async (req, res, next) => {
 
 router.post('/:placeUUID/check-out', wrap(async (req, res, next) => {
     try {
-        if (await db.isEnabled(req.params.placeUUID)) {
+        if (await placedb.isEnabled(req.params.placeUUID)) {
             let personUUID;
             if (req.cookies.person_identifier != undefined) {
                 JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET);
                 personUUID = JWT.decode(req.cookies.person_identifier).uuid;
-                db.checkOut(personUUID, req.params.placeUUID);
+                placedb.checkOut(personUUID, req.params.placeUUID);
                 res.sendStatus(200);
             } else {
                 res.sendStatus(500);
@@ -406,14 +406,14 @@ router.post('/:placeUUID/check-out', wrap(async (req, res, next) => {
 
 router.post('/:placeUUID/feedback', wrap(async (req, res, next) => {
     try {
-        console.log(await db.isEnabled(req.params.placeUUID))
-        if (await db.isEnabled(req.params.placeUUID)) {
+        console.log(await placedb.isEnabled(req.params.placeUUID))
+        if (await placedb.isEnabled(req.params.placeUUID)) {
             let personUUID;
             if (req.cookies.person_identifier != undefined) {
                 JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET);
                 personUUID = JWT.decode(req.cookies.person_identifier).uuid;
                 console.log(req.body);
-                db.createFeedback(personUUID, req.params.placeUUID, req.body.feedback);
+                placedb.createFeedback(personUUID, req.params.placeUUID, req.body.feedback);
                 res.sendStatus(200);
             } else {
                 res.sendStatus(500);

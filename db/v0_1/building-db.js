@@ -1,5 +1,6 @@
-const db = require("./config");
-const { QueryError, InsertError, DeleteError } = require("../routes/errors");
+const db = require(`./config`);
+
+const { QueryError, InsertError, DeleteError } = require("../../routes/errors");
 
 const listBuildings = async () => {
     try {

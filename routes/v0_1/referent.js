@@ -2,11 +2,13 @@ const router = require("express").Router();
 const JWT = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 
-const db = require("../../db/referent-db");
-const placedb = require("../../db/place-db");
-const categorydb = require("../../db/category-db");
-const buildingdb = require("../../db/building-db");
-const reportdb = require("../../db/report-db");
+const API_VERSION = process.env.API_VERSION;
+const db = require(`../../db/${API_VERSION}/referent-db`);
+const placedb = require(`../../db/${API_VERSION}/place-db`);
+const categorydb = require(`../../db/${API_VERSION}/category-db`);
+const buildingdb = require(`../../db/${API_VERSION}/building-db`);
+const reportdb = require(`../../db/${API_VERSION}/report-db`);
+
 const { UnAuthenticatedError, QueryError, InsertError, UpdateError, DeleteError, InternalServerError ,ModuleError, InternalOperationError } = require("../errors");
 
 let wrap = fn => (...args) => fn(...args).catch(args[2]);

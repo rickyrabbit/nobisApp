@@ -1,6 +1,6 @@
+const db = require(`./config`);
 const { v4: uuidv4 } = require('uuid');
-const db = require("./config");
-const { UpdateError, DeleteError, InsertError, QueryError } = require('../routes/errors');
+const { UpdateError, DeleteError, InsertError, QueryError } = require('../../routes/errors');
 
 const getPlaceNameByUUID = async (uuid) => {
     try {
@@ -125,12 +125,13 @@ const disablePlace = async (uuid) => {
 
 const checkIn = async (personUUID, placeUUID) => {
     try {
-        let now = Date.now()/1000.0;
-        let queryPlace = await db.pool.query("UPDATE place SET counter = counter + 1 WHERE uuid = $1;", [placeUUID]);
-        let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp) VALUES (true, to_timestamp($1)) RETURNING id;", [now]);
-        let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]);
+        //let now = Date.now()/1000.0;
+        let handlecheckIn = await db.pool.query("CALL handlecheckin($1,$2);",[personUUID,placeUUID])
+        /* let queryPlace = await db.pool.query("UPDATE place SET counter = counter + 1 WHERE uuid = $1;", [placeUUID]);
+        let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp, assumption) VALUES (true, to_timestamp($1),$2) RETURNING id;", [now,assumption]);
+        let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]); */
 
-        if(queryPlace && queryLog && queryVisit)
+        if(handlecheckIn)
             return true;
     } catch(e) {
         console.error(e.stack);
@@ -142,14 +143,14 @@ const checkIn = async (personUUID, placeUUID) => {
 
 const checkOut = async (personUUID, placeUUID) => {
     try {
-        let now = Date.now()/1000.0;
-        let queryPlace = await db.pool.query("UPDATE place SET counter = counter - 1 WHERE uuid = $1;", [placeUUID]);
-        let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp) VALUES (false, to_timestamp($1)) RETURNING id;", [now]);
-        let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]);
-
-        if(queryPlace && queryLog && queryVisit)
+        //let now = Date.now()/1000.0;
+        let handlecheckIn = await db.pool.query("CALL handlecheckout($1,$2);",[personUUID,placeUUID])
+        /* let queryPlace = await db.pool.query("UPDATE place SET counter = counter + 1 WHERE uuid = $1;", [placeUUID]);
+        let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp, assumption) VALUES (true, to_timestamp($1),$2) RETURNING id;", [now,assumption]);
+        let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]); */
+        
+        if(handlecheckIn)
             return true;
-            
     } catch(e) {
         console.error(e.stack);
         let ie = new InsertError();

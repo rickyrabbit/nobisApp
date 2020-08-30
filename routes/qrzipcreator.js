@@ -97,7 +97,7 @@ const saveQRImagetoPath = async (dirpath, placeuuid, type) => {
             typeCheck = 'in';
         }
         qrFilePath = `${dirpath}/${placeuuid}-check-${typeCheck}.PNG`;
-        qrLink = `https://nobis.dei.unipd.it/place/check-${typeCheck}?placeUUID=${placeuuid}`;
+        qrLink = `${process.env.APP_DOMAIN}/place/check-${typeCheck}?placeUUID=${placeuuid}`;
 
         let me = new ModuleError();
         try {

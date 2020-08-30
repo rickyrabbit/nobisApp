@@ -27,83 +27,69 @@ let isPointInBounds = (LatLngPoint, LatLngBounds) => {
     return LatLngBounds.contains(LatLngPoint);
 }
 
+const toGeoCoordArray = (geoCoordString) => {
+    const searchTerm = ' ';
+    const indexOfFirst = geoCoordString.indexOf(searchTerm);
+
+    const x = geoCoordString.slice(6, indexOfFirst);
+    const y = geoCoordString.slice(indexOfFirst + 1, -1);
+    
+    return [y,x];
+}
+
 function removeCurrentMapMarkers() {
     [...currentMapMarkers].forEach(element => {
         element.removeFrom(map);
     });
     currentMapMarkers.clear();
 
-    console.log(`bau`);
+    //console.log(`bau`);
     return;
 }
 
-async function showMarkersOnMap(resultsjson) {
-    // read JSON of results
-    let response = await fetch(resultsjson);
-    let objs = await response.json();
-    let places = objs.places;
-    let buildings = objs.buildings;
 
+async function showMarkersOnMap(placesJSONArray) {
+    let places = placesJSONArray;
 
     places.forEach(place => {
-        // finds the building of the current place
-        let placeBuilding = buildings.find(be => {
-            return be.id == place.building;
-        });
-
+       
+        place.geocoord = toGeoCoordArray(place.geocoord);
         // Add the place coordinates to the array of bounds
-        setBoundCoord.add(place.geometry);
+        setBoundCoord.add(place.geocoord);
 
         // Add the place marker to the map
-        let marker = L.marker(place.geometry);
+        let marker = L.marker(place.geocoord);
         currentMapMarkers.add(marker);
-        marker.addTo(map).bindPopup(`<strong>${place.name}</strong> of: ${placeBuilding.name}`);
-
-    });
-
-    buildings.forEach(building => {
-        // Add the place coordinates to the array of bounds
-        setBoundCoord.add(building.geometry);
-
-        // Add the building marker to the map
-        let marker = L.marker(building.geometry);
-        currentMapMarkers.add(marker);
-        marker.addTo(map).bindPopup(`${building.name}`);
-
+        marker.addTo(map).bindPopup(`<strong>${place.pname}</strong> of: ${place.buildingname}`);
 
     });
 
     // Show the map with all the results in it
     map.flyToBounds([...setBoundCoord]);
-
-
 }
 
 
 
-async function zoomOnPlace(resultsjson, placeuuid) {
+async function zoomOnPlace(placesJSONArray, placeuuid) {
     // read JSON of results
-    let response = await fetch(resultsjson);
-    let objs = await response.json();
-    let places = objs.places;
+    let places = placesJSONArray;
 
-    let found = places.find(pl => {
-        return pl.placeuuid == placeuuid;
+    let found = places.find(place => {
+        return place.puuid == placeuuid;
     });
 
-    console.log(`placefound? ${found}`);
+    //console.log(`placefound? ${found}`);
 
     if (found !== undefined) {
-        map.flyTo(found.geometry, mapProperties.placeZooming);
+        map.flyTo(found.geocoord, mapProperties.placeZooming);
     }
 
 
 }
 
-/* async function zoomOnBuilding(resultsjson, buildingid) {
+/* async function zoomOnBuilding(placesJSONArray, buildingid) {
     // read JSON of results
-    let response = await fetch(resultsjson);
-    let objs = await response.json();
+    let places = placesJSONArray;
     let buildings = objs.buildings;
 
 
