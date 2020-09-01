@@ -150,7 +150,7 @@ const saveQRPDFtoPath = (dirpath, filenameNoExtension, pdfGraphicalDetails, chec
                 doc.fontSize(38).text(`CHECK-${typeCheckOperation}`, 72, 320, { align: 'center' });
                 doc.fontSize(28).text(details.PLACENAME, 72, 380, { align: 'center' });
                 doc.fontSize(24).text(details.BUILDINGNAME, 72, 410, { align: 'center' });
-                doc.image(imgPath, 213, 460, { width: 200 });
+                doc.image(imgPath, 206, 460, { width: 200 });
                 doc.fontSize(20).text(helpText, 72, 670, { align: 'center' });
             };
             //doc.on('pageAdded', newPdfPage);
