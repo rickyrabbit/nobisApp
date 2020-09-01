@@ -16,6 +16,15 @@ let initialMarker = L.marker([mapProperties.latitude, mapProperties.longitude]);
 initialMarker.addTo(map).bindPopup('DEI caput mundi.');
 //markerLayer.addLayer(initialMarker);
 
+
+map.on("moveend", function () {
+    if(map.getZoom() > 15) {
+        clearResults();
+        inSurroundings();
+    }
+});
+
+
 let currentMapMarkers = new Set();
 let setBoundCoord = new Set();
 

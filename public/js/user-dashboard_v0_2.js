@@ -28,6 +28,7 @@ async function inSurroundings() {
     
     let response = await fetch(url);
     let places = await response.json();
+    console.log(places);
 
     // populate list
     for (const key in places) {
@@ -219,7 +220,7 @@ function addToList(placeObj, listitemid) {
     ).appendTo(li);
 
     $("<small></small>", {
-        text: `prova prova prova prova`
+        html: computeMaxFeedback(placeObj)
     }
     ).appendTo(li);
 
@@ -234,13 +235,28 @@ function addToList(placeObj, listitemid) {
 
 }
 
+function computeMaxFeedback(placeObj){
+    let low = placeObj.lowfeedback;
+    let medium = placeObj.mediumfeedback;
+    let high = placeObj.highfeedback;
+    if(high > low && high > medium) {
+        return `<strong>${high}</strong> persone hanno segnalato questo luogo come <strong>alta occupazione</strong>`;
+    } else if (medium > low) {
+        return `<strong>${medium}</strong> persone hanno segnalato questo luogo come <strong>media occupazione</strong>`;
+    } else if (medium < low) {
+        return `<strong>${low}</strong> persone hanno segnalato questo luogo come <strong>bassa occupazione</strong>`;
+    } else {
+        return "";
+    }
+}
+
 function showSearchResulsInfo(stringSearched, numResults) {
     let t = `You searched <strong>${stringSearched}</strong>: `;
     $("#search-alert").hide();
     $("#search-alert").removeClass();
     $("#search-alert").addClass("alert");
     if (numResults !== 0) {
-        t = `<strong>${numResults}</strong> results found`;
+        t = `<strong>${numResults}</strong> Risultati`;
         $("#search-alert").addClass("alert-success");
 
     } else {
@@ -258,11 +274,11 @@ function showSurroundingsResulsInfo(numResults) {
     $("#search-alert").removeClass();
     $("#search-alert").addClass("alert");
     if (numResults !== 0) {
-        t = `<strong>${numResults}</strong> results found`;
+        t = `<strong>${numResults}</strong> Risultati`;
         $("#search-alert").addClass("alert-success");
 
     } else {
-        t = t + `Nothing found here`;
+        t = t + `Nessun Risultato`;
         $("#search-alert").addClass("alert-danger");
     }
     $("#search-alert").html(t);
@@ -281,14 +297,12 @@ $(document).ready(function () {
         clearResults();
         let userinput = $("#searchbar-input").val();
         searchByInput(userinput);
-
     });
 
     $("#searchsurr-btn").on("click", function (e) {
         e.preventDefault();
         clearResults();
         inSurroundings();
-
     });
     inSurroundings();
 });
