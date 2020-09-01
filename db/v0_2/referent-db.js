@@ -22,6 +22,21 @@ const checkReferentCredentials = async (email, password) => {
     }
 }
 
+const checkEmailPresence = async (email) => {
+    try {
+        let query = await db.pool.query(
+            "SELECT EXISTS (SELECT FROM referent WHERE email = $1)",
+            [email]
+        );
+        return query.rows[0].exists;
+    } catch(e) {
+        console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason('CHECKEMAILPRESENCE'); 
+        throw qe;
+    }
+}
+
 
 const createReferent = async (firstname, lastname, email, password) => {
     try {
@@ -123,6 +138,7 @@ const getEmailByReferentId = async (id) => {
 
 module.exports = {
     checkReferentCredentials,
+    checkEmailPresence,
     createReferent,
     listNewReferents,
     listOldReferents,

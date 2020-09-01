@@ -24,7 +24,8 @@ router.get('/login', async (req, res) => {
 router.get('/register', async (req, res) => {
     res.render('ref-register', {
         layout: 'access.handlebars',
-        pageTitle: 'Registrazione Referente'
+        pageTitle: 'Registrazione Referente',
+        errorMessage: req.query.error
     });
 });
 
@@ -126,8 +127,6 @@ router.post('/checkCredentials', wrap(async (req, res, next) => {
             let message = "REFNOTENABLED";
             ue.setReason(message);
             next(ue);
-            /* 
-            res.status(401).redirect(`/referent/login?error=${message}`); */
         } else if (!login.valid) {
             // login isn't valid 
             console.log("NOT login.valid");
@@ -136,13 +135,9 @@ router.post('/checkCredentials', wrap(async (req, res, next) => {
             let message = "WRONGREFCREDENTIALS";
             ue.setReason(message);
             next(ue);
-            /* 
-            res.status(401).redirect(`/referent/login?error=${message}`); */
         }
         return;
     } catch (err) {
-        /* let message = "Credenziali non valide, per favore riprova.";
-        res.status(401).redirect(`/referent/login?error=${message}`); */
         if (err instanceof QueryError) {
             let ise = new InternalServerError();
             if (err.reason !== "") {
@@ -156,15 +151,19 @@ router.post('/checkCredentials', wrap(async (req, res, next) => {
 
 router.post('/create', wrap(async (req, res, next) => {
     try {
-        // TODO: email già presente?
-        let refCreated = await db.createReferent(req.body.firstname, req.body.lastname, req.body.email, req.body.password);
-        if (refCreated) {
-            res.redirect('/referent/login');
+        let emailPresent = await db.checkEmailPresence(req.body.email);
+        if(!emailPresent){
+            if (await db.createReferent(req.body.firstname, req.body.lastname, req.body.email, req.body.password)) {
+                res.redirect('/referent/login');
+            } else {
+                let ise = new InternalServerError();
+                ise.setReason("REFNOTCREATED");
+                throw ise;
+            }
         } else {
-            let ise = new InternalServerError();
-            ise.setReason("REFNOTCREATED");
-            throw ise;
-            //res.status(500).redirect('/referent/register');
+            let ie = new InsertError();
+            ie.setReason("REFALREADYEXISTING");
+            throw ie;
         }
     } catch (err) {
         // createReferent - database query mulfunction
@@ -177,7 +176,6 @@ router.post('/create', wrap(async (req, res, next) => {
         }
         // Internal Server Exception - Referent is not created
         next(err);
-        //res.status(500).redirect('/referent/register');
     }
 }));
 
@@ -302,11 +300,16 @@ router.use(function (err, req, res, next) {
 
     }
     else if (err instanceof InternalServerError) {
-        res.sendStatus(err.statusCode);
+        res.status(err.statusCode);
         console.log(`arriva qui?InternalServerError`);
         console.log(`Internal server error: error ${err.statusCode}`);
         if (err.reason == 'CREATEREF' || err.reason == 'REFNOTCREATED') {
             res.redirect(`/referent/register`);
+            return;
+        }
+        if (err.reason == 'REFALREADYEXISTING') {
+            let message = "Email già presente, se non ricordi la password ripristinala alla pagina di login.";
+            res.redirect(`/referent/register?error=${message}`);
             return;
         }
         if (err.reason == 'CHECKREFCREDENTIALS') {
