@@ -6,15 +6,18 @@ set assumption = false
 where assumption ISNULL;
 
 */
-CREATE FUNCTION public.findplacesinbox(IN xmin numeric, IN ymin numeric, IN xmax numeric, IN ymax numeric) RETURNS TABLE(puuid uuid,
-                                                                                                                         pname text,buildingname text, category text,geocoord text,occ decimal) AS $$
+CREATE FUNCTION public.findplacesinbox(IN xmin numeric, IN ymin numeric, IN xmax numeric, IN ymax numeric) RETURNS TABLE(puuid uuid, pname text,buildingname text, category text,geocoord text,occ decimal, highFeedback bigint, mediumFeedback bigint, lowFeedback bigint) AS $$
 
 SELECT place.uuid AS uuid,
 place.name,
 building.name AS building,
 category.name AS category,
 st_astext(place.geometry) AS geocoord,
-TRUNC((place.counter::decimal(3) / place.capacity),2) AS occ FROM place
+TRUNC((place.counter::decimal(3) / place.capacity),2) AS occ,
+getfeedbackbyplace(place.uuid, 3) AS highFeedback,
+getfeedbackbyplace(place.uuid, 2) AS mediumFeedback,
+getfeedbackbyplace(place.uuid, 1) AS lowFeedback
+FROM place
 LEFT JOIN building
 ON place.building_id = building.id
 LEFT JOIN have
@@ -24,7 +27,19 @@ ON have.category_id = category.id
 WHERE st_intersects(st_makeenvelope(xmin,ymin,xmax,ymax,4326), place.geometry)
 ORDER BY occ DESC;
 
-	$$ LANGUAGE SQL VOLATILE; -- END FUNCTION
+$$ LANGUAGE SQL VOLATILE; -- END FUNCTION
+
+
+CREATE FUNCTION public.getfeedbackbyplace(IN placeuuid uuid, IN rating numeric) RETURNS TABLE(feedback bigint) AS $$
+
+SELECT COUNT(*) FROM visit
+LEFT JOIN log
+ON log.id = visit.log_id
+LEFT JOIN feedback
+ON feedback.log_id = log.id
+WHERE place_uuid = placeuuid AND log.timestamp >= NOW() - interval '2 hours' AND feedback.rating = feedback;
+
+$$ LANGUAGE SQL VOLATILE; -- END FUNCTION
 
 
 CREATE FUNCTION public.findPersonlastDetection(IN person_uuid_q uuid) RETURNS TABLE(place_uuid uuid,
