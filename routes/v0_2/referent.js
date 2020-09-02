@@ -274,6 +274,11 @@ router.post('/create', wrap(async (req, res, next) => {
         let emailPresent = await db.checkEmailPresence(req.body.email);
         if(!emailPresent){
             if (await db.createReferent(req.body.firstname, req.body.lastname, req.body.email, req.body.password)) {
+                sendMail(
+                    ["mattia.avanzi.1@studenti.unipd.it", "riccardo.coniglio@studenti.unipd.it"],
+                    "Nuovo Referente da Abilitare",
+                    "Abilitalo al seguente link nobis.dei.unipd.it/admin/login"
+                );
                 res.redirect('/referent/login');
             } else {
                 let ise = new InternalServerError();
@@ -308,7 +313,7 @@ router.post('/:id/enable', wrap(async (req, res, next) => {
             sendMail(
                 email,
                 "Referente Abilitato",
-                "Il tuo account da referente è stato abilitato. Puoi ora creare luoghi e ottenere i codici QR per il check-in e check-out."
+                "Il tuo account da referente è stato abilitato. Puoi ora creare luoghi e ottenere i codici QR per il check-in e check-out. nobis.dei.unipd.it/referent/login"
             );
             res.sendStatus(200);
         }
@@ -360,7 +365,6 @@ router.post('/:id/disable', wrap(async (req, res, next) => {
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
             console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
 
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
