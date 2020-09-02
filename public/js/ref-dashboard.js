@@ -115,41 +115,46 @@ $(document).ready(function () {
 
 	$("#save-edit-place").click(function() {
 
-		let placeUUID = $("#edit-place").attr("place-uuid");
+		if ($("#edit-place-form")[0].checkValidity()) {
+			let placeUUID = $("#edit-place").attr("place-uuid");
 
-		let tds = $(`#luoghi tr[place-uuid='${placeUUID}']`).children();
+			let tds = $(`#luoghi tr[place-uuid='${placeUUID}']`).children();
 
-		let placeName = $("#place-name").val();
-		let placeBuilding = $("#place-building option:selected").attr('building-id');
-		let placeLatitude = $("#place-latitude").val();
-		let placeLongitude = $("#place-longitude").val();
-		let placeCapacity = $("#place-capacity").val();
-		let placeVisitTime = $("#place-visit-time").val();
-		let placeCategory = $("#place-category option:selected").attr('category-id');
+			let placeName = $("#place-name").val();
+			let placeBuilding = $("#place-building option:selected").attr('building-id');
+			let placeLatitude = $("#place-latitude").val();
+			let placeLongitude = $("#place-longitude").val();
+			let placeCapacity = $("#place-capacity").val();
+			let placeVisitTime = $("#place-visit-time").val();
+			let placeCategory = $("#place-category option:selected").attr('category-id');
 
-		$.ajax({
-			url: `/place/${placeUUID}/update`,
-			method: "POST",
-			data:{
-				placeName: placeName,
-				placeBuilding: placeBuilding,
-				placeLatitude: placeLatitude,
-				placeLongitude: placeLongitude,
-				placeCapacity: placeCapacity,
-				placeVisitTime: placeVisitTime,
-				placeCategory: placeCategory
-			},
-			statusCode: {
-				200: function() {
-					$('#edit-place').modal('hide');
-					tds[1].innerHTML = placeName;
-					tds[2].innerHTML = $(`#place-building option[building-id='${placeBuilding}']`).text();
-					tds[3].innerHTML = $(`#place-category option[category-id='${placeCategory}']`).text();
-					tds[4].innerHTML = placeCapacity;
-					tds[5].innerHTML = placeVisitTime;
+			$.ajax({
+				url: `/place/${placeUUID}/update`,
+				method: "POST",
+				data:{
+					placeName: placeName,
+					placeBuilding: placeBuilding,
+					placeLatitude: placeLatitude,
+					placeLongitude: placeLongitude,
+					placeCapacity: placeCapacity,
+					placeVisitTime: placeVisitTime,
+					placeCategory: placeCategory
+				},
+				statusCode: {
+					200: function() {
+						$('#edit-place').modal('hide');
+						tds[1].innerHTML = placeName;
+						tds[2].innerHTML = $(`#place-building option[building-id='${placeBuilding}']`).text();
+						tds[3].innerHTML = $(`#place-category option[category-id='${placeCategory}']`).text();
+						tds[4].innerHTML = placeCapacity;
+						tds[5].innerHTML = placeVisitTime;
+					}
 				}
-			  }
-		});
+			});
+		} else {
+			$("#edit-place-error").slideDown(500);
+			setTimeout(function() {$("#edit-place-error").slideUp(500)}, 3000)
+		}
 
 	})
 
@@ -189,64 +194,76 @@ $(document).ready(function () {
 	})
 
 	$("#create-place-button").click(function() {
-		//$("#create-place-form")[0].checkValidity();
-		let placeName = $("#place-name-create").val();
-		let placeBuilding = $("#place-building-create option:selected").attr('building-id');
-		let placeLatitude = $("#place-latitude-create").val();
-		let placeLongitude = $("#place-longitude-create").val();
-		let placeCapacity = $("#place-capacity-create").val();
-		let placeVisitTime = $("#place-visit-time-create").val();
-		let placeCategory = $("#place-category-create option:selected").attr('category-id');
-		$.ajax({
-			url: `/place/create`,
-			method: "POST",
-			data:{
-				placeName: placeName,
-				placeBuilding: placeBuilding,
-				placeLatitude: placeLatitude,
-				placeLongitude: placeLongitude,
-				placeCapacity: placeCapacity,
-				placeVisitTime: placeVisitTime,
-				placeCategory: placeCategory
-			},
-			statusCode: {
-				200: function() {
-					$('#create-place').modal('hide');
-					location.reload();
+		console.log(document.getElementById("create-place-form").checkValidity());
+		if (document.getElementById("create-place-form").checkValidity()) {
+			let placeName = $("#place-name-create").val();
+			let placeBuilding = $("#place-building-create option:selected").attr('building-id');
+			let placeLatitude = $("#place-latitude-create").val();
+			let placeLongitude = $("#place-longitude-create").val();
+			let placeCapacity = $("#place-capacity-create").val();
+			let placeVisitTime = $("#place-visit-time-create").val();
+			let placeCategory = $("#place-category-create option:selected").attr('category-id');
+			$.ajax({
+				url: `/place/create`,
+				method: "POST",
+				data:{
+					placeName: placeName,
+					placeBuilding: placeBuilding,
+					placeLatitude: placeLatitude,
+					placeLongitude: placeLongitude,
+					placeCapacity: placeCapacity,
+					placeVisitTime: placeVisitTime,
+					placeCategory: placeCategory
+				},
+				statusCode: {
+					200: function() {
+						$('#create-place').modal('hide');
+						location.reload();
+					}
 				}
-			  }
-		});
+			});
+			
+		} else {
+			$("#create-place-error").slideDown(500);
+			setTimeout(function() {$("#create-place-error").slideUp(500)}, 3000);
+		}
 	})
 
 	$("#create-building-button").click(function() {
-		let buildingName = $("#building-name-create").val();
-		let buildingLatitude = $("#building-latitude-create").val();
-		let buildingLongitude = $("#building-longitude-create").val();
-		let buildingAddress = $("#building-address-create").val();
-		let buildingNumber = $("#building-number-create").val();
-		let buildingProvince = $("#building-province-create").val();
-		$.ajax({
-			url: `/building/create`,
-			method: "POST",
-			data:{
-				buildingName: buildingName,
-				buildingLatitude: buildingLatitude,
-				buildingLongitude: buildingLongitude,
-				buildingAddress: buildingAddress,
-				buildingNumber: buildingNumber,
-				buildingProvince: buildingProvince
-			},
-			statusCode: {
-				200: function() {
-					$('#create-building').modal('hide');
-					location.reload();
+		if ($("#create-building-form")[0].checkValidity()) {
+		
+			let buildingName = $("#building-name-create").val();
+			let buildingLatitude = $("#building-latitude-create").val();
+			let buildingLongitude = $("#building-longitude-create").val();
+			let buildingAddress = $("#building-address-create").val();
+			let buildingNumber = $("#building-number-create").val();
+			let buildingProvince = $("#building-province-create").val();
+			$.ajax({
+				url: `/building/create`,
+				method: "POST",
+				data:{
+					buildingName: buildingName,
+					buildingLatitude: buildingLatitude,
+					buildingLongitude: buildingLongitude,
+					buildingAddress: buildingAddress,
+					buildingNumber: buildingNumber,
+					buildingProvince: buildingProvince
 				},
-				500: function() {
-					alert('Building creation didn\'t go as planned. Try again');
+				statusCode: {
+					200: function() {
+						$('#create-building').modal('hide');
+						location.reload();
+					},
+					500: function() {
+						alert('Building creation didn\'t go as planned. Try again');
 
+					}
 				}
-			}
-		});
+			});
+		} else {
+			$("#create-building-error").slideDown(500);
+			setTimeout(function() {$("#create-building-error").slideUp(500)}, 3000);
+		}
 	})
 
 	$(".deleteBuilding").click(function () {

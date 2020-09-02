@@ -24,8 +24,11 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <div id="edit-place-error" class="alert alert-danger" role="alert">
+        Tutti i campi sono obbligatori.
+      </div>
       <div class="modal-body">
-        <form>
+        <form id="edit-place-form">
           <div class="row">
             <div class="col">
               <label for="place-name">Nome</label>
@@ -33,7 +36,7 @@
             </div>
             <div class="col">
               <label for="place-building">Edificio</label>
-              <select class="form-control" id="place-building" name="place-building">
+              <select class="form-control" id="place-building" name="place-building" required>
                 {{#each buildings}}
                 <option building-id="{{id}}">{{name}}</option>
                 {{/each}}
@@ -43,12 +46,12 @@
           <div class="row">
             <div class="col">
               <label for="place-latitude">Latitudine</label>
-              <input type="number" class="form-control" id="place-latitude" name="place-latitude"
+              <input type="text" class="form-control" disabled id="place-latitude" name="place-latitude"
                 placeholder="Latitudine" required>
             </div>
             <div class="col">
               <label for="place-latitude">Longitudine</label>
-              <input type="number" class="form-control" id="place-longitude" name="place-longitude"
+              <input type="text" class="form-control" disabled id="place-longitude" name="place-longitude"
                 placeholder="Longitudine" required>
             </div>
           </div>
@@ -60,18 +63,18 @@
           <div class="row">
             <div class="col">
               <label for="place-capacity">Capacità</label>
-              <input type="text" class="form-control" id="place-capacity" name="place-capacity" placeholder="Capacità">
+              <input type="number" class="form-control" id="place-capacity" name="place-capacity" placeholder="Capacità" required>
             </div>
             <div class="col">
               <label for="place-visit-time">Tempo Medio Visita</label>
-              <input type="text" class="form-control" id="place-visit-time" name="place-visit-time"
-                placeholder="Minuti">
+              <input type="number" class="form-control" id="place-visit-time" name="place-visit-time"
+                placeholder="Minuti" required>
             </div>
           </div>
           <div class="row">
             <div class="col">
               <label for="place-category">Categoria</label>
-              <select class="form-control" id="place-category" name="place-category">
+              <select class="form-control" id="place-category" name="place-category" required>
                 {{#each categories}}
                 <option category-id="{{id}}">{{name}}</option>
                 {{/each}}
@@ -101,6 +104,9 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <div id="create-place-error" class="alert alert-danger" role="alert">
+        Tutti i campi sono obbligatori.
+      </div>
       <div class="modal-body">
         <form id="create-place-form">
           <div class="row">
@@ -111,10 +117,10 @@
             </div>
             <div class="col">
               <label for="place-building">Edificio</label>
-              <select class="form-control" id="place-building-create" name="place-building-create">
-                <option building-id="-">-</option>
+              <select class="form-control" id="place-building-create" name="place-building-create" required>
+                <option building-id="-" value="">-</option>
                 {{#each buildings}}
-                <option building-id="{{id}}">{{name}}</option>
+                <option building-id="{{id}}" value="{{id}}">{{name}}</option>
                 {{/each}}
               </select>
             </div>
@@ -122,39 +128,40 @@
           <div class="row">
             <div class="col">
               <label for="place-latitude-create">Latitudine</label>
-              <input type="number" class="form-control" id="place-latitude-create" name="place-latitude-create"
+              <input type="text" class="form-control" disabled id="place-latitude-create" name="place-latitude-create"
                 placeholder="Latitudine" required>
             </div>
             <div class="col">
               <label for="place-longitude-create">Longitudine</label>
-              <input type="number" class="form-control" id="place-longitude-create" name="place-longitude-create"
+              <input type="text" class="form-control" disabled id="place-longitude-create" name="place-longitude-create"
                 placeholder="Longitudine" required>
             </div>
           </div>
           <div class="row">
             <div class="col">
               <div id="place-modal-map-create"></div>
+              <small class="text-center">Seleziona sulla mappa la posizione del Luogo.</small>
             </div>
           </div>
           <div class="row">
             <div class="col">
               <label for="place-capacity-create">Capacità</label>
-              <input type="text" class="form-control" id="place-capacity-create" name="place-capacity-create"
-                placeholder="Capacità">
+              <input type="number" class="form-control" id="place-capacity-create" name="place-capacity-create"
+                placeholder="Capacità" required>
             </div>
             <div class="col">
               <label for="place-visit-time-create">Tempo Medio Visita</label>
-              <input type="text" class="form-control" id="place-visit-time-create" name="place-visit-time-create"
-                placeholder="Minuti">
+              <input type="number" class="form-control" id="place-visit-time-create" name="place-visit-time-create"
+                placeholder="Minuti" required>
             </div>
           </div>
           <div class="row">
             <div class="col">
               <label for="place-category-create">Categoria</label>
-              <select class="form-control" id="place-category-create" name="place-category-create">
-                <option category-id="-">-</option>
+              <select class="form-control" id="place-category-create" name="place-category-create" required>
+                <option category-id="" value="">-</option>
                 {{#each categories}}
-                <option category-id="{{id}}">{{name}}</option>
+                <option category-id="{{id}}" value="{{id}}">{{name}}</option>
                 {{/each}}
               </select>
             </div>
@@ -181,54 +188,58 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <div id="create-building-error" class="alert alert-danger" role="alert">
+        Tutti i campi sono obbligatori.
+      </div>
       <div class="modal-body">
-        <form>
+        <form id="create-building-form">
           <div class="row">
             <div class="col">
               <label for="building-name-create">Nome</label>
               <input type="text" class="form-control" id="building-name-create" name="building-name-create"
-                placeholder="Nome">
+                placeholder="Nome" required>
             </div>
             <div class="col">
               <label for="building-address-create">Indirizzo</label>
               <input type="text" class="form-control" id="building-address-create" name="building-address-create"
-                placeholder="Indirizzo">
+                placeholder="Indirizzo" required>
             </div>
           </div>
           <div class="row">
             <div class="col">
               <label for="building-number-create">Civico</label>
               <input type="text" class="form-control" id="building-number-create" name="building-number-create"
-                placeholder="Civico">
+                placeholder="Civico" required>
             </div>
             <div class="col">
               <label for="building-province-create"></label>
               <input type="text" class="form-control" id="building-province-create" name="building-province-create"
-                placeholder="Provincia">
+                placeholder="Provincia" required>
             </div>
           </div>
           <div class="row">
             <div class="col">
               <label for="building-latitude-create">Latitudine</label>
-              <input type="text" class="form-control" id="building-latitude-create" name="plbuildingace-latitude-create"
-                placeholder="Latitudine">
+              <input type="text" class="form-control" disabled id="building-latitude-create" name="plbuildingace-latitude-create"
+                placeholder="Latitudine" required>
             </div>
             <div class="col">
               <label for="building-longitude-create">Longitudine</label>
-              <input type="text" class="form-control" id="building-longitude-create" name="building-longitude-create"
-                placeholder="Longitudine">
+              <input type="text" class="form-control" disabled id="building-longitude-create" name="building-longitude-create"
+                placeholder="Longitudine" required>
             </div>
           </div>
           <div class="row">
             <div class="col">
               <div id="building-modal-map-create"></div>
+              <small class="text-center">Seleziona sulla mappa la posizione del Luogo.</small>
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
-        <button type="button" id="create-building-button" class="btn btn-success">Crea Luogo</button>
+        <button type="button" id="create-building-button" class="btn btn-success">Crea Edificio</button>
       </div>
     </div>
   </div>

@@ -75,3 +75,15 @@ form label{
   font-weight: 600;
   margin: 10px 0 0;
 }
+
+#create-place-error{
+  display: none;
+}
+
+#edit-place-error{
+  display: none;
+}
+
+#create-building-error{
+  display: none;
+}
