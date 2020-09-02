@@ -394,9 +394,17 @@ router.post('/:placeUUID/check-out', wrap(async (req, res, next) => {
                 placedb.checkOut(personUUID, req.params.placeUUID);
                 res.sendStatus(200);
             } else {
-                // FIXME: Io(Ricky) lo gestirei lato server assegnandogli direttamente un uuid e inviando il token come su check-in 
-                console.debug(`QQQQQQ: asldjfkflasdvkayzkcva`);
-                res.sendStatus(500);
+                personUUID = uuidv4();
+                persondb.createPerson(personUUID);
+                var d = new Date();
+                d.setHours(24, 0, 0, 0);
+                res.cookie("person_identifier", JWT.sign({ uuid: personUUID }, process.env.PERSON_SECRET), {
+                    expires: d,
+                    httpOnly: true,
+                    sameSite: true
+                });
+                placedb.checkOut(personUUID, req.params.placeUUID);
+                res.sendStatus(200);
             }
         } else {
             res.sendStatus(404);
