@@ -11,6 +11,7 @@ const buildingdb = require(`../../db/${API_VERSION}/building-db`);
 const reportdb = require(`../../db/${API_VERSION}/report-db`);
 
 const { UnAuthenticatedError, QueryError, InsertError, UpdateError, DeleteError, InternalServerError ,ModuleError, InternalOperationError } = require("../errors");
+const adminDb = require("../../db/v0_2/admin-db");
 
 let wrap = fn => (...args) => fn(...args).catch(args[2]);
 
@@ -272,10 +273,11 @@ router.post('/checkCredentials', wrap(async (req, res, next) => {
 router.post('/create', wrap(async (req, res, next) => {
     try {
         let emailPresent = await db.checkEmailPresence(req.body.email);
+        let emails = await adminDb.getAdminsEmails();
         if(!emailPresent){
             if (await db.createReferent(req.body.firstname, req.body.lastname, req.body.email, req.body.password)) {
                 sendMail(
-                    ["mattia.avanzi.1@studenti.unipd.it", "riccardo.coniglio@studenti.unipd.it"],
+                    emails,
                     "Nuovo Referente da Abilitare",
                     "Abilitalo al seguente link nobis.dei.unipd.it/admin/login"
                 );

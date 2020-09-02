@@ -13,6 +13,22 @@ const getAdminByEmail = async (email) => {
     }
 }
 
+const getAdminsEmails = async () => {
+    try {
+        let query = await db.pool.query('SELECT email FROM admin');
+        let emails = [];
+        for (let i = 0; i < query.rows.length; i++) {
+            emails.push(query.rows[i].email);
+        }
+        return emails;
+    } catch(e) {
+        console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason("QUERY_ADMINSEMAILS");
+        throw qe;
+    }
+}
+
 /**
  * 
  * @param {*} email ee
@@ -40,5 +56,6 @@ const checkAdminCredentials = async (email, password) => {
 
 module.exports = {
     getAdminByEmail,
+    getAdminsEmails,
     checkAdminCredentials
 };
