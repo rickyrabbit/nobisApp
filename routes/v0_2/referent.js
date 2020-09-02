@@ -376,21 +376,17 @@ async function sendMail(email, subject, text) {
 
     // send mail with defined transport object
     try {
-        let testAccount = await nodemailer.createTestAccount();
+        //let testAccount = await nodemailer.createTestAccount();
 
         // TODO: chiedere ed usare credenziali DEI
         // TODO: must be reusable
         let transporter = nodemailer.createTransport({
-            host: "smtp.ethereal.email",
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: testAccount.user, // generated ethereal user
-                pass: testAccount.pass, // generated ethereal password
-            },
+            host: "mail.dei.unipd.it",
+            port: 465,
+            secure: true // true for 465, false for other ports,
         });
         let info = await transporter.sendMail({
-            from: '"Nobis" <hello@nobis.dei.unipd.it>', // sender address
+            from: '"Nobis" <nobis@dei.unipd.it>', // sender address
             to: email, // list of receivers
             subject: subject, // Subject line
             text: text, // plain text body
