@@ -1,4 +1,6 @@
-const db = require("./config");
+const db = require(`./config`);
+const { QueryError, InsertError, DeleteError, UpdateError } = require("../../routes/errors");
+
 
 const checkReferentCredentials = async (email, password) => {
     try {
@@ -6,11 +8,20 @@ const checkReferentCredentials = async (email, password) => {
             "SELECT id, enable, (password = crypt($2, password)) AS valid FROM referent WHERE email = $1",
             [email, password]
         );
-        return query.rows[0];
+        ///console.log(`vediamo cos'è => checkReferentCredentials: ${JSON.stringify(query.rows[0])}`);
+        if(query.rows[0] !== undefined){
+            return query.rows[0];
+        }else{
+            return {"id":undefined,"enable":false,"valid":false};
+        }
     } catch(e) {
         console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason('CHECKREFCREDENTIALS'); 
+        throw qe;
     }
 }
+
 
 const createReferent = async (firstname, lastname, email, password) => {
     try {
@@ -21,8 +32,12 @@ const createReferent = async (firstname, lastname, email, password) => {
         return query;
     } catch(e) {
         console.error(e.stack);
+        let ie = new InsertError();
+        ie.setReason('CREATEREF'); 
+        throw ie;
     }
 }
+
 
 const listNewReferents = async () => {
 
@@ -31,8 +46,12 @@ const listNewReferents = async () => {
         return query.rows;
     } catch(e) {
         console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason('LISTNEWREFS'); 
+        throw qe;
     }
 }
+
 
 const listOldReferents = async () => {
 
@@ -41,8 +60,12 @@ const listOldReferents = async () => {
         return query.rows;
     } catch(e) {
         console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason('LISTOLDREFS'); 
+        throw qe;
     }
 }
+
 
 const isReferentEnabled = async (id) => {
 
@@ -51,8 +74,12 @@ const isReferentEnabled = async (id) => {
         return query.rows[0].enable;
     } catch(e) {
         console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason('ISREFENABLED'); 
+        throw qe;
     }
 }
+
 
 const enableReferent = async (id) => {
 
@@ -61,8 +88,12 @@ const enableReferent = async (id) => {
         return query;
     } catch(e) {
         console.error(e.stack);
+        let ue = new UpdateError();
+        ue.setReason('ENABLEREF'); 
+        throw ue;
     }
 }
+
 
 const disableReferent = async (id) => {
 
@@ -71,16 +102,22 @@ const disableReferent = async (id) => {
         return query.rows;
     } catch(e) {
         console.error(e.stack);
+        let ue = new UpdateError();
+        ue.setReason('DISABLEREF'); 
+        throw ue;
     }
 }
 
-const getEmailByReferentId = async (id) => {
 
+const getEmailByReferentId = async (id) => {
     try {
         let query = await db.pool.query("SELECT email FROM referent WHERE id = $1;", [id]);
         return query.rows[0].email;
     } catch(e) {
         console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason('GETEMAILFROMREFID'); 
+        throw qe;
     }
 }
 

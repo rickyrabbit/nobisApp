@@ -189,6 +189,7 @@ $(document).ready(function () {
 	})
 
 	$("#create-place-button").click(function() {
+		//$("#create-place-form")[0].checkValidity();
 		let placeName = $("#place-name-create").val();
 		let placeBuilding = $("#place-building-create option:selected").attr('building-id');
 		let placeLatitude = $("#place-latitude-create").val();
@@ -239,8 +240,12 @@ $(document).ready(function () {
 				200: function() {
 					$('#create-building').modal('hide');
 					location.reload();
+				},
+				500: function() {
+					alert('Building creation didn\'t go as planned. Try again');
+
 				}
-			  }
+			}
 		});
 	})
 
@@ -254,10 +259,16 @@ $(document).ready(function () {
 					$(`#buildings tr[building-id='${buildingIdToDelete}']`).remove();
 					// Add Building Delete
 					$('#deleteBuildingModal').modal('hide');
+					//location.reload();
+				},
+				401: function() {
+					$('#deleteBuildingModal').modal('hide');
+					//location.reload();
 				}
 			  }
 		});
-	})
+		location.reload();
+	});
 
 	$(".openResolveProblemModal").click(function () {
 		let reportId = $(this).attr("data-report-id");

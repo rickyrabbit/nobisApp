@@ -4,9 +4,9 @@ const cookieParser = require('cookie-parser')
 const path = require('path')
 var exphbs  = require('express-handlebars')
 
-const apiVersion = process.env.API_VERSION || 'v1';
+//const API_VERSION = process.env.API_VERSION || 'v0_1';
 
-const mountRoutes = require(`./routes/${apiVersion}/handler`);
+const mountRoutes = require(`./routes/handler`);
 
 const app = express();
 

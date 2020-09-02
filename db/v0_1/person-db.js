@@ -1,4 +1,5 @@
-const db = require("./config");
+const db = require(`./config`);
+const { InsertError } = require("../../routes/errors");
 
 const createPerson = async (personUUID) => {
     try {
@@ -6,6 +7,7 @@ const createPerson = async (personUUID) => {
         return query;
     } catch(e) {
         console.error(e.stack);
+        throw new InsertError();
     }
 }
 

@@ -1,5 +1,6 @@
+const db = require(`./config`);
 const { v4: uuidv4 } = require('uuid');
-const db = require("./config");
+const { UpdateError, DeleteError, InsertError, QueryError } = require('../../routes/errors');
 
 const getPlaceNameByUUID = async (uuid) => {
     try {
@@ -7,6 +8,9 @@ const getPlaceNameByUUID = async (uuid) => {
         return query.rows[0].name;
     } catch(e) {
         console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason("GETPLACENAMEBYUUID");
+        throw qe;
     }
 }
 
@@ -16,6 +20,9 @@ const getPlaceByUUID = async (uuid) => {
         return query.rows[0];
     } catch(e) {
         console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason("GETPLACEBYUUID");
+        throw qe;
     }
 }
 
@@ -26,6 +33,9 @@ const listPlacesByReferentId = async (refId) => {
         return query.rows;
     } catch(e) {
         console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason("LISTPLACESBYREFID");
+        throw qe;
     }
 }
 
@@ -39,6 +49,9 @@ const createPlace = async (name, lon, lat, capacity, visitTime, buildingId, cate
             return true;
     } catch(e) {
         console.error(e.stack);
+        let ie = new InsertError();
+        ie.setReason("CREATEPLACE");
+        throw ie;
     }
 }
 
@@ -50,6 +63,9 @@ const updatePlace = async (name, lon, lat, capacity, visitTime, buildingId, cate
             return true;
     } catch(e) {
         console.error(e.stack);
+        let ue = new UpdateError();
+        ue.setReason("UPDATEPLACE");
+        throw ue;
     }
 }
 
@@ -65,6 +81,9 @@ const deletePlace = async (uuid) => {
             return true;
     } catch(e) {
         console.error(e.stack);
+        let de = new DeleteError();
+        de.setReason("DELETEPLACE");
+        throw de;
     }
 }
 
@@ -74,6 +93,9 @@ const enablePlace = async (uuid) => {
         return query;
     } catch(e) {
         console.error(e.stack);
+        let ue = new UpdateError();
+        ue.setReason("ENABLEPLACE");
+        throw ue;
     }
 }
 
@@ -83,6 +105,9 @@ const isEnabled = async (uuid) => {
         return query.rows[0].enable;
     } catch(e) {
         console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason("CHECKIFPLACEISENABLED");
+        throw qe;
     }
 }
 
@@ -92,35 +117,45 @@ const disablePlace = async (uuid) => {
         return query;
     } catch(e) {
         console.error(e.stack);
+        let ue = new UpdateError();
+        ue.setReason("DISABLEPLACE");
+        throw ue;
     }
 }
 
 const checkIn = async (personUUID, placeUUID) => {
     try {
-        let now = Date.now()/1000.0;
-        let queryPlace = await db.pool.query("UPDATE place SET counter = counter + 1 WHERE uuid = $1;", [placeUUID]);
-        let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp) VALUES (true, to_timestamp($1)) RETURNING id;", [now]);
-        let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]);
+        //let now = Date.now()/1000.0;
+        let handlecheckIn = await db.pool.query("CALL handlecheckin($1,$2);",[personUUID,placeUUID])
+        /* let queryPlace = await db.pool.query("UPDATE place SET counter = counter + 1 WHERE uuid = $1;", [placeUUID]);
+        let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp, assumption) VALUES (true, to_timestamp($1),$2) RETURNING id;", [now,assumption]);
+        let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]); */
 
-        if(queryPlace && queryLog && queryVisit)
+        if(handlecheckIn)
             return true;
     } catch(e) {
         console.error(e.stack);
+        let ie = new InsertError();
+        ie.setReason("PERSONCHECKINPLACE");
+        throw ie;
     }
 }
 
 const checkOut = async (personUUID, placeUUID) => {
     try {
-        let now = Date.now()/1000.0;
-        let queryPlace = await db.pool.query("UPDATE place SET counter = counter - 1 WHERE uuid = $1;", [placeUUID]);
-        let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp) VALUES (false, to_timestamp($1)) RETURNING id;", [now]);
-        let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]);
-
-        if(queryPlace && queryLog && queryVisit)
+        //let now = Date.now()/1000.0;
+        let handlecheckIn = await db.pool.query("CALL handlecheckout($1,$2);",[personUUID,placeUUID])
+        /* let queryPlace = await db.pool.query("UPDATE place SET counter = counter + 1 WHERE uuid = $1;", [placeUUID]);
+        let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp, assumption) VALUES (true, to_timestamp($1),$2) RETURNING id;", [now,assumption]);
+        let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]); */
+        
+        if(handlecheckIn)
             return true;
-            
     } catch(e) {
         console.error(e.stack);
+        let ie = new InsertError();
+        ie.setReason("PERSONCHECKOUTPLACE");
+        throw ie;
     }
 }
 
@@ -133,6 +168,9 @@ const createFeedback = async (personUUID, placeUUID, feedback) => {
             return true;
     } catch(e) {
         console.error(e.stack);
+        let ie = new InsertError();
+        ie.setReason("CREATEFEEDBACK");
+        throw ie;
     }
 }
 

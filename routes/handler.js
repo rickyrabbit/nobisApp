@@ -1,9 +1,13 @@
-const admin = require('./admin');
-const building = require('./building');
-const feedback = require('./feedback');
-const place = require('./place');
-const referent = require('./referent');
-const report = require('./report');
+const API_VERSION = process.env.API_VERSION;
+
+const user = require(`./${API_VERSION}/user`);
+const admin = require(`./${API_VERSION}/admin`);
+const building = require(`./${API_VERSION}/building`);
+const feedback = require(`./${API_VERSION}/feedback`);
+const place = require(`./${API_VERSION}/place`);
+const referent = require(`./${API_VERSION}/referent`);
+const report = require(`./${API_VERSION}/report`);
+
 
 module.exports = app => {
 
@@ -14,6 +18,7 @@ module.exports = app => {
   });
   */
 
+  app.use('/', user);
   app.use('/admin', admin);
   app.use('/building', building);
   app.use('/feedback', feedback);
@@ -23,11 +28,11 @@ module.exports = app => {
 
   // forse bisogna utilizzare nuovamente router e in index usare app.use(/,./handler.js);
 
-  app.get("/", (req, res) => {
+  /* app.get("/", (req, res) => {
     res.render('user-dashboard', {
       pageTitle: 'Dashboard Utente',
       loadMap: true,
       css: ['user-dashboard']
     });
-  });
+  }); */
 }
