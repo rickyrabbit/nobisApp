@@ -29,7 +29,7 @@
           <div class="row">
             <div class="col">
               <label for="place-name">Nome</label>
-              <input type="text" class="form-control" id="place-name" name="place-name" placeholder="Nome">
+              <input type="text" class="form-control" id="place-name" name="place-name" placeholder="Nome" required>
             </div>
             <div class="col">
               <label for="place-building">Edificio</label>
@@ -43,13 +43,13 @@
           <div class="row">
             <div class="col">
               <label for="place-latitude">Latitudine</label>
-              <input type="text" class="form-control" id="place-latitude" name="place-latitude"
-                placeholder="Latitudine">
+              <input type="number" class="form-control" id="place-latitude" name="place-latitude"
+                placeholder="Latitudine" required>
             </div>
             <div class="col">
               <label for="place-latitude">Longitudine</label>
-              <input type="text" class="form-control" id="place-longitude" name="place-longitude"
-                placeholder="Longitudine">
+              <input type="number" class="form-control" id="place-longitude" name="place-longitude"
+                placeholder="Longitudine" required>
             </div>
           </div>
           <div class="row">
@@ -102,12 +102,12 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
+        <form id="create-place-form">
           <div class="row">
             <div class="col">
               <label for="place-name-create">Nome</label>
               <input type="text" class="form-control" id="place-name-create" name="place-name-create"
-                placeholder="Nome">
+                placeholder="Nome" required>
             </div>
             <div class="col">
               <label for="place-building">Edificio</label>
@@ -122,13 +122,13 @@
           <div class="row">
             <div class="col">
               <label for="place-latitude-create">Latitudine</label>
-              <input type="text" class="form-control" id="place-latitude-create" name="place-latitude-create"
-                placeholder="Latitudine">
+              <input type="number" class="form-control" id="place-latitude-create" name="place-latitude-create"
+                placeholder="Latitudine" required>
             </div>
             <div class="col">
               <label for="place-longitude-create">Longitudine</label>
-              <input type="text" class="form-control" id="place-longitude-create" name="place-longitude-create"
-                placeholder="Longitudine">
+              <input type="number" class="form-control" id="place-longitude-create" name="place-longitude-create"
+                placeholder="Longitudine" required>
             </div>
           </div>
           <div class="row">

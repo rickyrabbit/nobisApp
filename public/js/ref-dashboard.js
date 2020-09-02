@@ -189,6 +189,7 @@ $(document).ready(function () {
 	})
 
 	$("#create-place-button").click(function() {
+		//$("#create-place-form")[0].checkValidity();
 		let placeName = $("#place-name-create").val();
 		let placeBuilding = $("#place-building-create option:selected").attr('building-id');
 		let placeLatitude = $("#place-latitude-create").val();

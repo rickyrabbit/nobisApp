@@ -2,6 +2,23 @@ const db = require(`./config`);
 const { QueryError, InsertError, DeleteError, UpdateError } = require("../../routes/errors");
 
 
+const getReferentByEmail = async (email) => {
+    try {
+        let query = await db.pool.query(
+            "SELECT * FROM referent WHERE email = $1",
+            [email]
+        );
+        if(query.rows[0] !== undefined){
+            return query.rows[0];
+        }
+    } catch(e) {
+        console.error(e.stack);
+        let qe = new QueryError();
+        qe.setReason('GETREFBYEMAIL'); 
+        throw qe;
+    }
+}
+
 const checkReferentCredentials = async (email, password) => {
     try {
         let query = await db.pool.query(
@@ -34,6 +51,20 @@ const checkEmailPresence = async (email) => {
         let qe = new QueryError();
         qe.setReason('CHECKEMAILPRESENCE'); 
         throw qe;
+    }
+}
+
+
+const updatePassword = async (id, password) => {
+
+    try {
+        let query = await db.pool.query("UPDATE referent SET password = crypt($1, gen_salt('bf')) WHERE id = $2;", [password, id]);
+        return query;
+    } catch(e) {
+        console.error(e.stack);
+        let ue = new UpdateError();
+        ue.setReason('UPDATEPSW'); 
+        throw ue;
     }
 }
 
@@ -137,8 +168,10 @@ const getEmailByReferentId = async (id) => {
 }
 
 module.exports = {
+    getReferentByEmail,
     checkReferentCredentials,
     checkEmailPresence,
+    updatePassword,
     createReferent,
     listNewReferents,
     listOldReferents,

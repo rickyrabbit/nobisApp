@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const JWT = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
+const assert = require('assert');
 
 const API_VERSION = process.env.API_VERSION;
 const db = require(`../../db/${API_VERSION}/referent-db`);
@@ -17,7 +18,8 @@ router.get('/login', async (req, res) => {
     res.render('ref-login', {
         layout: 'access.handlebars',
         pageTitle: 'Accesso Referente',
-        errorMessage: req.query.error
+        errorMessage: req.query.error,
+        successMessage: req.query.successMessage
     });
 });
 
@@ -28,6 +30,124 @@ router.get('/register', async (req, res) => {
         errorMessage: req.query.error
     });
 });
+
+router.get('/restore-password', async (req, res) => {
+    res.render('restore-password', {
+        layout: 'access.handlebars',
+        pageTitle: 'Ripristino Password'
+    });
+});
+
+router.post('/restorePassword', wrap(async (req, res, next) => {
+    try {
+
+        let email = req.body.email;
+        let ref = await db.getReferentByEmail(email);
+
+        let payload = {
+            id: ref.id,
+            email: email
+        };
+        
+        let secret = ref.password;
+
+        let token = JWT.sign(payload, secret);
+
+        console.log(token);
+
+        // TODO: Better send mail with HTML
+        sendMail(
+            email,
+            "Ripristino Password Referente",
+            `Per ripristinare la password vai al seguente link: ${process.env.APP_DOMAIN}/referent/restore-password-auth/${ref.id}/${token}`
+        );
+
+        res.render('restore-password', {
+            layout: 'access.handlebars',
+            pageTitle: 'Ripristino Password',
+            successMessage: 'Riceverai presto una mail con il link per procedere al ripristino della password.'
+        });
+
+        return;
+    } catch (err) {
+        if (err instanceof QueryError) {
+            let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
+            next(ise);
+        }
+        next(err);
+    }
+}));
+
+router.get('/restore-password-auth/:id/:token', async (req, res) => {
+    try {
+        let refId = req.params.id;
+        let token = req.params.token;
+        
+        let email = await db.getEmailByReferentId(refId);
+        let ref = await db.getReferentByEmail(email);
+
+        let secret = ref.password;
+        let payload = JWT.decode(token, secret);
+
+        assert(email == payload.email);
+
+        res.render('restore-password-auth', {
+            layout: 'access.handlebars',
+            pageTitle: 'Ripristino Password',
+            refId: refId,
+            token: token,
+            email: email
+        });
+
+    } catch (error) {
+        if (err instanceof QueryError || err instanceof assert.AssertionError) {
+            let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
+            next(ise);
+        }
+    }
+});
+
+router.post('/changePassword/', wrap(async (req, res, next) => {
+    try {
+
+        let refId = req.body.refid;
+        let token = req.body.token;
+
+        let newPassword = req.body.password;
+        let email = await db.getEmailByReferentId(refId);
+
+        let ref = await db.getReferentByEmail(email);
+
+        let secret = ref.password;
+        let payload = JWT.decode(token, secret);
+
+        assert(email == payload.email);
+
+        let updateResult = await db.updatePassword(refId, newPassword);
+        
+        if(updateResult) {
+            let message = "Effettua il login con la nuova password da te scelta."
+            res.status(200).redirect(`/referent/login?successMessage=${message}`);
+        }
+
+        return;
+    } catch (err) {
+        if (err instanceof QueryError || err instanceof assert.AssertionError) {
+            let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
+            next(ise);
+        }
+        next(err);
+    }
+}));
 
 router.get('/dashboard', wrap(async (req, res, next) => {
     try {
@@ -253,28 +373,32 @@ router.post('/:id/disable', wrap(async (req, res, next) => {
 }));
 
 async function sendMail(email, subject, text) {
-    let testAccount = await nodemailer.createTestAccount();
-
-    // TODO: chiedere ed usare credenziali DEI
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-            user: testAccount.user, // generated ethereal user
-            pass: testAccount.pass, // generated ethereal password
-        },
-    });
 
     // send mail with defined transport object
-    let info = await transporter.sendMail({
-        from: '"Nobis" <hello@nobis.dei.unipd.it>', // sender address
-        to: email, // list of receivers
-        subject: subject, // Subject line
-        text: text, // plain text body
-        html: `<p>${text}</p>`, // html body
-    });
+    try {
+        let testAccount = await nodemailer.createTestAccount();
+
+        // TODO: chiedere ed usare credenziali DEI
+        // TODO: must be reusable
+        let transporter = nodemailer.createTransport({
+            host: "smtp.ethereal.email",
+            port: 587,
+            secure: false, // true for 465, false for other ports
+            auth: {
+                user: testAccount.user, // generated ethereal user
+                pass: testAccount.pass, // generated ethereal password
+            },
+        });
+        let info = await transporter.sendMail({
+            from: '"Nobis" <hello@nobis.dei.unipd.it>', // sender address
+            to: email, // list of receivers
+            subject: subject, // Subject line
+            text: text, // plain text body
+            html: `<p>${text}</p>`, // html body
+        });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 
