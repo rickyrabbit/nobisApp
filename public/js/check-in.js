@@ -16,12 +16,24 @@ $(document).ready(function () {
 		}
 	}, 1000);
 
-	if (sessionStorage.getItem("sessionTimestamp") == null) {
-		sessionStorage.setItem('sessionTimestamp', Date.now());
-	} else {
+	let checkInDate = localStorage.getItem("checkinTimestamp");
+
+	if(checkInDate != null && Date.now()-checkInDate > 8*60*60*10000) { // Not valid anymore after 8 hour
+		localStorage.removeItem("checkinUUID");
+		localStorage.removeItem("checkinTimestamp");
+	}
+
+	let currentPlaceUUID = $("#place").attr("place-uuid");
+
+	if (localStorage.getItem("checkinUUID") != null && localStorage.getItem("checkinUUID") == currentPlaceUUID) {
 		stopCountdown();
 		$("#session-expired").fadeIn(600);
+		$('#manual-checkin').fadeIn(600);
 	}
+
+	$('#manual-checkin').click(function () {
+		checkIn();
+	});
 
 	$("#stop-check-in").click(function () {
 		stopCountdown();
@@ -35,7 +47,7 @@ $(document).ready(function () {
 		$("#form-report-problem").fadeIn(600);
 	})
 
-	$("#send-problem").click(function() {
+	$("#send-problem").click(function () {
 		let email = $("#inputEmail").val();
 		let problem = $("#inputProblem").val();
 		let placeUUID = $("#place").attr("place-uuid");
@@ -48,10 +60,10 @@ $(document).ready(function () {
 				placeUUID: placeUUID
 			},
 			statusCode: {
-				200: function() {
+				200: function () {
 					$("#form-report-problem").slideDown(600);
 				}
-			  }
+			}
 		});
 
 	})
@@ -72,15 +84,21 @@ function checkIn() {
 		url: `/place/${placeUUID}/check-in`,
 		method: "POST",
 		statusCode: {
-			200: function() {
+			200: function () {
+				$('#manual-checkin').hide();
+				$("#session-expired").hide();
 				stopCountdown();
+				localStorage.setItem('checkinUUID', $("#place").attr("place-uuid"));
+				localStorage.setItem("checkinTimestamp", Date.now());
+				localStorage.removeItem("checkoutUUID");
+				localStorage.removeItem("checkoutTimestamp");
 				$(".showCheckIn").show();
 			},
-			500: function() {
+			500: function () {
 				stopCountdown();
 				alert("Errore: si prega di riprovare!");
 			}
-		  }
+		}
 	});
 
 }

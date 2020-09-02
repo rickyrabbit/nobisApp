@@ -15,12 +15,24 @@ $(document).ready(function () {
 		}
 	}, 1000);
 
-	if (sessionStorage.getItem("sessionTimestamp") == null) {
-		sessionStorage.setItem('sessionTimestamp', Date.now());
-	} else {
+	let checkOutDate = localStorage.getItem("checkoutTimestamp");
+
+	if(checkOutDate != null && Date.now()-checkOutDate > 8*60*60*10000) { // Not valid anymore after 8 hour
+		localStorage.removeItem("checkoutUUID");
+		localStorage.removeItem("checkoutTimestamp");
+	}
+
+	let currentPlaceUUID = $("#place").attr("place-uuid");
+	
+	if (localStorage.getItem("checkoutUUID") != null && localStorage.getItem("checkoutUUID") == currentPlaceUUID) {
 		stopCountdown();
 		$("#session-expired").fadeIn(600);
+		$('#manual-checkout').fadeIn(600);
 	}
+
+	$('#manual-checkout').click(function () {
+		checkOut();
+	});
 
 	$("#stop-check-out").click(function () {
 		stopCountdown();
@@ -64,6 +76,12 @@ function checkOut() {
 		method: "POST",
 		statusCode: {
 			200: function() {
+				$('#manual-checkout').hide();
+				$("#session-expired").hide();
+				localStorage.setItem('checkoutUUID', $("#place").attr("place-uuid"));
+				localStorage.setItem("checkoutTimestamp", Date.now());
+				localStorage.removeItem("checkinUUID");
+				localStorage.removeItem("checkinTimestamp");
 				stopCountdown();
 				$(".showCheckIn").show();
 			},

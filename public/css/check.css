@@ -176,7 +176,16 @@ h6{
 
 #session-expired{
   display: none;
-  margin-bottom: 0;
+}
+
+#manual-checkin{
+  display: none;
+  margin: 0 auto;
+}
+
+#manual-checkout{
+  display: none;
+  margin: 0 auto;
 }
 
 #form-report-problem{
