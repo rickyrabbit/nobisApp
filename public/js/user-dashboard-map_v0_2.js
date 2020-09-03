@@ -21,6 +21,9 @@ map.on("moveend", function () {
     if(map.getZoom() > 15) {
         clearResults();
         inSurroundings();
+        $("#searchsurr-btn").fadeOut(500);
+    } else {
+        $("#searchsurr-btn").fadeIn(500);
     }
 });
 

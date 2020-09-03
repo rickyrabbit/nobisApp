@@ -66,6 +66,10 @@ header h2{
   width: 100%;
 }
 
+#searchsurr-btn{
+  display: none;
+}
+
 @media (max-width: 768px) {
 
   header{
