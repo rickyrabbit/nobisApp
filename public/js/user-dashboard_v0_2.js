@@ -4,6 +4,8 @@ let occupancyThreshold = {
     "high": 0.80
 }
 
+let lastPlaces = [];
+
 async function clearResults() {
     // empty current list
     $("#groupSearchResults").empty();
@@ -28,7 +30,12 @@ async function inSurroundings() {
     
     let response = await fetch(url);
     let places = await response.json();
-    console.log(places);
+
+    if(!checkNewPlaces(places)){
+        return;
+    }
+
+    clearResults();
 
     // populate list
     for (const key in places) {
@@ -63,6 +70,29 @@ async function inSurroundings() {
     });
     showSurroundingsResulsInfo(places.length);
 
+}
+
+function checkNewPlaces(places) {
+    let newPlace = false;
+    places.forEach(function(place) {
+        if(!lastPlaces.includes(place.puuid)){
+            newPlace = true;
+        }
+    })
+
+    if(places.length != lastPlaces.length){
+        newPlace = true;
+    }
+
+    if(!newPlace)
+        return false;
+    else {
+        lastPlaces = [];
+        places.forEach(function(place) {
+            lastPlaces.push(place.puuid);
+        })
+        return true;
+    }
 }
 
 

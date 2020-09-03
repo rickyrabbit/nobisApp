@@ -19,7 +19,6 @@ initialMarker.addTo(map).bindPopup('DEI caput mundi.');
 
 map.on("moveend", function () {
     if(map.getZoom() > 15) {
-        clearResults();
         inSurroundings();
         $("#searchsurr-btn").fadeOut(500);
     } else {
