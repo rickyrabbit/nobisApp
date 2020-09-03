@@ -69,7 +69,7 @@ async function showMarkersOnMap(placesJSONArray) {
         // Add the place marker to the map
         let marker = L.marker(place.geocoord);
         currentMapMarkers.add(marker);
-        marker.addTo(map).bindPopup(`<strong>${place.pname}</strong> of: ${place.buildingname}`);
+        marker.addTo(map).bindPopup(`<strong>${place.pname}</strong> (${place.buildingname})`);
 
     });
 
