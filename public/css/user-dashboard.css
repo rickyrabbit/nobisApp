@@ -65,3 +65,45 @@ header h2{
 .alert-container{
   width: 100%;
 }
+
+@media (max-width: 768px) {
+
+  header{
+    height: 80px;
+  }
+
+  header h2{
+    line-height: 80px;
+    font-size: 17px;
+  }
+  header p {
+    line-height: 80px;
+  }
+
+  .unipd-logo.small-img{
+    width: 60px;
+    height: 60px;
+  }
+
+  .col.map, .col.search{
+    flex: none;
+  }
+
+  #interactive_map{
+    height: 300px;
+    margin-bottom: 20px;
+  }
+
+  .results_info{
+    height: auto;
+    margin-bottom: 20px;
+  }
+
+  #searchbar-container, #search_result{
+    margin-left: 0;
+    margin-right: 0;
+  }
+  #searchsurr-btn{
+    margin-left: 10px;
+  }
+}
