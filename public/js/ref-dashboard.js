@@ -194,7 +194,6 @@ $(document).ready(function () {
 	})
 
 	$("#create-place-button").click(function() {
-		console.log(document.getElementById("create-place-form").checkValidity());
 		if (document.getElementById("create-place-form").checkValidity()) {
 			let placeName = $("#place-name-create").val();
 			let placeBuilding = $("#place-building-create option:selected").attr('building-id');
