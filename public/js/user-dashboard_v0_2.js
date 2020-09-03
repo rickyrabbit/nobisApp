@@ -1,7 +1,7 @@
 
 let occupancyThreshold = {
-    "medium": 40,
-    "high": 80
+    "medium": 0.40,
+    "high": 0.80
 }
 
 async function clearResults() {
