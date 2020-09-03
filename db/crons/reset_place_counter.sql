@@ -1,0 +1,1 @@
+UPDATE place SET counter = 0;
