@@ -48,14 +48,12 @@ $(document).ready(function () {
 	})
 
 	$("#send-problem").click(function () {
-		let email = $("#inputEmail").val();
 		let problem = $("#inputProblem").val();
 		let placeUUID = $("#place").attr("place-uuid");
 		$.ajax({
 			url: `/report/create`,
 			method: "POST",
 			data: {
-				email: email,
 				problem: problem,
 				placeUUID: placeUUID
 			},

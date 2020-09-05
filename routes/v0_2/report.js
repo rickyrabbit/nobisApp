@@ -5,7 +5,7 @@ const db = require(`../../db/${API_VERSION}/report-db`);
 
 router.post('/create', async (req, res) => {
     try {
-        let query = db.createReport(req.body.email, req.body.problem, req.body.placeUUID);
+        let query = db.createReport(req.body.problem, req.body.placeUUID);
         if (query)
             res.sendStatus(200);
     } catch (error) {
