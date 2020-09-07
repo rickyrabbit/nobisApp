@@ -270,9 +270,9 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
 
 
         let pdfGD = pdfGraphicalDetails('public/fonts/Roboto-Medium.ttf',
-            'public/img/Logo_Universita_Padova.png',
-            'NOBIS',
-            'Inquadra il codice QR con la fotocamera per effettuare il Check-XXXXX da  questo luogo',
+            'public/img/logo_unipd_dei.png',
+            'NoBis',
+            'Inquadra il codice QR con la fotocamera per effettuare il Check-XXXXX da questo luogo',
             placeName,
             buildingName
         );

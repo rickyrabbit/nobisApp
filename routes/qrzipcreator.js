@@ -7,55 +7,6 @@ const AdmZip = require('adm-zip');
 
 const { UnAuthenticatedError, QueryError, InsertError, UpdateError, DeleteError, InternalServerError, ModuleError, InternalOperationError } = require("./errors");
 
-
-
-/* let placeName = await db.getPlaceNameByUUID(req.params.uuid);
-let buildingName = await buildingdb.getBuildingNameByPlaceUUID(req.params.uuid);
-const options = { unsafeCleanup: true }; */
-
-
-
-/* tmp.dir(options, function _tempDirCreated(dirErr, path, cleanupCallback) {
-    if (dirErr) throw dirErr;
-    QRCode.toFile(`${path}/${req.params.uuid}-check-in.png`, `https://nobis.dei.unipd.it/place/check-in?placeUUID=${req.params.uuid}`, {}, function (inErr) {
-        if (inErr) throw inErr
-        QRCode.toFile(`${path}/${req.params.uuid}-check-out.png`, `https://nobis.dei.unipd.it/place/check-out?placeUUID=${req.params.uuid}`, {}, function (outErr) {
-            if (outErr) throw outErr
-            // TODO: Code refactoring needed 
-            const doc = new PDFDocument();
-            // TODO: Better place for the PDF? Why temporary ${path} doesn't work?
-            let out = fs.createWriteStream(`${path}/printable.pdf`);
-            doc.pipe(out);
-            doc.font('public/fonts/Roboto-Medium.ttf');
-            doc.image('public/img/Logo_Universita_Padova.png', 216, 72, { fit: [180, 180] });
-            doc.fontSize(20).text('NOBIS', 72, 275, { align: 'center' });
-            doc.fontSize(38).text('CHECK-IN', 72, 320, { align: 'center' });
-            doc.fontSize(28).text(placeName, 72, 380, { align: 'center' });
-            doc.fontSize(24).text(buildingName, 72, 410, { align: 'center' });
-            doc.image(`${path}/${req.params.uuid}-check-in.png`, 213, 460, { fit: [180, 180] });
-            doc.fontSize(20).text('Inquadra il codice QR con la fotocamera per effettuare il Check-In in questo luogo', 72, 670, { align: 'center' });
-            doc.addPage();
-            doc.font('public/fonts/Roboto-Medium.ttf');
-            doc.image('public/img/Logo_Universita_Padova.png', 216, 72, { fit: [180, 180] });
-            doc.fontSize(20).text('NOBIS', 72, 275, { align: 'center' });
-            doc.fontSize(38).text('CHECK-OUT', 72, 320, { align: 'center' });
-            doc.fontSize(28).text(placeName, 72, 380, { align: 'center' });
-            doc.fontSize(24).text(buildingName, 72, 410, { align: 'center' });
-            doc.image(`${path}/${req.params.uuid}-check-out.png`, 213, 460, { fit: [180, 180] });
-            doc.fontSize(20).text('Inquadra il codice QR con la fotocamera per effettuare il Check-Out da  questo luogo', 72, 670, { align: 'center' });
-            doc.end();
-            out.on('finish', function () {
-                res.zip([
-                    { path: `${path}/${req.params.uuid}-check-in.png`, name: `check-in.png` },
-                    { path: `${path}/${req.params.uuid}-check-out.png`, name: `check-out.png` },
-                    { path: `${path}/printable.pdf`, name: `printable.pdf` }
-                ], `QR Codes - ${placeName}`, cleanupCallback);
-                //setTimeout(cleanupCallback, 1000);
-            });
-        })
-    })
-}); */
-
 const pdfGraphicalDetails = (fontpath, pathLogoImage, title, textBelowQR, placeName, buildingName) => {
     return {
         "FONTPATH": fontpath,
@@ -125,7 +76,6 @@ const saveQRPDFtoPath = (dirpath, filenameNoExtension, pdfGraphicalDetails, chec
         try {
             const doc = new PDFDocument({ autoFirstPage: false });
             let pdfFilePath = `${dirpath}/${filenameNoExtension}.pdf`;
-            // TODO: Better place for the PDF? Why temporary ${path} doesn't work?
             let out = fs.createWriteStream(pdfFilePath);
 
             const newPdfPage = (details, typeCheckOperation) => {
@@ -143,38 +93,41 @@ const saveQRPDFtoPath = (dirpath, filenameNoExtension, pdfGraphicalDetails, chec
                     imgPath = checkoutFilePath;
                     helpText = helpText.replace('XXXXX', 'Out');
                 }
-                doc.addPage();
+                doc.addPage({
+                    margins: {
+                      top: 50,
+                      bottom: 50,
+                      left: 72,
+                      right: 72
+                    }
+                  });
                 doc.font(details.FONTPATH);
-                doc.image(details.LOGOPATH, 216, 72, { fit: [180, 180] });
-                doc.fontSize(20).text(details.TITLE, 72, 275, { align: 'center' });
-                doc.fontSize(38).text(`CHECK-${typeCheckOperation}`, 72, 320, { align: 'center' });
-                doc.fontSize(28).text(details.PLACENAME, 72, 380, { align: 'center' });
-                doc.fontSize(24).text(details.BUILDINGNAME, 72, 410, { align: 'center' });
-                doc.image(imgPath, 206, 460, { width: 200 });
-                doc.fontSize(20).text(helpText, 72, 670, { align: 'center' });
+                doc.image(details.LOGOPATH, 146, 50, { fit: [320, 85] });
+                // TODO: Add in details if they became final
+                doc.font("public/fonts/Roboto-Regular.ttf");
+                doc.fontSize(26).text("Sperimentazione di", 72, 150, { align: 'center',  });
+                doc.font("public/fonts/Roboto-Bold.ttf");
+                doc.fontSize(45).text(details.TITLE, 72, 175, { align: 'center' });
+                doc.font("public/fonts/Roboto-Italic.ttf");
+                doc.fontSize(16).text("NoBis è un servizio completamente anonimo di conteggio in tempo reale del livello di affollamento di un locale universitario", 72, 235, { align: 'center',   });
+                doc.font("public/fonts/Roboto-Bold.ttf");
+                doc.fontSize(50).text(`CHECK-${typeCheckOperation}`, 72, 300, { align: 'center' });
+                doc.fontSize(28).text(details.PLACENAME, 72, 370, { align: 'center' });
+                doc.font(details.FONTPATH);
+                doc.fontSize(24).text(details.BUILDINGNAME, 72, 400, { align: 'center' });
+                doc.image(imgPath, 206, 430, { width: 190 });
+                doc.font("public/fonts/Roboto-Regular.ttf");
+                doc.fontSize(20).text(helpText, 72, 630, { align: 'center' });
+                doc.fontSize(13).text("nobis.dei.unipd.it", 72, 695, { align: 'center' });
+                doc.fontSize(12).text("Giulia Cisotto (giulia.cisotto@dei.unipd.it)", 72, 715, { align: 'left', continued: true});
+                doc.fontSize(12).text("Marco Giordani (giordani@dei.unipd.it)", 72, 715, { align: 'right'});
             };
-            //doc.on('pageAdded', newPdfPage);
+
             doc.pipe(out);
 
             newPdfPage(pdfGraphicalDetails, "IN");
             newPdfPage(pdfGraphicalDetails, "OUT");
-            /* doc.font('public/fonts/Roboto-Medium.ttf');
-            doc.image('public/img/Logo_Universita_Padova.png', 216, 72, { fit: [180, 180] });
-            doc.fontSize(20).text('NOBIS', 72, 275, { align: 'center' });
-            doc.fontSize(38).text('CHECK-IN', 72, 320, { align: 'center' });
-            doc.fontSize(28).text(placeName, 72, 380, { align: 'center' });
-            doc.fontSize(24).text(buildingName, 72, 410, { align: 'center' });
-            doc.image(`${path}/${req.params.uuid}-check-in.png`, 213, 460, { fit: [180, 180] });
-            doc.fontSize(20).text('Inquadra il codice QR con la fotocamera per effettuare il Check-In in questo luogo', 72, 670, { align: 'center' }); */
-            //doc.addPage();
-            /*  doc.font('public/fonts/Roboto-Medium.ttf');
-             doc.image('public/img/Logo_Universita_Padova.png', 216, 72, { fit: [180, 180] });
-             doc.fontSize(20).text('NOBIS', 72, 275, { align: 'center' });
-             doc.fontSize(38).text('CHECK-OUT', 72, 320, { align: 'center' });
-             doc.fontSize(28).text(placeName, 72, 380, { align: 'center' });
-             doc.fontSize(24).text(buildingName, 72, 410, { align: 'center' });
-             doc.image(`${path}/${req.params.uuid}-check-out.png`, 213, 460, { fit: [180, 180] });
-             doc.fontSize(20).text('Inquadra il codice QR con la fotocamera per effettuare il Check-Out da  questo luogo', 72, 670, { align: 'center' }); */
+            
             doc.end();
             out.on('finish', () => {
                 resolve(pdfFilePath);
