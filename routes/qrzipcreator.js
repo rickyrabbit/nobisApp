@@ -118,9 +118,9 @@ const saveQRPDFtoPath = (dirpath, filenameNoExtension, pdfGraphicalDetails, chec
                 doc.image(imgPath, 206, 430, { width: 190 });
                 doc.font("public/fonts/Roboto-Regular.ttf");
                 doc.fontSize(20).text(helpText, 72, 630, { align: 'center' });
-                doc.fontSize(13).text("nobis.dei.unipd.it", 72, 695, { align: 'center' });
-                doc.fontSize(12).text("Giulia Cisotto (giulia.cisotto@dei.unipd.it)", 72, 715, { align: 'left', continued: true});
-                doc.fontSize(12).text("Marco Giordani (giordani@dei.unipd.it)", 72, 715, { align: 'right'});
+                doc.fontSize(13).text("nobis.dei.unipd.it", 72, 700, { align: 'center' });
+                doc.fontSize(12).text("Giulia Cisotto (giulia.cisotto@dei.unipd.it)", 72, 725, { align: 'left', continued: true});
+                doc.fontSize(12).text("Marco Giordani (giordani@dei.unipd.it)", 72, 725, { align: 'right'});
             };
 
             doc.pipe(out);
