@@ -28,14 +28,12 @@ header h2{
 }
 
 .unipd-logo{
-  width: 200px;
   height: 200px;
   float: left;
   margin: 10px;
 }
 
 .unipd-logo.small-img{
-  width: 100px;
   height: 100px;
 }
 
@@ -66,8 +64,40 @@ header h2{
   width: 100%;
 }
 
+.col.map{
+  margin-bottom: 20px;
+}
+
 #searchsurr-btn{
   display: none;
+}
+
+footer {
+  background-color: #fff;
+}
+
+#info{
+  font-size: 12px;
+  text-align: center;
+  color: #fff;
+  background-color: #9c9c9c;
+}
+
+#info p {
+  width: 80%;
+  margin: 20px auto;
+}
+
+#contacts{
+  font-size: 14px;
+}
+#contacts .col{
+  text-align: center;
+}
+
+#contacts span{
+  margin: 20px 0;
+  display: block;
 }
 
 @media (max-width: 768px) {
