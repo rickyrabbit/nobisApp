@@ -12,8 +12,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-let initialMarker = L.marker([mapProperties.latitude, mapProperties.longitude]);
-initialMarker.addTo(map).bindPopup('DEI caput mundi.');
+//let initialMarker = L.marker([mapProperties.latitude, mapProperties.longitude]);
+// Sorry Buddy production calls
+//initialMarker.addTo(map).bindPopup('DEI caput mundi.');
 //markerLayer.addLayer(initialMarker);
 
 
