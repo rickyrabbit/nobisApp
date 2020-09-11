@@ -81,7 +81,8 @@ $BODY$;
 ALTER FUNCTION public.findplacesfrompattern(text) OWNER TO nobis;
 
 
--- FUNCTION: public.checkinf(uuid, uuid, boolean)
+
+--- FUNCTION: public.checkinf(uuid, uuid, boolean)
 
 -- DROP FUNCTION public.checkinf(uuid, uuid, boolean);
 
@@ -99,13 +100,14 @@ AS $BODY$
 DECLARE newlogid integer;
 BEGIN
 UPDATE public.place SET counter = counter+1 WHERE uuid = _placeuuid;
-INSERT INTO log (is_in, timestamp, assumption) VALUES (true, NOW()::timestamp,_assumption) RETURNING log.id INTO newlogid;
+INSERT INTO log (is_in, timestamp, assumption) VALUES (true, clock_timestamp(),_assumption) RETURNING log.id INTO newlogid;
 INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES (_placeuuid, newlogid, _personuuid);
 END;
 $BODY$;
 
 ALTER FUNCTION public.checkinf(uuid, uuid, boolean)
     OWNER TO nobis;
+
 
 
 -- FUNCTION: public.checkoutf(uuid, uuid, boolean)
@@ -126,7 +128,7 @@ AS $BODY$
 DECLARE newlogid integer;
 BEGIN
 UPDATE public.place SET counter = counter-1 WHERE uuid = _placeuuid;
-INSERT INTO log (is_in, timestamp, assumption) VALUES (false, NOW()::timestamp,_assumption) RETURNING log.id INTO newlogid;
+INSERT INTO log (is_in, timestamp, assumption) VALUES (false, clock_timestamp(),_assumption) RETURNING log.id INTO newlogid;
 INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES (_placeuuid, newlogid, _personuuid);
 END;
 $BODY$;

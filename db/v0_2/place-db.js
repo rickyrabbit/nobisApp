@@ -124,23 +124,27 @@ const disablePlace = async (uuid) => {
 }
 
 const checkIn = async (personUUID, placeUUID) => {
-    try {
+    //const client = await db.pool.connect();
+    try{
         //let now = Date.now()/1000.0;
+        //await client.query("CALL handlecheckin($1,$2);",[personUUID,placeUUID]);
         let handlecheckIn = await db.pool.query("CALL handlecheckin($1,$2);",[personUUID,placeUUID]);
+        //let handlecheckIn = await db.pool.query("CALL handlecheckin($1,$2);",[personUUID,placeUUID]);
         /* let queryPlace = await db.pool.query("UPDATE place SET counter = counter + 1 WHERE uuid = $1;", [placeUUID]);
         let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp, assumption) VALUES (true, to_timestamp($1),$2) RETURNING id;", [now,assumption]);
         let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]); */
-        console.debug(`handlecheckin vale:${handlecheckIn}`);
-        if(handlecheckIn){
+        if(handlecheckIn.rows.length==0){
             return true;
         }else{
             return false;
         }
-    } catch(e) {
+    }catch(e) {
         console.error(e.stack);
         let ie = new InsertError();
         ie.setReason("PERSONCHECKINPLACE");
         throw ie;
+    }finally{
+        //client.release();
     }
 }
 
@@ -151,8 +155,7 @@ const checkOut = async (personUUID, placeUUID) => {
         /* let queryPlace = await db.pool.query("UPDATE place SET counter = counter + 1 WHERE uuid = $1;", [placeUUID]);
         let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp, assumption) VALUES (true, to_timestamp($1),$2) RETURNING id;", [now,assumption]);
         let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]); */
-        
-        if(handlecheckOut){
+        if(handlecheckOut.rows.length==0){
             return true;
         }else{
             return false;

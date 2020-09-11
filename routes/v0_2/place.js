@@ -347,7 +347,8 @@ router.post('/:placeUUID/check-in', wrap(async (req, res, next) => {
             let personUUID;
             if (req.cookies.person_identifier == undefined) {
                 personUUID = uuidv4();
-                persondb.createPerson(personUUID); // throws InsertError
+                let scp = await persondb.createPerson(personUUID); // throws InsertError
+                console.debug(`person creation has been successful:${JSON.stringify(scp)}`);
                 var d = new Date();
                 d.setHours(24, 0, 0, 0);
                 res.cookie("person_identifier", JWT.sign({ uuid: personUUID }, process.env.PERSON_SECRET), {
@@ -359,10 +360,11 @@ router.post('/:placeUUID/check-in', wrap(async (req, res, next) => {
                 JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET); // throws JWTErrors
                 personUUID = JWT.decode(req.cookies.person_identifier).uuid;
             }
-            const succCI = placedb.checkIn(personUUID, req.params.placeUUID); // throws InsertError
+            const succCI = await placedb.checkIn(personUUID, req.params.placeUUID); // throws InsertError
             if (succCI) {
                 // successfull checkin
                 // handled via ajax
+                console.log(`arriva quiluyvuvykuyu`);
                 res.sendStatus(200);
             } else {
                 // UNsuccessfull checkin
@@ -408,7 +410,7 @@ router.post('/:placeUUID/check-out', wrap(async (req, res, next) => {
             let personUUID;
             if (req.cookies.person_identifier == undefined) {
                 personUUID = uuidv4();
-                persondb.createPerson(personUUID); // throws InsertError
+                let res = await persondb.createPerson(personUUID); // throws InsertError
                 var d = new Date();
                 d.setHours(24, 0, 0, 0);
                 res.cookie("person_identifier", JWT.sign({ uuid: personUUID }, process.env.PERSON_SECRET), {
@@ -420,7 +422,7 @@ router.post('/:placeUUID/check-out', wrap(async (req, res, next) => {
                 JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET); // throws JWTErrors
                 personUUID = JWT.decode(req.cookies.person_identifier).uuid;
             }
-            const succCO = placedb.checkOut(personUUID, req.params.placeUUID); // throws InsertError
+            const succCO = await placedb.checkOut(personUUID, req.params.placeUUID); // throws InsertError
             if (succCO) {
                 // successfull checkout
                 // handled via ajax
@@ -476,7 +478,7 @@ router.post('/:placeUUID/feedback', wrap(async (req, res, next) => {
                 JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET);
                 personUUID = JWT.decode(req.cookies.person_identifier).uuid;
                 console.log(req.body);
-                const succFDBK = placedb.createFeedback(personUUID, req.params.placeUUID, req.body.feedback);
+                const succFDBK = await placedb.createFeedback(personUUID, req.params.placeUUID, req.body.feedback);
                 if (succFDBK) {
                     // successfull feedback
                     // handled via ajax
