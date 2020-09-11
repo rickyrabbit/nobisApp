@@ -167,6 +167,12 @@ h6{
   animation: fillred .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
 }
 
+.clarifications{
+  font-size: 12px;
+  line-height: 1em;
+  margin-top: 20px;
+}
+
 .closemark__check {
   transform-origin: 50% 50%;
   stroke-dasharray: 48;

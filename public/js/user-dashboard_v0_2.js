@@ -200,36 +200,30 @@ function addToList(placeObj, listitemid) {
     });
 
     bname.appendTo(bname_cont);
-    bname_cont.appendTo(lip);
-
 
     let lic = $("<div></div>", {
         "class": "capacityinfo",
         id: `listitem-${listitemid}-capacityinfo`
     });
 
-
-
     let badge = {
         "text": "",
-        //"class": "badge badge-pill "
         "class": "badge "
     }
 
     let sit = computePlaceSituation(placeObj.occ);
-    //console.log(`sit vale ${sit}`);
 
     if (sit === 0) {
         badge.class = badge.class + "badge-success";
-        badge.text = "Bassa Occupazione";
+        badge.text = "Bassa Occupazione*";
     }
     if (sit === 1) {
         badge.class = badge.class + "badge-warning";
-        badge.text = "Media Occupazione";
+        badge.text = "Media Occupazione*";
     }
     if (sit === 2) {
         badge.class = badge.class + "badge-danger";
-        badge.text = "Alta Occupazione";
+        badge.text = "Alta Occupazione*";
     }
 
     $("<span></span>", {
@@ -238,8 +232,9 @@ function addToList(placeObj, listitemid) {
         text: badge.text
     }).appendTo(lic);
 
+    lic.appendTo(lip);
     lip.appendTo(li);
-    lic.appendTo(li);
+    bname_cont.appendTo(li);    
 
 
 

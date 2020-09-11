@@ -20,7 +20,7 @@ header h2{
 
 #interactive_map {
   min-height: 300px;
-  height: 600px;
+  height: 602px;
 }
 
 .form-inline{
@@ -39,9 +39,13 @@ header h2{
 
 .building-name{
   font-size: 1.3em;
-  margin-left: 30px !important;
-  padding: 5px;
-  
+  margin-bottom: .25rem;
+}
+
+.clarifications{
+  font-size: 12px;
+  line-height: 1em;
+  margin-top: 10px;
 }
 
 .capacityinfo{
@@ -56,7 +60,7 @@ header h2{
 .results_info{
   max-width: inherit !important;
   width: 100%;
-  height: 480px;
+  height: 450px;
   overflow-y: scroll;
 }
 

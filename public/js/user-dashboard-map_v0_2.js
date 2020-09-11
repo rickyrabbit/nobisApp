@@ -9,7 +9,7 @@ let mapProperties = {
 let map = L.map('interactive_map').setView([mapProperties.latitude, mapProperties.longitude], mapProperties.zooming);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 }).addTo(map);
 
 //let initialMarker = L.marker([mapProperties.latitude, mapProperties.longitude]);
