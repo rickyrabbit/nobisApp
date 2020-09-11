@@ -18,9 +18,17 @@ header h2{
   float: right;
 }
 
+#main{
+  margin-bottom: 20px;
+}
+
 #interactive_map {
   min-height: 300px;
   height: 602px;
+}
+
+#search-alert{
+  margin-bottom: 8px;
 }
 
 .form-inline{
@@ -46,6 +54,13 @@ header h2{
   font-size: 12px;
   line-height: 1em;
   margin-top: 10px;
+  padding-left: 10px;
+}
+
+.clarifications::before{
+  content: "*";
+  position: absolute;
+  left: 1px;
 }
 
 .capacityinfo{
@@ -133,7 +148,14 @@ footer {
 
   .results_info{
     height: auto;
-    margin-bottom: 50px;
+  }
+
+  .clarifications{
+    margin-bottom: 30px;
+  }
+  
+  .clarifications::before{
+    left: 15px;
   }
 
   #search-form{
