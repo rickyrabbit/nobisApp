@@ -6,7 +6,7 @@ const fs = require('fs');
 
 const { createZip, pdfGraphicalDetails, saveQRImagetoPath, saveQRPDFtoPath } = require('../qrzipcreator');
 
-const { UnAuthenticatedError, QueryError, InsertError, UpdateError, DeleteError, InternalServerError ,ModuleError, InternalOperationError } = require("../errors");
+const { NotFoundError, UnAuthenticatedError, QueryError, InsertError, UpdateError, DeleteError, InternalServerError, ModuleError, InternalOperationError } = require("../errors");
 
 const API_VERSION = process.env.API_VERSION;
 const buildingdb = require(`../../db/${API_VERSION}/building-db`);
@@ -58,11 +58,9 @@ router.post('/create', wrap(async (req, res, next) => {
             unauth.setReason(message);
             next(unauth);
         }
-        /* res.status(401).redirect('/referent/login');
-        next(err); */
 
         next(err);
-        //res.sendStatus(500);
+        
     }
 
 }));
@@ -95,11 +93,9 @@ router.post('/:uuid/update', wrap(async (req, res, next) => {
             unauth.setReason(message);
             next(unauth);
         }
-        /* res.status(401).redirect('/referent/login');
-        next(err); */
 
         next(err);
-        //res.sendStatus(500);
+        
     }
 
 }));
@@ -130,11 +126,9 @@ router.delete('/:uuid', wrap(async (req, res, next) => {
             unauth.setReason(message);
             next(unauth);
         }
-        /* res.status(401).redirect('/referent/login');
-        next(err); */
 
         next(err);
-        //res.sendStatus(500);
+        
     }
 
 }));
@@ -165,11 +159,9 @@ router.post('/:uuid/enable', wrap(async (req, res, next) => {
             unauth.setReason(message);
             next(unauth);
         }
-        /* res.status(401).redirect('/referent/login');
-        next(err); */
 
         next(err);
-        //res.sendStatus(500);
+        
     }
 }));
 
@@ -199,11 +191,9 @@ router.post('/:uuid/disable', wrap(async (req, res, next) => {
             unauth.setReason(message);
             next(unauth);
         }
-        /* res.status(401).redirect('/referent/login');
-        next(err); */
 
         next(err);
-        //res.sendStatus(500);
+        
     }
 
 }));
@@ -235,11 +225,9 @@ router.post('/:uuid/get', wrap(async (req, res, next) => {
             unauth.setReason(message);
             next(unauth);
         }
-        /* res.status(401).redirect('/referent/login');
-        next(err); */
 
         next(err);
-        //res.sendStatus(500);
+        
     }
 
 }));
@@ -265,7 +253,7 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
 
         let tmppath = tdc.path;
 
-        let checkinFilePath =  await saveQRImagetoPath(tmppath, req.params.uuid, "CHECKIN");
+        let checkinFilePath = await saveQRImagetoPath(tmppath, req.params.uuid, "CHECKIN");
         let checkoutFilePath = await saveQRImagetoPath(tmppath, req.params.uuid, "CHECKOUT");
 
 
@@ -284,9 +272,9 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
         let zipFileName = `QRCodes-${placeName}`;
         const regex = /[\\/:"*?<>|]+/;
         zipFileName = zipFileName.replace(regex, '-');
-        let zipPath = createZip(tmppath,zipFileName);
+        let zipPath = createZip(tmppath, zipFileName);
 
-        res.download(zipPath,() => {
+        res.download(zipPath, () => {
             tdc.cleanup();
         });
         console.log(`dopo download in teoria`);
@@ -314,11 +302,9 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
             unauth.setReason(message);
             next(unauth);
         }
-        /* res.status(401).redirect('/referent/login');
-        next(err); */
 
         next(err);
-        //res.sendStatus(500);
+        
     }
 
 }));
@@ -356,11 +342,12 @@ router.get('/check-out', async (req, res) => {
 
 router.post('/:placeUUID/check-in', wrap(async (req, res, next) => {
     try {
-        if (await placedb.isEnabled(req.params.placeUUID)) {
+        let isEn = await placedb.isEnabled(req.params.placeUUID); // throws QueryError
+        if (isEn) {
             let personUUID;
             if (req.cookies.person_identifier == undefined) {
                 personUUID = uuidv4();
-                persondb.createPerson(personUUID);
+                persondb.createPerson(personUUID); // throws InsertError
                 var d = new Date();
                 d.setHours(24, 0, 0, 0);
                 res.cookie("person_identifier", JWT.sign({ uuid: personUUID }, process.env.PERSON_SECRET), {
@@ -369,33 +356,59 @@ router.post('/:placeUUID/check-in', wrap(async (req, res, next) => {
                     sameSite: true
                 });
             } else {
-                JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET);
+                JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET); // throws JWTErrors
                 personUUID = JWT.decode(req.cookies.person_identifier).uuid;
             }
-            placedb.checkIn(personUUID, req.params.placeUUID);
-
-            res.sendStatus(200);
+            const succCI = placedb.checkIn(personUUID, req.params.placeUUID); // throws InsertError
+            if (succCI) {
+                // successfull checkin
+                // handled via ajax
+                res.sendStatus(200);
+            } else {
+                // UNsuccessfull checkin
+                // handled via ajax
+                res.sendStatus(500);
+            }
         } else {
-            res.sendStatus(404);
+            // TODO: handle 404 
+            let nf = new NotFoundError();
+            nf.setReason(`Place NOT enabled: UUID:${req.params.placeUUID}`);
+            throw nf;
         }
-    } catch (error) {
-        res.sendStatus(500);
-    }
+    } catch (err) {
+        console.debug(err);
+        if (err instanceof InsertError || err instanceof QueryError) {
+            let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
+            next(ise);
+        } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
+            // Problems with jwt verify
+            console.log(`problems with jwt token, error: ${err.name}`);
+            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
 
+            let unauth = new UnAuthenticatedError();
+            let message = "JWTERROR";
+            //let message = "GotoLogin";
+            unauth.setReason(message);
+            next(unauth);
+        }
+
+        next(err);
+
+
+    }
 }));
 
 router.post('/:placeUUID/check-out', wrap(async (req, res, next) => {
     try {
-        if (await placedb.isEnabled(req.params.placeUUID)) {
+        let isEn = await placedb.isEnabled(req.params.placeUUID); // throws QueryError
+        if (isEn) {
             let personUUID;
-            if (req.cookies.person_identifier != undefined) {
-                JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET);
-                personUUID = JWT.decode(req.cookies.person_identifier).uuid;
-                placedb.checkOut(personUUID, req.params.placeUUID);
-                res.sendStatus(200);
-            } else {
+            if (req.cookies.person_identifier == undefined) {
                 personUUID = uuidv4();
-                persondb.createPerson(personUUID);
+                persondb.createPerson(personUUID); // throws InsertError
                 var d = new Date();
                 d.setHours(24, 0, 0, 0);
                 res.cookie("person_identifier", JWT.sign({ uuid: personUUID }, process.env.PERSON_SECRET), {
@@ -403,36 +416,109 @@ router.post('/:placeUUID/check-out', wrap(async (req, res, next) => {
                     httpOnly: true,
                     sameSite: true
                 });
-                placedb.checkOut(personUUID, req.params.placeUUID);
+            } else {
+                JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET); // throws JWTErrors
+                personUUID = JWT.decode(req.cookies.person_identifier).uuid;
+            }
+            const succCO = placedb.checkOut(personUUID, req.params.placeUUID); // throws InsertError
+            if (succCO) {
+                // successfull checkout
+                // handled via ajax
                 res.sendStatus(200);
+            } else {
+                // UNsuccessfull checkout
+                // handled via ajax
+                let ise = new InternalServerError();
+                ise.setReason(`Unsuccessful Checkout`);
+                throw ise;
             }
         } else {
-            res.sendStatus(404);
+            // place not enabled
+            // TODO: handle 404 
+            let nf = new NotFoundError();
+            nf.setReason(`Place NOT enabled: UUID:${req.params.placeUUID}`);
+            throw nf;
         }
-    } catch (error) {
-        res.sendStatus(500);
+    } catch (err) {
+        console.debug(err);
+        if (err instanceof InsertError || err instanceof QueryError) {
+            let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
+            next(ise);
+        } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
+            // Problems with jwt verify
+            console.log(`problems with jwt token, error: ${err.name}`);
+            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+
+            let unauth = new UnAuthenticatedError();
+            let message = "JWTERROR";
+            //let message = "GotoLogin";
+            unauth.setReason(message);
+            next(unauth);
+        }
+
+        next(err);
+
+
     }
 }));
 
 router.post('/:placeUUID/feedback', wrap(async (req, res, next) => {
     try {
-        console.log(await placedb.isEnabled(req.params.placeUUID))
-        if (await placedb.isEnabled(req.params.placeUUID)) {
+        let isEn = await placedb.isEnabled(req.params.placeUUID); // throws QueryError
+        if (isEn) {
             let personUUID;
-            if (req.cookies.person_identifier != undefined) {
+            if (req.cookies.person_identifier == undefined) {
+                res.sendStatus(500);
+            }else {
                 JWT.verify(req.cookies.person_identifier, process.env.PERSON_SECRET);
                 personUUID = JWT.decode(req.cookies.person_identifier).uuid;
                 console.log(req.body);
-                placedb.createFeedback(personUUID, req.params.placeUUID, req.body.feedback);
-                res.sendStatus(200);
-            } else {
-                res.sendStatus(500);
+                const succFDBK = placedb.createFeedback(personUUID, req.params.placeUUID, req.body.feedback);
+                if (succFDBK) {
+                    // successfull feedback
+                    // handled via ajax
+                    res.sendStatus(200);
+                } else {
+                    // UNsuccessfull feedback
+                    // handled via ajax
+                    let ise = new InternalServerError();
+                    ise.setReason(`Unsuccessful Feedback`);
+                    throw ise;
+                }
             }
         } else {
-            res.sendStatus(404);
+            // place not enabled
+            // TODO: handle 404 
+            let nf = new NotFoundError();
+            nf.setReason(`Place NOT enabled: UUID:${req.params.placeUUID}`);
+            throw nf;
         }
-    } catch (error) {
-        res.sendStatus(500);
+    } catch (err) {
+        console.debug(err);
+        if (err instanceof InsertError || err instanceof QueryError) {
+            let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
+            next(ise);
+        } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
+            // Problems with jwt verify
+            console.log(`problems with jwt token, error: ${err.name}`);
+            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+
+            let unauth = new UnAuthenticatedError();
+            let message = "JWTERROR";
+            //let message = "GotoLogin";
+            unauth.setReason(message);
+            next(unauth);
+        }
+
+        next(err);
+
+
     }
 }));
 
@@ -445,5 +531,21 @@ function validateReferentSession(req, res) {
         return false;
     }
 }
+
+router.use(function (err, req, res, next) {
+    if (err instanceof UnAuthenticatedError) {
+        console.log(`arriva qui?UnAuthenticatedError`);
+        res.clearCookie("referent_token");
+        res.status(err.statusCode).redirect(`/referent/login`);
+        console.log(`UnAuthenticated Error: error ${err.statusCode}`);
+        return;
+    }
+    if (err instanceof InternalServerError) {
+        res.sendStatus(err.statusCode);
+        console.log(`arriva qui?InternalServerError`);
+        console.log(`Internal server error: error ${err.statusCode}`);
+        return;
+    }
+});
 
 module.exports = router;
