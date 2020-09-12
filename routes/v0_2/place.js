@@ -16,15 +16,7 @@ const persondb = require(`../../db/${API_VERSION}/person-db`);
 let wrap = fn => (...args) => fn(...args).catch(args[2]);
 
 router.post('/create', wrap(async (req, res, next) => {
-    /* if (!validateReferentSession(req, res)) return;
-
-    try {
-        return true;
-    } catch (err) {
-        res.status(401).redirect(`/referent/login`);
-        return false;
-    } */
-
+    
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
         let refId = JWT.decode(req.cookies.referent_token).id;
@@ -49,12 +41,10 @@ router.post('/create', wrap(async (req, res, next) => {
             next(ise);
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+            console.log(`problems with jwt token, error: ${err.name}`);        
 
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
-            //let message = "GotoLogin";
             unauth.setReason(message);
             next(unauth);
         }
@@ -66,8 +56,6 @@ router.post('/create', wrap(async (req, res, next) => {
 }));
 
 router.post('/:uuid/update', wrap(async (req, res, next) => {
-
-    //if (!validateReferentSession(req, res)) return;
 
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
@@ -84,12 +72,10 @@ router.post('/:uuid/update', wrap(async (req, res, next) => {
             next(ise);
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+            console.log(`problems with jwt token, error: ${err.name}`);        
 
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
-            //let message = "GotoLogin";
             unauth.setReason(message);
             next(unauth);
         }
@@ -101,8 +87,6 @@ router.post('/:uuid/update', wrap(async (req, res, next) => {
 }));
 
 router.delete('/:uuid', wrap(async (req, res, next) => {
-
-    //if (!validateReferentSession(req, res)) return;
 
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
@@ -118,8 +102,7 @@ router.delete('/:uuid', wrap(async (req, res, next) => {
             next(ise);
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+            console.log(`problems with jwt token, error: ${err.name}`);        
 
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
@@ -135,7 +118,6 @@ router.delete('/:uuid', wrap(async (req, res, next) => {
 
 router.post('/:uuid/enable', wrap(async (req, res, next) => {
 
-    //if (!validateReferentSession(req, res)) return;
 
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
@@ -151,8 +133,7 @@ router.post('/:uuid/enable', wrap(async (req, res, next) => {
             next(ise);
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+            console.log(`problems with jwt token, error: ${err.name}`);        
 
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
@@ -167,7 +148,6 @@ router.post('/:uuid/enable', wrap(async (req, res, next) => {
 
 router.post('/:uuid/disable', wrap(async (req, res, next) => {
 
-    //if (!validateReferentSession(req, res)) return;
 
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
@@ -183,8 +163,7 @@ router.post('/:uuid/disable', wrap(async (req, res, next) => {
             next(ise);
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+            console.log(`problems with jwt token, error: ${err.name}`);        
 
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
@@ -200,7 +179,6 @@ router.post('/:uuid/disable', wrap(async (req, res, next) => {
 
 router.post('/:uuid/get', wrap(async (req, res, next) => {
 
-    //if (!validateReferentSession(req, res)) return;
 
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
@@ -217,8 +195,7 @@ router.post('/:uuid/get', wrap(async (req, res, next) => {
             next(ise);
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+            console.log(`problems with jwt token, error: ${err.name}`);        
 
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
@@ -234,7 +211,6 @@ router.post('/:uuid/get', wrap(async (req, res, next) => {
 
 router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
 
-    //if (!validateReferentSession(req, res)) return;
 
     try {
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
@@ -252,7 +228,6 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
         }
 
         let tmppath = tdc.path;
-
         let checkinFilePath = await saveQRImagetoPath(tmppath, req.params.uuid, "CHECKIN");
         let checkoutFilePath = await saveQRImagetoPath(tmppath, req.params.uuid, "CHECKOUT");
 
@@ -265,7 +240,6 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
             buildingName
         );
 
-        //let pdfQR = QRImages(checkinFilePath, checkoutFilePath);
         let pdfFilePath = await saveQRPDFtoPath(tmppath, "printable", pdfGD, checkinFilePath, checkoutFilePath);
 
         // control that there are no illegal characters
@@ -277,12 +251,7 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
         res.download(zipPath, () => {
             tdc.cleanup();
         });
-        console.log(`dopo download in teoria`);
-        /* res.zip([
-            { path: checkinFilePath, name: `check-in.png` },
-            { path: checkoutFilePath, name: `check-out.png` },
-            { path: pdfFilePath, name: `printable.pdf` }
-        ], `QRCodes-${placeName}.zip`, tdc.cleanup); */
+        
 
     } catch (err) {
         console.debug(err);
@@ -294,8 +263,7 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
             next(ise);
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+            console.log(`problems with jwt token, error: ${err.name}`);        
 
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
@@ -364,7 +332,6 @@ router.post('/:placeUUID/check-in', wrap(async (req, res, next) => {
             if (succCI) {
                 // successfull checkin
                 // handled via ajax
-                console.log(`arriva quiluyvuvykuyu`);
                 res.sendStatus(200);
             } else {
                 // UNsuccessfull checkin
@@ -388,11 +355,8 @@ router.post('/:placeUUID/check-in', wrap(async (req, res, next) => {
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
             console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
-
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
-            //let message = "GotoLogin";
             unauth.setReason(message);
             next(unauth);
         }
@@ -451,12 +415,10 @@ router.post('/:placeUUID/check-out', wrap(async (req, res, next) => {
             next(ise);
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+            console.log(`problems with jwt token, error: ${err.name}`);        
 
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
-            //let message = "GotoLogin";
             unauth.setReason(message);
             next(unauth);
         }
@@ -508,12 +470,10 @@ router.post('/:placeUUID/feedback', wrap(async (req, res, next) => {
             next(ise);
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
+            console.log(`problems with jwt token, error: ${err.name}`);        
 
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
-            //let message = "GotoLogin";
             unauth.setReason(message);
             next(unauth);
         }
@@ -524,15 +484,6 @@ router.post('/:placeUUID/feedback', wrap(async (req, res, next) => {
     }
 }));
 
-function validateReferentSession(req, res) {
-    try {
-        JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
-        return true;
-    } catch (err) {
-        res.status(401).redirect(`/referent/login`);
-        return false;
-    }
-}
 
 router.use(function (err, req, res, next) {
     if (err instanceof UnAuthenticatedError) {
