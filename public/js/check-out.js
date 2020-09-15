@@ -15,11 +15,12 @@ $(document).ready(function () {
 		}
 	}, 1000);
 
-	let checkOutDate = localStorage.getItem("checkoutTimestamp");
+	let checkOutDate = localStorage.getItem("checkoutTimestampBF");
 
-	if(checkOutDate != null && Date.now()-checkOutDate > 8*60*60*1000) { // Not valid anymore after 8 hour
+	if(checkOutDate == null || Date.now()-checkOutDate > 8*60*60*1000) { // Not valid anymore after 8 hour
 		localStorage.removeItem("checkoutUUID");
 		localStorage.removeItem("checkoutTimestamp");
+		localStorage.removeItem("checkoutTimestampBF");
 	}
 
 	let currentPlaceUUID = $("#place").attr("place-uuid");
@@ -79,9 +80,9 @@ function checkOut() {
 				$('#manual-checkout').hide();
 				$("#session-expired").hide();
 				localStorage.setItem('checkoutUUID', $("#place").attr("place-uuid"));
-				localStorage.setItem("checkoutTimestamp", Date.now());
+				localStorage.setItem("checkoutTimestampBF", Date.now());
 				localStorage.removeItem("checkinUUID");
-				localStorage.removeItem("checkinTimestamp");
+				localStorage.removeItem("checkinTimestampBF");
 				stopCountdown();
 				$(".showCheckIn").show();
 			},

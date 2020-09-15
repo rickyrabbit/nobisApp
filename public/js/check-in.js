@@ -16,11 +16,13 @@ $(document).ready(function () {
 		}
 	}, 1000);
 
-	let checkInDate = localStorage.getItem("checkinTimestamp");
+	let checkInDate = localStorage.getItem("checkinTimestampBF");
+	console.log(checkInDate);
 
-	if(checkInDate != null && Date.now()-checkInDate > 8*60*60*1000) { // Not valid anymore after 8 hour
+	if(checkInDate == null || Date.now()-checkInDate > 8*60*60*1000) { // Not valid anymore after 8 hour
 		localStorage.removeItem("checkinUUID");
 		localStorage.removeItem("checkinTimestamp");
+		localStorage.removeItem("checkinTimestampBF");
 	}
 
 	let currentPlaceUUID = $("#place").attr("place-uuid");
@@ -87,9 +89,9 @@ function checkIn() {
 				$("#session-expired").hide();
 				stopCountdown();
 				localStorage.setItem('checkinUUID', $("#place").attr("place-uuid"));
-				localStorage.setItem("checkinTimestamp", Date.now());
+				localStorage.setItem("checkinTimestampBF", Date.now());
 				localStorage.removeItem("checkoutUUID");
-				localStorage.removeItem("checkoutTimestamp");
+				localStorage.removeItem("checkoutTimestampBF");
 				$(".showCheckIn").show();
 			},
 			500: function () {
