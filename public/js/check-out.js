@@ -17,7 +17,7 @@ $(document).ready(function () {
 
 	let checkOutDate = localStorage.getItem("checkoutTimestamp");
 
-	if(checkOutDate != null && Date.now()-checkOutDate > 8*60*60*10000) { // Not valid anymore after 8 hour
+	if(checkOutDate != null && Date.now()-checkOutDate > 8*60*60*1000) { // Not valid anymore after 8 hour
 		localStorage.removeItem("checkoutUUID");
 		localStorage.removeItem("checkoutTimestamp");
 	}
