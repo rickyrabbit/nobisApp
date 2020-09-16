@@ -26,6 +26,9 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// pickerjs static files
+app.use('/pickerjs', express.static(__dirname + '/node_modules/pickerjs/dist/'));
+
 mountRoutes(app);
 
 // simple route

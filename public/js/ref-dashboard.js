@@ -193,6 +193,86 @@ $(document).ready(function () {
 		$('#create-building').modal('show');
 	})
 
+	$(".edit-opening-button").click(function () {
+		let placeUUID = $(this).closest('tr').attr("place-uuid");
+		$.ajax({
+			url: `/place/${placeUUID}/opening/get`,
+			method: "GET",
+			statusCode: {
+				200: function(openings) {
+					let form = $("#edit-opening-form");
+					form.html("");
+					if(openings.length > 0) {
+						let rows = generateOpeningRows(openings.length);
+						rows.appendTo(form);
+						rows = $(".single-hour");
+						openings.forEach(function(opening, i) {
+							$(rows[i]).find('select[name="opening-week-day"] option[week-day-id="'+opening.weekday+'"]').prop('selected', true);
+							$(rows[i]).find('input[name="start-hour"]').val(opening.start_hour);
+							$(rows[i]).find('input[name="end-hour"]').val(opening.end_hour);
+						});
+						attachTimePickerEvents()
+					} else {
+						let rows = generateOpeningRows(1);
+						rows.appendTo(form);
+						attachTimePickerEvents();
+					}
+				}
+			  }
+		});
+
+		// Copy building id to modal
+		$('#edit-opening').attr("data-place-uuid", placeUUID);
+		$('#edit-opening').modal('show');
+	})
+
+	$("#save-opening").click(function () {
+		let placeUUID = $('#edit-opening').attr("data-place-uuid");
+		let intervals = [];
+		let allFieldOk = true;
+		$(".single-hour").each(function(){
+			let weekday = $(this).find('select[name="opening-week-day"]').val();
+			let starthour = $(this).find('input[name="start-hour"]').val();
+			let endhour = $(this).find('input[name="end-hour"]').val();
+			let interval = {"weekday": weekday, "starthour": starthour, "endhour": endhour};
+			if(weekday == "" || starthour == "" || endhour == "" ) {
+				$("#opening-error").slideDown(500);
+				setTimeout(function() {$("#opening-error").slideUp(500)}, 3000);
+				allFieldOk = false;
+			}
+			intervals.push(interval);
+		});
+		if(allFieldOk) {
+			$.ajax({
+				url: `/place/${placeUUID}/openings/replace`,
+				method: "POST",
+				data: {
+					intervals: intervals
+				},
+				statusCode: {
+					200: function() {
+						$('#edit-opening').modal('hide');
+					}
+				  }
+			});
+		}
+	})
+
+	attachTimePickerEvents();
+	
+
+	$(".add-week-day").click(function() {
+		
+		let form = $("#edit-opening-form");
+		
+		let row = generateOpeningRows(1);
+
+		row.appendTo(form);
+
+		attachTimePickerEvents();
+		
+	});
+
 	$("#create-place-button").click(function() {
 		if (document.getElementById("create-place-form").checkValidity()) {
 			let placeName = $("#place-name-create").val();
@@ -309,6 +389,84 @@ $(document).ready(function () {
 	})
 
 });
+
+function attachTimePickerEvents() {
+	$('.time-picker').each(function() {
+		console.log(this);
+		new Picker(this, {
+			format: 'HH:mm',
+			date: '8:00',
+			inline: true,
+			rows: 1,
+			text: {
+				title: "Scegli l'ora",
+				cancel: 'Cancella',
+				confirm: 'OK',
+				year: 'Anno',
+				month: 'Mese',
+				day: 'Giorno',
+				hour: 'Ora',
+				minute: 'Minuto',
+				second: 'Secondo',
+				millisecond: 'Millisecond',
+			  }
+		});
+	})
+	$(".remove-week-day").click(function() {
+		$(this).parent().parent().remove();
+	})
+}
+
+function generateOpeningRows(num) {
+
+	let rows = $("<div></div>");
+
+	for (let index = 0; index < num; index++) {
+
+		let row = $("<div></div>", {
+			"class": "row single-hour"
+		});
+
+		$("<div></div>", {
+			"class": "col",
+			html: 	`<select class="form-control" id="opening-week-day" name="opening-week-day" required>
+						<option week-day-id="" value="">-</option>
+						<option week-day-id="1" value="1">Lunedì</option>
+						<option week-day-id="2" value="2">Martedì</option>
+						<option week-day-id="3" value="3">Mercoledì</option>
+						<option week-day-id="4" value="4">Giovedì</option>
+						<option week-day-id="5" value="5">Venerdì</option>
+						<option week-day-id="6" value="6">Sabato</option>
+						<option week-day-id="0" value="0">Domenica</option>
+					</select>`
+		}
+		).appendTo(row);
+
+		$("<div></div>", {
+			"class": "col",
+			html: 	`<input type="text" name="start-hour" class="form-control time-picker start">`
+		}
+		).appendTo(row);
+
+		$("<div></div>", {
+			"class": "col",
+			html: 	`<input type="text" name="end-hour" class="form-control time-picker">`
+		}
+		).appendTo(row);
+
+		$("<div></div>", {
+			"class": "col",
+			html: 	`<button type="button"  class="btn btn-danger remove-week-day">Elimina</button>`
+		}
+		).appendTo(row);
+
+		row.appendTo(rows);
+		
+	}
+
+	return rows;
+
+}
 
 function onMapClick(e) {
 	lat = e.latlng.lat;

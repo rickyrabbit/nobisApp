@@ -484,6 +484,39 @@ router.post('/:placeUUID/feedback', wrap(async (req, res, next) => {
     }
 }));
 
+router.post('/:placeUUID/openings/replace', wrap(async (req, res, next) => {
+    JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
+    let placeUUID = req.params.placeUUID;
+    let intervals = req.body.intervals;
+    placedb.replaceIntervals(placeUUID, intervals)
+    res.sendStatus(200);
+}));
+
+router.get('/:placeUUID/opening/get', wrap(async (req, res, next) => {
+    try {
+        JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
+        let result = await placedb.getOpeningTimeByUUID(req.params.placeUUID);
+        if (result) res.status(200).json(result);
+    } catch (err) {
+        console.debug(err);
+        if (err instanceof QueryError) {
+            let ise = new InternalServerError();
+            if (err.reason !== "") {
+                ise.setReason(err.reason);
+            }
+            next(ise);
+        } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
+            // Problems with jwt verify
+            console.log(`problems with jwt token, error: ${err.name}`);        
+
+            let unauth = new UnAuthenticatedError();
+            let message = "JWTERROR";
+            unauth.setReason(message);
+            next(unauth);
+        }
+        next(err);
+    }
+}));
 
 router.use(function (err, req, res, next) {
     if (err instanceof UnAuthenticatedError) {
