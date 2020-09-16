@@ -46,14 +46,12 @@ header h2{
 }
 
 .unipd-logo{
-  width: 200px;
   height: 200px;
   float: left;
   margin: 10px;
 }
 
 .unipd-logo.small-img{
-  width: 100px;
   height: 100px;
 }
 
@@ -85,5 +83,27 @@ form label{
 }
 
 #create-building-error{
+  display: none;
+}
+
+.single-hour{
+  margin-bottom: 10px;
+}
+
+#edit-opening-form{
+  max-height: 250px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.picker-dialog{
+  width: 40%;
+  margin-left: 50%;
+  left: -20% !important;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+#opening-error{
   display: none;
 }

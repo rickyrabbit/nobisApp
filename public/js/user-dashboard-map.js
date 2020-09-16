@@ -33,7 +33,6 @@ function removeCurrentMapMarkers() {
     });
     currentMapMarkers.clear();
 
-    console.log(`bau`);
     return;
 }
 

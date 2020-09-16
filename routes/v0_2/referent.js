@@ -174,7 +174,8 @@ router.get('/dashboard', wrap(async (req, res, next) => {
                 places: places,
                 categories: categories,
                 buildings: buildings,
-                reports: reports
+                reports: reports,
+                isReferent: true
             });
 
         } else {

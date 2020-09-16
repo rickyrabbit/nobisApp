@@ -270,6 +270,72 @@
   </div>
 </div>
 
+<!--MODAL GESTIONE ORARI LUOGO-->
+
+<div id="edit-opening" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Gestisci Orari</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="opening-error" class="alert alert-danger" role="alert">
+        Tutti i campi sono obbligatori.
+      </div>
+      <div class="modal-body">
+        <p>In questa sezione è possibile aggiungere gli orari di apertura del luogo. Seleziona il giorno della settimana e un'unico intervallo se le il luogo prevede un'orario continuato, oppure è possibile creare più intervalli per lo stesso giorno!</p>
+        <div class="row">
+            <div class="col">
+              Giorno
+            </div>
+            <div class="col">
+              Apertura
+            </div>
+            <div class="col">
+              Chiusura
+            </div>
+            <div class="col">
+              Elimina
+            </div>
+          </div>
+        <form id="edit-opening-form">
+          <div class="row single-hour">
+            <div class="col">
+              <select class="form-control" name="opening-week-day" required>
+                <option week-day-id="" value="">-</option>
+                <option week-day-id="1" value="1">Lunedì</option>
+                <option week-day-id="2" value="2">Martedì</option>
+                <option week-day-id="3" value="3">Mercoledì</option>
+                <option week-day-id="4" value="4">Giovedì</option>
+                <option week-day-id="5" value="5">Venerdì</option>
+                <option week-day-id="6" value="6">Sabato</option>
+                <option week-day-id="0" value="0">Domenica</option>
+              </select>
+            </div>
+            <div class="col">
+              <input type="text" name="start-hour" class="form-control time-picker">
+            </div>
+            <div class="col">
+              <input type="text" name="end-hour" class="form-control time-picker">
+            </div>
+            <div class="col">
+              <button type="button"  class="btn btn-danger remove-week-day">Elimina</button>
+            </div>
+          </div>
+        </form>
+        <button type="button"  class="btn btn-primary add-week-day">Nuovo Intervallo</button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
+        <button type="button" id="save-opening" class="btn btn-primary">Salva</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal RISOLVI PROBLEMA -->
 
 <div class="modal fade" id="resolveProblemModal" data-report-id="" tabindex="-1" role="dialog"
@@ -322,6 +388,7 @@
             <th scope="col">Contatore</th>
             <th scope="col">Pubblico</th>
             <th scope="col">Codici QR</th>
+            <th scope="col">Orari</th>
             <th scope="col">Modifica</th>
           </tr>
         </thead>
@@ -340,6 +407,8 @@
                 data-on="Abilitato" data-off="Disabilitato" data-size="sm"></td>
             <td><a href="/place/{{uuid}}/qrcodes" download ><button type="button"
                   class="btn btn-primary btn-sm">Download</button></a></td>
+            <td><button type="button" class="btn btn-secondary btn-sm edit-opening-button" data-toggle="modal"
+                data-target="#edit-opening">{{#if opening}} Cambia {{else}} Aggiungi {{/if}}</button></td>
             <td><button type="button" class="btn btn-success btn-sm edit-place-button" data-toggle="modal"
                 data-target="#edit-place">Modifica</button></td>
           </tr>

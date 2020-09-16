@@ -153,25 +153,6 @@ function computePlaceSituation(placeOccupation) {
 
 function addToList(placeObj, listitemid) {
 
-
-    /*
-    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">Place name</h5>
-            <small>Place Building</small>
-        </div>
-        <div class="capacityinfo">
-            <span class="badge badge-pill badge-success">Low Traffic</span>
-            <span class="badge badge-pill badge-warning">Medium Traffic</span>
-            <span class="badge badge-pill badge-danger">High Traffic</span>
-        </div>
-        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-        <small>Donec id elit non mi porta.</small>
-    </a>
-    */
-    //console.log(`placeObj che arriva: ${placeObj}`);
-    // list i-th item element
-
     let li = $("<a></a>", {
         "class": "list-group-item list-group-item-action flex-column align-items-start result-item",
         href: "#",
@@ -213,17 +194,22 @@ function addToList(placeObj, listitemid) {
 
     let sit = computePlaceSituation(placeObj.occ);
 
-    if (sit === 0) {
-        badge.class = badge.class + "badge-success";
-        badge.text = "Bassa Occupazione*";
-    }
-    if (sit === 1) {
-        badge.class = badge.class + "badge-warning";
-        badge.text = "Media Occupazione*";
-    }
-    if (sit === 2) {
-        badge.class = badge.class + "badge-danger";
-        badge.text = "Alta Occupazione*";
+    if(!placeObj.isopen){
+        badge.class = badge.class + "badge-secondary";
+        badge.text = "Chiuso";
+    } else{
+        if (sit === 0) {
+            badge.class = badge.class + "badge-success";
+            badge.text = "Bassa Occupazione*";
+        }
+        if (sit === 1) {
+            badge.class = badge.class + "badge-warning";
+            badge.text = "Media Occupazione*";
+        }
+        if (sit === 2) {
+            badge.class = badge.class + "badge-danger";
+            badge.text = "Alta Occupazione*";
+        }
     }
 
     $("<span></span>", {
@@ -264,12 +250,16 @@ function computeMaxFeedback(placeObj){
     let low = placeObj.lowfeedback;
     let medium = placeObj.mediumfeedback;
     let high = placeObj.highfeedback;
-    if(high > low && high > medium) {
-        return `<strong>${high}</strong> persone hanno segnalato questo luogo come <strong>alta occupazione</strong>`;
-    } else if (medium > low) {
-        return `<strong>${medium}</strong> persone hanno segnalato questo luogo come <strong>media occupazione</strong>`;
-    } else if (medium < low) {
-        return `<strong>${low}</strong> persone hanno segnalato questo luogo come <strong>bassa occupazione</strong>`;
+    if(placeObj.isopen){
+        if(high > low && high > medium) {
+            return `<strong>${high}</strong> persone hanno segnalato questo luogo come <strong>alta occupazione</strong>`;
+        } else if (medium > low) {
+            return `<strong>${medium}</strong> persone hanno segnalato questo luogo come <strong>media occupazione</strong>`;
+        } else if (medium < low) {
+            return `<strong>${low}</strong> persone hanno segnalato questo luogo come <strong>bassa occupazione</strong>`;
+        } else {
+            return "";
+        }
     } else {
         return "";
     }

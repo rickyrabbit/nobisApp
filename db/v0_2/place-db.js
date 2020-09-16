@@ -76,8 +76,9 @@ const deletePlace = async (uuid) => {
         let queryCategory = await db.pool.query("DELETE FROM have WHERE place_uuid = $1;", [uuid]);
         let queryReferent = await db.pool.query("DELETE FROM manage WHERE place_uuid = $1;", [uuid]);
         let queryReport = await db.pool.query("DELETE FROM report WHERE place_uuid = $1;", [uuid]);
+        let queryOpening = await db.pool.query("DELETE FROM opening WHERE place_uuid = $1;", [uuid]);
         let queryPlace = await db.pool.query("DELETE FROM place WHERE uuid = $1;", [uuid]);
-        if(queryPlace && queryCategory && queryReferent && queryReport)
+        if(queryPlace && queryOpening && queryCategory && queryReferent && queryReport)
             return true;
     } catch(e) {
         console.error(e.stack);
@@ -168,6 +169,7 @@ const checkOut = async (personUUID, placeUUID) => {
     }
 }
 
+
 const createFeedback = async (personUUID, placeUUID, feedback) => {
     try {
         let queryLog = await db.pool.query("SELECT MAX(log_id) FROM visit WHERE place_uuid = $1 AND person_uuid = $2;", [placeUUID, personUUID]);
@@ -179,6 +181,37 @@ const createFeedback = async (personUUID, placeUUID, feedback) => {
         console.error(e.stack);
         let ie = new InsertError();
         ie.setReason("CREATEFEEDBACK");
+        throw ie;
+    }
+}
+
+const replaceIntervals = async (placeUUID, intervals) => {
+    try {
+        let queryDelete = await db.pool.query("DELETE FROM opening WHERE place_uuid = $1;", [placeUUID]);
+        intervals.forEach(async interval => {
+            let queryInsert = await db.pool.query("INSERT INTO opening (place_uuid, weekday, start_hour, end_hour) VALUES ($1, $2, $3, $4)", [placeUUID, interval.weekday, interval.starthour, interval.endhour]);
+        });
+
+        if(queryDelete)
+            return true;
+    } catch(e) {
+        console.error(e.stack);
+        let ie = new InsertError();
+        ie.setReason("REPLACEINTERVALS");
+        throw ie;
+    }
+}
+
+const getOpeningTimeByUUID = async (placeUUID) => {
+    try {
+        let query = await db.pool.query("SELECT * FROM opening WHERE place_uuid = $1 ORDER BY weekday;", [placeUUID]);
+
+        if(query)
+            return query.rows;
+    } catch(e) {
+        console.error(e.stack);
+        let ie = new InsertError();
+        ie.setReason("GETOPENINGS");
         throw ie;
     }
 }
@@ -195,5 +228,7 @@ module.exports = {
     disablePlace,
     checkIn,
     checkOut,
-    createFeedback
+    createFeedback,
+    replaceIntervals,
+    getOpeningTimeByUUID
 };
