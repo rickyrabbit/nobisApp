@@ -6,7 +6,7 @@ set assumption = false
 where assumption ISNULL;
 
 */
-CREATE FUNCTION public.findplacesinbox(IN xmin numeric, IN ymin numeric, IN xmax numeric, IN ymax numeric) RETURNS TABLE(puuid uuid, pname text,buildingname text, category text,geocoord text,occ decimal, highFeedback bigint, mediumFeedback bigint, lowFeedback bigint) AS $$
+CREATE FUNCTION public.findplacesinbox(IN xmin numeric, IN ymin numeric, IN xmax numeric, IN ymax numeric) RETURNS TABLE(puuid uuid, pname text,buildingname text, category text,geocoord text,occ decimal, highFeedback bigint, mediumFeedback bigint, lowFeedback bigint, isOpen boolean) AS $$
 
 SELECT place.uuid AS uuid,
 place.name,
@@ -16,7 +16,8 @@ st_astext(place.geometry) AS geocoord,
 TRUNC((place.counter::decimal(3) / place.capacity),2) AS occ,
 getfeedbackbyplace(place.uuid, 3) AS highFeedback,
 getfeedbackbyplace(place.uuid, 2) AS mediumFeedback,
-getfeedbackbyplace(place.uuid, 1) AS lowFeedback
+getfeedbackbyplace(place.uuid, 1) AS lowFeedback,
+isPlaceOpen(place.uuid) AS isOpen
 FROM place
 LEFT JOIN building
 ON place.building_id = building.id
@@ -29,6 +30,30 @@ ORDER BY occ DESC;
 
 $$ LANGUAGE SQL VOLATILE; -- END FUNCTION
 
+ALTER FUNCTION public.findplacesinbox(IN xmin numeric, IN ymin numeric, IN xmax numeric, IN ymax numeric) OWNER TO nobis;
+
+
+CREATE OR REPLACE FUNCTION public.isPlaceOpen(IN placeuuid uuid) RETURNS boolean AS 
+$$
+DECLARE
+iso boolean;
+BEGIN
+    PERFORM * FROM opening WHERE place_uuid = placeuuid;
+    IF NOT FOUND THEN
+        RETURN TRUE;
+    ELSE
+        SELECT COUNT(*) > 0 INTO iso FROM opening
+        WHERE place_uuid = placeuuid AND 
+        weekday = (SELECT EXTRACT(DOW FROM NOW())) AND 
+        start_hour < (SELECT to_timestamp(to_char(now(),'HH24:MI:SS'),'HH24:MI:SS')::time) AND 
+        end_hour > (SELECT to_timestamp(to_char(now(),'HH24:MI:SS'),'HH24:MI:SS')::time);
+        RETURN iso;
+    END IF;
+END;
+$$ LANGUAGE plpgsql; -- END FUNCTION
+
+ALTER FUNCTION public.isPlaceOpen(IN placeuuid uuid) OWNER TO nobis;
+
 
 CREATE FUNCTION public.getfeedbackbyplace(IN placeuuid uuid, IN rating numeric) RETURNS TABLE(feedback bigint) AS $$
 
@@ -40,6 +65,9 @@ ON feedback.log_id = log.id
 WHERE place_uuid = placeuuid AND log.timestamp >= NOW() - interval '2 hours' AND feedback.rating = feedback;
 
 $$ LANGUAGE SQL VOLATILE; -- END FUNCTION
+
+ALTER FUNCTION public.getfeedbackbyplace(IN placeuuid uuid, IN rating numeric) OWNER TO nobis;
+
 
 
 CREATE FUNCTION public.findPersonlastDetection(IN person_uuid_q uuid) RETURNS TABLE(place_uuid uuid,
@@ -64,8 +92,8 @@ LIMIT 1
 -- FUNCTION: public.findplacesfrompattern(text)
  -- DROP FUNCTION public.findplacesfrompattern(text);
 
-CREATE OR REPLACE FUNCTION public.findplacesfrompattern(_searchpattern text) RETURNS TABLE(puuid uuid, pname text, buildingname text, category text, geocoord text, occ numeric) LANGUAGE 'sql' COST 100 VOLATILE ROWS 1000 AS $BODY$
-SELECT place.uuid AS uuid,place.name,building.name AS building,category.name AS category,st_astext(place.geometry) AS geocoord , TRUNC((place.counter::decimal(3) / place.capacity),2) AS occ FROM place
+CREATE OR REPLACE FUNCTION public.findplacesfrompattern(_searchpattern text) RETURNS TABLE(puuid uuid, pname text, buildingname text, category text, geocoord text, occ numeric, isOpen boolean) LANGUAGE 'sql' COST 100 VOLATILE ROWS 1000 AS $BODY$
+SELECT place.uuid AS uuid,place.name,building.name AS building,category.name AS category,st_astext(place.geometry) AS geocoord , TRUNC((place.counter::decimal(3) / place.capacity),2) AS occ, isPlaceOpen(place.uuid) AS isOpen FROM place
 LEFT JOIN building
 ON place.building_id = building.id
 LEFT JOIN have
