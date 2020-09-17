@@ -6,7 +6,7 @@ set assumption = false
 where assumption ISNULL;
 
 */
-CREATE FUNCTION public.findplacesinbox(IN xmin numeric, IN ymin numeric, IN xmax numeric, IN ymax numeric) RETURNS TABLE(puuid uuid, pname text,buildingname text, category text,geocoord text,occ decimal, highFeedback bigint, mediumFeedback bigint, lowFeedback bigint, isOpen boolean) AS $$
+CREATE OR REPLACE FUNCTION public.findplacesinbox(IN xmin numeric, IN ymin numeric, IN xmax numeric, IN ymax numeric) RETURNS TABLE(puuid uuid, pname text,buildingname text, category text,geocoord text,occ decimal, highFeedback bigint, mediumFeedback bigint, lowFeedback bigint, isOpen boolean) AS $$
 
 SELECT place.uuid AS uuid,
 place.name,
@@ -25,7 +25,7 @@ LEFT JOIN have
 ON place.uuid = have.place_uuid
 LEFT JOIN category
 ON have.category_id = category.id
-WHERE st_intersects(st_makeenvelope(xmin,ymin,xmax,ymax,4326), place.geometry)
+WHERE st_intersects(st_makeenvelope(xmin,ymin,xmax,ymax,4326), place.geometry) AND place.enable = TRUE
 ORDER BY occ DESC;
 
 $$ LANGUAGE SQL VOLATILE; -- END FUNCTION
@@ -101,7 +101,7 @@ ON place.uuid = have.place_uuid
 LEFT JOIN category
 ON have.category_id = category.id
 --WHERE st_intersects(st_makeenvelope(xmin,ymin,xmax,ymax,4326), place.geometry)
-WHERE place.name ILIKE '%' || _searchpattern || '%' OR building.name ILIKE '%' || _searchpattern || '%'
+WHERE (place.name ILIKE '%' || _searchpattern || '%' OR building.name ILIKE '%' || _searchpattern || '%') AND place.enable = TRUE
 ORDER BY occ DESC;
 $BODY$;
 
