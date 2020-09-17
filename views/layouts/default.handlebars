@@ -30,10 +30,12 @@
         {{/if}}
         <!-- /Leaflet -->
 
+        <!-- JS Picker -->
         {{#if isReferent}}
             <link  href="../pickerjs/picker.css" rel="stylesheet">
             <script src="../pickerjs/picker.js"></script>
         {{/if}}
+        <!-- /JS Picker -->
 
         <!-- Bootstrap -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -61,7 +63,8 @@
                 <img class="unipd-logo small-img" src="../img/logo_unipd_dei.png">
                 </div>
                 <div class="col">
-                <h2>NoBis</h2>
+                <h2>{{{nobisName}}}</h2>
+                <h3>{{{pageTitle}}}</h3>
                 </div>
             </div>
             </div>

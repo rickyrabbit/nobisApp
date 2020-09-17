@@ -17,13 +17,14 @@ let wrap = fn => (...args) => fn(...args).catch(args[2]);
 
 router.get("/", async (req, res) => {
     try {
-        
+
         res.render('user-dashboard', {
-          pageTitle: 'Dashboard Utente',
-          loadMap: true,
-          css: ['user-dashboard']
+            nobisName: "NoBis",
+            pageTitle: 'Dashboard Utente',
+            loadMap: true,
+            css: ['user-dashboard']
         });
-        
+
     } catch (err) {
         console.debug(err);
     }
@@ -36,7 +37,7 @@ router.get("/mapInfo/findPlacesinMap", async (req, res) => {
         let ymin = parseFloat(req.query.coorYmin);
         let xmax = parseFloat(req.query.coorXmax);
         let ymax = parseFloat(req.query.coorYmax);
-        
+
         /*
         let xmin = req.query.coorXmin;
         let ymin = req.query.coorYmin;
@@ -49,8 +50,8 @@ router.get("/mapInfo/findPlacesinMap", async (req, res) => {
         //console.debug(`log xmax: ${xmax}`);
         //console.debug(`log ymax: ${ymax}`);
 
-        let placesRes = await userdb.getPlacesInMapBoundingBox(xmin,ymin,xmax,ymax);
-        if(placesRes){
+        let placesRes = await userdb.getPlacesInMapBoundingBox(xmin, ymin, xmax, ymax);
+        if (placesRes) {
             //console.log(placesRes);
             res.status(200).json(placesRes);
         }
@@ -67,7 +68,7 @@ router.get("/mapInfo/searchPlaces", async (req, res) => {
         //console.debug(`log si: ${si}`);
 
         let placesRes = await userdb.getPlacesFromSearchPattern(si);
-        if(placesRes){
+        if (placesRes) {
             //console.log(placesRes);
             res.status(200).json(placesRes);
         }

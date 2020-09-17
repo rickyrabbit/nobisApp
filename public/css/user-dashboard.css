@@ -14,8 +14,15 @@ header p{
 }
 
 header h2{
-  line-height: 120px;
-  float: right;
+  line-height: 1em;
+  text-align: right;
+  font-size: 40px;
+  margin: 27px 0 0px;
+}
+
+header h3{
+  text-align: right;
+  font-size: 22px;
 }
 
 #main{
@@ -128,7 +135,13 @@ footer {
   header h2{
     line-height: 80px;
     font-size: 17px;
+    margin:0;
   }
+
+  header h3{
+    display: none;
+  }
+
   header p {
     line-height: 80px;
   }

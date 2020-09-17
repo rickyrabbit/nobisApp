@@ -24,6 +24,7 @@ router.get('/panel', wrap(async (req, res) => {
         let newRef = await referentdb.listNewReferents();
         let oldRef = await referentdb.listOldReferents();
         res.render('admin-panel', {
+            nobisName: "NoBis",
             pageTitle: 'Pannello Amministratore',
             newRef: newRef,
             oldRef: oldRef,

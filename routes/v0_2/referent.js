@@ -168,6 +168,7 @@ router.get('/dashboard', wrap(async (req, res, next) => {
             let buildings = await buildingdb.listBuildings();
             let reports = await reportdb.listReports(id);
             res.render('ref-dashboard', {
+                nobisName: "NoBis",
                 pageTitle: 'Dashboard Referente',
                 loadMap: true,
                 css: ['ref-dashboard'],
