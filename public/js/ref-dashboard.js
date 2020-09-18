@@ -93,7 +93,7 @@ $(document).ready(function () {
 		$("#edit-place").attr("place-uuid", placeUUID);
 		$.ajax({
 			url: `/place/${placeUUID}/get`,
-			method: "POST",
+			method: "GET",
 			statusCode: {
 				200: function(res) {
 					$("#place-name").val(res.name);
