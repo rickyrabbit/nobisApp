@@ -1,67 +1,65 @@
 <script type="text/javascript">
-window.onload = function () {
-	document.getElementById("inputPassword").onchange = validatePassword;
-	document.getElementById("inputPasswordCheck").onchange = validatePassword;
-}
-function validatePassword(){
-  var pass2=document.getElementById("inputPasswordCheck").value;
-  var pass1=document.getElementById("inputPassword").value;
-  if(pass1!=pass2) {
-    document.getElementById("inputPasswordCheck").setCustomValidity("Le due password non coincidono!");
-    document.getElementById("inputPasswordCheck").reportValidity();
+  window.onload = function () {
+    document.getElementById("inputPassword").onchange = validatePassword;
+    document.getElementById("inputPasswordCheck").onchange = validatePassword;
   }
-  else
-    document.getElementById("inputPasswordCheck").setCustomValidity('');	 
-}
+  function validatePassword() {
+    var pass2 = document.getElementById("inputPasswordCheck").value;
+    var pass1 = document.getElementById("inputPassword").value;
+    if (pass1 != pass2) {
+      document.getElementById("inputPasswordCheck").setCustomValidity("Le due password non coincidono!");
+      document.getElementById("inputPasswordCheck").reportValidity();
+    }
+    else
+      document.getElementById("inputPasswordCheck").setCustomValidity('');
+  }
 </script>
 
 <div class="container">
-    <div class="row">
-      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
-        <div class="card card-signin my-5">
-          <div class="card-body">
-            <img id="unipd-logo" src="../img/Logo_Universita_Padova.png">
-            <h5 class="card-title text-center">Registrazione Referente</h5>
-            {{#if errorMessage}}
-            <div id="login-error" class="alert alert-danger" role="alert">
-              <h4 class="alert-heading">Registrazione non effettuata</h4>
-              <p>{{errorMessage}}</p>
-            </div>
-            {{/if}}
-            <form class="form-signin" method="POST" action="/referent/create">
-              <div class="form-label-group">
-                <input type="text" id="inputFirstname" name="firstname" class="form-control" placeholder="Nome" required autofocus>
-                <label for="inputFirstname">Nome</label>
-              </div>
-
-              <div class="form-label-group">
-                <input type="text" id="inputLastname" name="lastname" class="form-control" placeholder="Cognome" required autofocus>
-                <label for="inputLastname">Cognome</label>
-              </div>
-
-              <div class="form-label-group">
-                <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Indirizzo Email" required
-                  autofocus>
-                <label for="inputEmail">Indirizzo Email</label>
-              </div>
-
-              <div class="form-label-group">
-                <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
-                <label for="inputPassword">Password</label>
-              </div>
-              <div class="form-label-group">
-                <input type="password" id="inputPasswordCheck" class="form-control" placeholder="Controllo Password" required>
-                <label for="inputPasswordCheck">Ripeti Password</label>
-              </div>
-
-              <a href="login">Sono già registrato</a>
-
-              <hr>
-
-              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Registrati</button>
-            </form>
+  <div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+      <div class="card card-signin my-5">
+        <div class="card-body">
+          <img id="unipd-logo" src="../img/Logo_Universita_Padova.png">
+          <h5 class="card-title text-center">Registrazione Referente</h5>
+          {{#if errorMessage}}
+          <div id="login-error" class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Registrazione non effettuata</h4>
+            <p>{{errorMessage}}</p>
           </div>
+          {{/if}}
+          <form class="form-signin" method="POST" action="/referent/create">
+            <div class="form-label-group">
+              <input type="text" id="inputFirstname" name="firstname" class="form-control" placeholder="Nome" required
+                autofocus>
+              <label for="inputFirstname">Nome</label>
+            </div>
+            <div class="form-label-group">
+              <input type="text" id="inputLastname" name="lastname" class="form-control" placeholder="Cognome" required
+                autofocus>
+              <label for="inputLastname">Cognome</label>
+            </div>
+            <div class="form-label-group">
+              <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Indirizzo Email"
+                required autofocus>
+              <label for="inputEmail">Indirizzo Email</label>
+            </div>
+            <div class="form-label-group">
+              <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password"
+                required>
+              <label for="inputPassword">Password</label>
+            </div>
+            <div class="form-label-group">
+              <input type="password" id="inputPasswordCheck" class="form-control" placeholder="Controllo Password"
+                required>
+              <label for="inputPasswordCheck">Ripeti Password</label>
+            </div>
+            <a href="login">Sono già registrato</a>
+            <hr>
+            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Registrati</button>
+          </form>
         </div>
       </div>
     </div>
   </div>
+</div>

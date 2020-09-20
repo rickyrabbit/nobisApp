@@ -63,7 +63,8 @@
           <div class="row">
             <div class="col">
               <label for="place-capacity">Capacità</label>
-              <input type="number" class="form-control" id="place-capacity" name="place-capacity" placeholder="Capacità" required>
+              <input type="number" class="form-control" id="place-capacity" name="place-capacity" placeholder="Capacità"
+                required>
             </div>
             <div class="col">
               <label for="place-visit-time">Tempo Medio Visita</label>
@@ -112,8 +113,8 @@
           <div class="row">
             <div class="col">
               <label for="place-name-create">Nome</label>
-              <input type="text" class="form-control" id="place-name-create" name="place-name-create"
-                placeholder="Nome" required>
+              <input type="text" class="form-control" id="place-name-create" name="place-name-create" placeholder="Nome"
+                required>
             </div>
             <div class="col">
               <label for="place-building">Edificio</label>
@@ -220,13 +221,13 @@
           <div class="row">
             <div class="col">
               <label for="building-latitude-create">Latitudine</label>
-              <input type="text" class="form-control" disabled id="building-latitude-create" name="plbuildingace-latitude-create"
-                placeholder="Latitudine" required>
+              <input type="text" class="form-control" disabled id="building-latitude-create"
+                name="plbuildingace-latitude-create" placeholder="Latitudine" required>
             </div>
             <div class="col">
               <label for="building-longitude-create">Longitudine</label>
-              <input type="text" class="form-control" disabled id="building-longitude-create" name="building-longitude-create"
-                placeholder="Longitudine" required>
+              <input type="text" class="form-control" disabled id="building-longitude-create"
+                name="building-longitude-create" placeholder="Longitudine" required>
             </div>
           </div>
           <div class="row">
@@ -286,21 +287,23 @@
         Tutti i campi sono obbligatori.
       </div>
       <div class="modal-body">
-        <p>In questa sezione è possibile aggiungere gli orari di apertura del luogo. Seleziona il giorno della settimana e un'unico intervallo se le il luogo prevede un'orario continuato, oppure è possibile creare più intervalli per lo stesso giorno!</p>
+        <p>In questa sezione è possibile aggiungere gli orari di apertura del luogo. Seleziona il giorno della settimana
+          e un'unico intervallo se le il luogo prevede un'orario continuato, oppure è possibile creare più intervalli
+          per lo stesso giorno!</p>
         <div class="row">
-            <div class="col">
-              Giorno
-            </div>
-            <div class="col">
-              Apertura
-            </div>
-            <div class="col">
-              Chiusura
-            </div>
-            <div class="col">
-              Elimina
-            </div>
+          <div class="col">
+            Giorno
           </div>
+          <div class="col">
+            Apertura
+          </div>
+          <div class="col">
+            Chiusura
+          </div>
+          <div class="col">
+            Elimina
+          </div>
+        </div>
         <form id="edit-opening-form">
           <div class="row single-hour">
             <div class="col">
@@ -322,11 +325,11 @@
               <input type="text" name="end-hour" class="form-control time-picker">
             </div>
             <div class="col">
-              <button type="button"  class="btn btn-danger remove-week-day">Elimina</button>
+              <button type="button" class="btn btn-danger remove-week-day">Elimina</button>
             </div>
           </div>
         </form>
-        <button type="button"  class="btn btn-primary add-week-day">Nuovo Intervallo</button>
+        <button type="button" class="btn btn-primary add-week-day">Nuovo Intervallo</button>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
@@ -405,7 +408,7 @@
             <td>{{counter}}</td>
             <td><input class="toggle-auth" type="checkbox" {{#if enable}} checked {{/if}} data-toggle="toggle"
                 data-on="Abilitato" data-off="Disabilitato" data-size="sm"></td>
-            <td><a href="/place/{{uuid}}/qrcodes" download ><button type="button"
+            <td><a href="/place/{{uuid}}/qrcodes" download><button type="button"
                   class="btn btn-primary btn-sm">Download</button></a></td>
             <td><button type="button" class="btn btn-secondary btn-sm edit-opening-button" data-toggle="modal"
                 data-target="#edit-opening">{{#if opening}} Cambia {{else}} Aggiungi {{/if}}</button></td>
@@ -465,7 +468,6 @@
         <tbody>
           {{#each buildings}}
           <tr building-id="{{id}}">
-            <!-- TODO: remove id? it is useless because we do not show uuid -->
             <th scope="row">{{@index}}</th>
             <td>{{name}}</td>
             <td>({{lon}}, {{lat}})</td>
@@ -524,7 +526,6 @@
 
           {{#each reports}}
           <tr report-id="{{id}}">
-            <!-- TODO: remove id? it is useless because we do not show uuid -->
             <th scope="row">{{@index}}</th>
             <td>{{building_name}}</td>
             <td>{{place_name}}</td>

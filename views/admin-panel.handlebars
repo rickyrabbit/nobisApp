@@ -1,109 +1,107 @@
 <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="toast-header">
-      <strong class="mr-auto">Preferenza Aggiornata</strong>
-      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="toast-body">
-      Il consulente è stato <span></span>.
+  <div class="toast-header">
+    <strong class="mr-auto">Preferenza Aggiornata</strong>
+    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="toast-body">
+    Il consulente è stato <span></span>.
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3>Autorizzazione</h3>
     </div>
   </div>
-
-
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <h3>Autorizzazione</h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <p>In questa sezione sono presenti i nuovi referenti da abilitare.</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <table class="table">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Nome</th>
-              <th scope="col">Cognome</th>
-              <th scope="col">Email</th>
-              <th scope="col">Autorizzazione</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each newRef}}
-                <tr>
-                    <th scope="row">{{id}}</th>
-                    <td>{{firstname}}</td>
-                    <td>{{lastname}}</td>
-                    <td>{{email}}</td>
-                    <td><input class="toggle-auth" type="checkbox" ref-id="{{id}}" {{#if enable}} checked {{/if}} data-toggle="toggle" data-on="Abilitato"
-                        data-off="Disabilitato" data-size="sm"></td>
-                </tr>
-            {{else}}
-                <tr>
-                    <th scope="row">-</th>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
+  <div class="row">
+    <div class="col">
+      <p>In questa sezione sono presenti i nuovi referenti da abilitare.</p>
     </div>
   </div>
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <h3>Referenti</h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <p>In questa sezione sono presenti i referenti già abilitati una volta. Puoi dicidere se disabilitare qualche
-          referente.</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <table class="table">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Nome</th>
-              <th scope="col">Cognome</th>
-              <th scope="col">Email</th>
-              <th scope="col">Autorizzazione</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each oldRef}}
-                <tr>
-                    <th scope="row">{{id}}</th>
-                    <td>{{firstname}}</td>
-                    <td>{{lastname}}</td>
-                    <td>{{email}}</td>
-                    <td><input class="toggle-auth" type="checkbox" ref-id="{{id}}" {{#if enable}} checked {{/if}} data-toggle="toggle" data-on="Abilitato"
-                        data-off="Disabilitato" data-size="sm"></td>
-                </tr>
-            {{else}}
-                <tr>
-                    <th scope="row">-</th>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
+  <div class="row">
+    <div class="col">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Cognome</th>
+            <th scope="col">Email</th>
+            <th scope="col">Autorizzazione</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each newRef}}
+          <tr>
+            <th scope="row">{{id}}</th>
+            <td>{{firstname}}</td>
+            <td>{{lastname}}</td>
+            <td>{{email}}</td>
+            <td><input class="toggle-auth" type="checkbox" ref-id="{{id}}" {{#if enable}} checked {{/if}}
+                data-toggle="toggle" data-on="Abilitato" data-off="Disabilitato" data-size="sm"></td>
+          </tr>
+          {{else}}
+          <tr>
+            <th scope="row">-</th>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
     </div>
   </div>
-  <script src="../js/admin-panel.js"></script>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3>Referenti</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <p>In questa sezione sono presenti i referenti già abilitati una volta. Puoi dicidere se disabilitare qualche
+        referente.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Cognome</th>
+            <th scope="col">Email</th>
+            <th scope="col">Autorizzazione</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each oldRef}}
+          <tr>
+            <th scope="row">{{id}}</th>
+            <td>{{firstname}}</td>
+            <td>{{lastname}}</td>
+            <td>{{email}}</td>
+            <td><input class="toggle-auth" type="checkbox" ref-id="{{id}}" {{#if enable}} checked {{/if}}
+                data-toggle="toggle" data-on="Abilitato" data-off="Disabilitato" data-size="sm"></td>
+          </tr>
+          {{else}}
+          <tr>
+            <th scope="row">-</th>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script src="../js/admin-panel.js"></script>

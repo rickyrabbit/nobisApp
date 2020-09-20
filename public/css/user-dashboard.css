@@ -121,8 +121,12 @@ footer {
   text-align: center;
 }
 
+#contacts{
+  padding: 10px 0;
+}
+
 #contacts span{
-  margin: 20px 0;
+  margin: 5px 0;
   display: block;
 }
 
