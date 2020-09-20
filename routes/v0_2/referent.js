@@ -3,18 +3,30 @@ const JWT = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 const assert = require('assert');
 
+// Current used API version
 const API_VERSION = process.env.API_VERSION;
+// Databases
 const db = require(`../../db/${API_VERSION}/referent-db`);
+const adminDb = require(`../../db/${API_VERSION}/admin-db`);
 const placedb = require(`../../db/${API_VERSION}/place-db`);
 const categorydb = require(`../../db/${API_VERSION}/category-db`);
 const buildingdb = require(`../../db/${API_VERSION}/building-db`);
 const reportdb = require(`../../db/${API_VERSION}/report-db`);
 
+// Errors Management
 const { UnAuthenticatedError, QueryError, InsertError, UpdateError, DeleteError, InternalServerError ,ModuleError, InternalOperationError } = require("../errors");
-const adminDb = require("../../db/v0_2/admin-db");
 
 let wrap = fn => (...args) => fn(...args).catch(args[2]);
 
+/**
+ * Route serving Referent login form.
+ * @name get/login
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 router.get('/login', async (req, res) => {
     res.render('ref-login', {
         layout: 'access.handlebars',
@@ -24,6 +36,15 @@ router.get('/login', async (req, res) => {
     });
 });
 
+/**
+ * Route serving Referent register form.
+ * @name get/register
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 router.get('/register', async (req, res) => {
     res.render('ref-register', {
         layout: 'access.handlebars',
@@ -32,6 +53,15 @@ router.get('/register', async (req, res) => {
     });
 });
 
+/**
+ * Route serving Referent restore password form.
+ * @name get/restore-password
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 router.get('/restore-password', async (req, res) => {
     res.render('restore-password', {
         layout: 'access.handlebars',
@@ -39,28 +69,34 @@ router.get('/restore-password', async (req, res) => {
     });
 });
 
+/**
+ * Route that sends the email for restoring the password.
+ * @name post/restorePassword
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 router.post('/restorePassword', wrap(async (req, res, next) => {
     try {
 
         let email = req.body.email;
-        let ref = await db.getReferentByEmail(email);
+        let referent = await db.getReferentByEmail(email);
 
         let payload = {
-            id: ref.id,
+            id: referent.id,
             email: email
         };
         
-        let secret = ref.password;
+        let secret = referent.password;
 
         let token = JWT.sign(payload, secret);
 
-        console.log(token);
-
-        // TODO: Better send mail with HTML
         sendMail(
             email,
             "Ripristino Password Referente",
-            `Per ripristinare la password vai al seguente link: ${process.env.APP_DOMAIN}/referent/restore-password-auth/${ref.id}/${token}`
+            `Per ripristinare la password vai al seguente link: ${process.env.APP_DOMAIN}/referent/restore-password-auth/${referent.id}/${token}`
         );
 
         res.render('restore-password', {
@@ -82,6 +118,15 @@ router.post('/restorePassword', wrap(async (req, res, next) => {
     }
 }));
 
+/**
+ * Route serving the new password form.
+ * @name get/restore-password-auth/id/token
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 router.get('/restore-password-auth/:id/:token', async (req, res) => {
     try {
         let refId = req.params.id;
@@ -114,7 +159,16 @@ router.get('/restore-password-auth/:id/:token', async (req, res) => {
     }
 });
 
-router.post('/changePassword/', wrap(async (req, res, next) => {
+/**
+ * Route that actually change the password.
+ * @name post/changePassword
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.post('/changePassword', wrap(async (req, res, next) => {
     try {
 
         let refId = req.body.refid;
@@ -150,19 +204,21 @@ router.post('/changePassword/', wrap(async (req, res, next) => {
     }
 }));
 
+/**
+ * Route serving the referent dashboard.
+ * @name get/dashboard
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 router.get('/dashboard', wrap(async (req, res, next) => {
     try {
-        //throw new JWT.JsonWebTokenError();
         JWT.verify(req.cookies.referent_token, process.env.REFERENT_SECRET);
         let id = JWT.decode(req.cookies.referent_token).id;
         let refenabled = await db.isReferentEnabled(id);
         if (refenabled) {
-            // const [places, categories, buildings, reports] = await Promise.allSettled([
-            //     placedb.listPlacesByReferentId(id),
-            //     categorydb.listCategories(),
-            //     buildingdb.listBuildings(),
-            //     reportdb.listReports(id)
-            // ]);
             let places = await placedb.listPlacesByReferentId(id);
             let categories = await categorydb.listCategories();
             let buildings = await buildingdb.listBuildings();
@@ -181,27 +237,12 @@ router.get('/dashboard', wrap(async (req, res, next) => {
 
         } else {
             let unauth = new UnAuthenticatedError();
-            let message2 = "Account non abilitato, aspetta la mail di conferma attivazione.";
             let message = "REFNOTENABLED";
             unauth.setReason(message);
             throw unauth;
-            /* let message = "Account non abilitato, aspetta la mail di conferma attivazione.";
-            res.status(401).redirect(`/referent/login?error=${message}`); */
         }
     } catch (err) {
         console.debug(err);
-        //console.debug(JSON.stringify(typeof err));
-        /* if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError){
-            // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
-
-            let unauth = new UnAuthenticatedError();
-            let message = "JWTERROR";
-            //let message = "GotoLogin";
-            unauth.setReason(message);
-            next(unauth);
-        } */
         if (err instanceof UpdateError || err instanceof DeleteError || err instanceof InsertError || err instanceof QueryError) {
             let ise = new InternalServerError();
             if (err.reason !== "") {
@@ -216,18 +257,24 @@ router.get('/dashboard', wrap(async (req, res, next) => {
 
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
-            //let message = "GotoLogin";
             unauth.setReason(message);
             next(unauth);
         }
         console.log(`vediamo la prova ${err instanceof JWT.JsonWebTokenError}`);
-        /* res.status(401).redirect('/referent/login');
-        next(err); */
 
         next(err);
     }
 }));
 
+/**
+ * Route checking Referent Credentials.
+ * @name post/checkCredentials
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 router.post('/checkCredentials', wrap(async (req, res, next) => {
     try {
         let login = await db.checkReferentCredentials(req.body.email, req.body.password);
@@ -241,12 +288,10 @@ router.post('/checkCredentials', wrap(async (req, res, next) => {
                 sameSite: true
             });
             res.redirect('/referent/dashboard');
-            console.debug('arrivi qui?sdfsdfsdfsdf');
         } else if (login.valid && !login.enable) {
-            // login isn't  enabled
+            // referent isn't enabled
             console.log("NOT login.enable");
             let ue = new UnAuthenticatedError();
-            let message2 = "Account non abilitato, aspetta la mail di conferma attivazione.";
             let message = "REFNOTENABLED";
             ue.setReason(message);
             next(ue);
@@ -254,7 +299,6 @@ router.post('/checkCredentials', wrap(async (req, res, next) => {
             // login isn't valid 
             console.log("NOT login.valid");
             let ue = new UnAuthenticatedError();
-            let message2 = "Credenziali non valide, per favore riprova.";
             let message = "WRONGREFCREDENTIALS";
             ue.setReason(message);
             next(ue);
@@ -272,6 +316,15 @@ router.post('/checkCredentials', wrap(async (req, res, next) => {
     }
 }));
 
+/**
+ * Route that creates a new referent.
+ * @name post/create
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 router.post('/create', wrap(async (req, res, next) => {
     try {
         let emailPresent = await db.checkEmailPresence(req.body.email);
@@ -308,6 +361,15 @@ router.post('/create', wrap(async (req, res, next) => {
     }
 }));
 
+/**
+ * Route that abilitates a referent.
+ * @name post/id/enable
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 router.post('/:id/enable', wrap(async (req, res, next) => {
     try {
         JWT.verify(req.cookies.admin_token, process.env.ADMIN_SECRET);
@@ -330,10 +392,7 @@ router.post('/:id/enable', wrap(async (req, res, next) => {
             }
             next(ise);
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
-            // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-            console.log(`ekrjbglaevlebvlaeb: ${err.name}`);
-
+            // Problems with JWT verify
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
             unauth.setReason(message);
@@ -341,10 +400,18 @@ router.post('/:id/enable', wrap(async (req, res, next) => {
         }
 
         next(err);
-        /* res.sendStatus(401); */
     }
 }));
 
+/**
+ * Route that disabilitates a referent.
+ * @name post/id/disable
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
 router.post('/:id/disable', wrap(async (req, res, next) => {
     try {
         JWT.verify(req.cookies.admin_token, process.env.ADMIN_SECRET);
@@ -368,8 +435,7 @@ router.post('/:id/disable', wrap(async (req, res, next) => {
             next(ise);
         } else if (err instanceof JWT.TokenExpiredError || err instanceof JWT.JsonWebTokenError || err instanceof JWT.NotBeforeError) {
             // Problems with jwt verify
-            console.log(`problems with jwt token, error: ${err.name}`);
-
+            console.log(`Problems with JWT token, error: ${err.name}`);
             let unauth = new UnAuthenticatedError();
             let message = "JWTERROR";
             unauth.setReason(message);
@@ -377,15 +443,19 @@ router.post('/:id/disable', wrap(async (req, res, next) => {
         }
 
         next(err);
-    }/* res.sendStatus(401); */
+    }
 }));
 
+/**
+ * Function to send email.
+ *
+ * @param {*} email 
+ * @param {*} subject
+ * @param {*} text
+ */
 async function sendMail(email, subject, text) {
-
     // send mail with defined transport object
     try {
-        //let testAccount = await nodemailer.createTestAccount();
-        // TODO: chiedere ed usare credenziali DEI
         // TODO: must be reusable
         let transporter = nodemailer.createTransport({
             host: "mail.dei.unipd.it",
@@ -404,7 +474,14 @@ async function sendMail(email, subject, text) {
     }
 }
 
-
+/**
+ * General route in case of error.
+ * @name use
+ * @function
+ * @memberof module:routers/referent
+ * @inner
+ * @param {callback} middleware - Express middleware.
+ */
 router.use(function (err, req, res, next) {
     if (err instanceof UnAuthenticatedError) {
         console.log(`arriva qui?UnAuthenticatedError`);
