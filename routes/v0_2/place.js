@@ -1,8 +1,23 @@
+/*
+ * Copyright 2020 Mattia Avanzi, Riccardo Coniglio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 const router = require("express").Router();
 const JWT = require('jsonwebtoken');
 const tmp = require('tmp-promise');
 const { v4: uuidv4 } = require('uuid');
-const fs = require('fs');
 
 // Required for QR Code PDF Generation
 const { createZip, pdfGraphicalDetails, saveQRImagetoPath, saveQRPDFtoPath } = require('../qrzipcreator');

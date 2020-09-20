@@ -1,12 +1,39 @@
+/*
+ * Copyright 2020 Mattia Avanzi, Riccardo Coniglio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 let QRCode = require('qrcode');
 const tmp = require('tmp-promise');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
-
 const AdmZip = require('adm-zip');
 
+// Errors Management
 const { UnAuthenticatedError, QueryError, InsertError, UpdateError, DeleteError, InternalServerError, ModuleError, InternalOperationError } = require("./errors");
 
+/**
+ * Provide both graphical and textual details for the PDF generation
+ *
+ * @param {*} fontpath Relative path of the used font
+ * @param {*} pathLogoImage Relative path of the logo image
+ * @param {*} title Title of the document (i.e. NoBis)
+ * @param {*} textBelowQR General use description
+ * @param {*} placeName Name of the place
+ * @param {*} buildingName Name of the building that contains the place
+ * @return {*} All information
+ */
 const pdfGraphicalDetails = (fontpath, pathLogoImage, title, textBelowQR, placeName, buildingName) => {
     return {
         "FONTPATH": fontpath,
@@ -18,6 +45,13 @@ const pdfGraphicalDetails = (fontpath, pathLogoImage, title, textBelowQR, placeN
     }
 }
 
+/**
+ * Provide the Relative path of the Check-In and Check-Out QR codes images
+ *
+ * @param {*} pathQRImageCheckIn Check-In QR Code image relative path
+ * @param {*} pathQRImageCheckOut Check-Out QR Code image relative path
+ * @return {*} 
+ */
 const QRImages = (pathQRImageCheckIn, pathQRImageCheckOut) => {
     return {
         "CHECK-IN": pathQRImageCheckIn,
@@ -26,10 +60,11 @@ const QRImages = (pathQRImageCheckIn, pathQRImageCheckOut) => {
 };
 
 /**
+ * Creates and saves the QR code for a specific type action (Check-In/Check-Out)
  * 
- * @param {*} dirpath 
- * @param {*} placeuuid 
- * @param {*} type 
+ * @param {*} dirpath temporary directory where QR Codes are stored
+ * @param {*} placeuuid uuid of the place
+ * @param {*} type action: Check-In or Check-Out
  * @throws {InternalOperationError} WRONGCHECKOPERATIONTYPE
  * @throws {ModuleError} QRFILECREATIONFAIL
  */
@@ -64,11 +99,12 @@ const saveQRImagetoPath = async (dirpath, placeuuid, type) => {
 
 
 /**
+ * Creates and saves the PDF containing the QR codes
  * 
- * @param {*} dirpath 
- * @param {*} filenameNoExtension 
- * @param {*} pdfGraphicalDetails 
- * @param {*} QRImages 
+ * @param {*} dirpath temporary directory where PDF and QR codes are stored
+ * @param {*} filenameNoExtension name of the PDF wo extension
+ * @param {*} pdfGraphicalDetails graphical and textual details for the PDF generation
+ * @param {*} QRImages QR codes images
  * @returns {string} file path of the pdf or nothing
  */
 const saveQRPDFtoPath = (dirpath, filenameNoExtension, pdfGraphicalDetails, checkinFilePath, checkoutFilePath) => {
@@ -151,33 +187,22 @@ const saveQRPDFtoPath = (dirpath, filenameNoExtension, pdfGraphicalDetails, chec
 
 }
 
-
+/**
+ *  Creates a zip file
+ *
+ * @param {*} dirPath Destination directory
+ * @param {*} zipname Name of the zip file
+ * @return {*} Destination directory where the file is created
+ */
 const createZip = (dirPath, zipname) => {
-
     let zip = new AdmZip();
     zip.addLocalFolder(dirPath);
     let destPath = `${dirPath}/${zipname}.zip`;
     zip.writeZip(destPath);
     return destPath;
-
-    /* await fs.promises.mkdir(`${dirFiles}/toZip`);
-    await Promise.all(dirFiles.map(filename => {
-        fs.promises.copyFile(filename,`${dirFiles}/toZip/${filename}`);
-    })); */
-
-    /* return Promise.all(dirFiles.map(filename => {
-        return new Promise((resolve, reject) => {
-          const fileContents = fs.createReadStream(`./data/${filename}`);
-          const writeStream = fs.createWriteStream(`./data/${filename}.gz`);
-          const zip = zlib.createGzip();
-          fileContents.pipe(zip).pipe(writeStream).on('finish', (err) => {
-            if (err) return reject(err);
-            else resolve();
-          });
-        });
-      })); */
 }
 
+// Exports
 
 module.exports = {
     pdfGraphicalDetails,
