@@ -33,8 +33,6 @@ async function inSurroundings(resultsjson) {
         }
     }
 
-    //console.log(`markerLayers: ${markerLayer.getLayers()}`);
-
     // leave buildings that are in the current view
     for (const key in buildings) {
         let bl = buildings[key];
@@ -90,12 +88,6 @@ async function inSurroundings(resultsjson) {
 
     showSurroundingsResulsInfo(filteredPlaces.length);
 
-
-    //markerLayer.addTo(map);
-    /* console.log(`markerLayers: ${markerLayer.getLayers()}`);
-    markerLayer.addTo(map);
-    console.log(`markerLayers: ${markerLayer.getLayers()}`); */
-
 }
 
 function matchPlace(searchedPlace, placeName) {
@@ -145,10 +137,8 @@ async function searchByInput(resultsjson, searchstring) {
         event.stopImmediatePropagation();
         // get item id
         let rid = this.id;
-        //console.log(this);
         // get index result from result set
         let n_item = parseInt(rid.substr(9));
-        console.log(`index n:${n_item}`);
         // remove active class from everyone
         // add class active to that item
         $(".active").removeClass("active");
@@ -181,25 +171,6 @@ async function searchByInput(resultsjson, searchstring) {
 
 }
 
-/* async function tryFly() {
-
-    await new Promise((resolve, reject) => setTimeout(resolve, 3000));
-    // Zoom on Aula Be
-    zoomOnPlace(jsondataURI, "6ecf2f89-4036-403d-bf84-cf8410a67836");
-
-    await new Promise((resolve, reject) => setTimeout(resolve, 3000));
-    // Zoom on Aula Ve
-    zoomOnPlace(jsondataURI, "6ecf8f89-4036-403d-bf84-cf8410a67836");
-
-
-    await new Promise((resolve, reject) => setTimeout(resolve, 3000));
-    // Zoom on DEI
-    zoomOnBuilding(jsondataURI, 1);
-} */
-
-
-
-
 function findPlaceBuilding(buildingsArray, placeObjBuilding) {
     // finds the building of the current place
     let placeBuilding = buildingsArray.find(be => {
@@ -230,25 +201,6 @@ function computePlaceSituation(placeObj) {
 
 function addToList(placeObj, listitemid, placeBuildingObj) {
 
-
-    /*
-    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">Place name</h5>
-            <small>Place Building</small>
-        </div>
-        <div class="capacityinfo">
-            <span class="badge badge-pill badge-success">Low Traffic</span>
-            <span class="badge badge-pill badge-warning">Medium Traffic</span>
-            <span class="badge badge-pill badge-danger">High Traffic</span>
-        </div>
-        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-        <small>Donec id elit non mi porta.</small>
-    </a>
-    */
-    //console.log(`placeObj che arriva: ${placeObj}`);
-    // list i-th item element
-
     let li = $("<a></a>", {
         "class": "list-group-item list-group-item-action flex-column align-items-start result-item",
         href: "#",
@@ -266,8 +218,6 @@ function addToList(placeObj, listitemid, placeBuildingObj) {
         text: `${placeObj.name}`
     }
     ).appendTo(lip);
-
-    //let pb = await findPlaceBuilding(jsondataURI, placeObj.building);
 
     let bname_cont = $("<span></span>", {
         "class": "building-name"
@@ -291,12 +241,10 @@ function addToList(placeObj, listitemid, placeBuildingObj) {
 
     let badge = {
         "text": "",
-        //"class": "badge badge-pill "
         "class": "badge "
     }
 
     let sit = computePlaceSituation(placeObj);
-    //console.log(`sit vale ${sit}`);
 
     if (sit === 0) {
         badge.class = badge.class + "badge-success";
@@ -320,8 +268,6 @@ function addToList(placeObj, listitemid, placeBuildingObj) {
     lip.appendTo(li);
     lic.appendTo(li);
 
-
-
     $("<p></p>", {
         "class": "mb-1",
         text: `${placeObj.description}`
@@ -333,15 +279,7 @@ function addToList(placeObj, listitemid, placeBuildingObj) {
     }
     ).appendTo(li);
 
-
-    /* li.append("p").addClass("mb-1").html(`${placeObj.description}`);
-    li.append("small").html(`prova prova prova prova`); */
-
-
-
     li.appendTo("#groupSearchResults");
-
-
 }
 
 function showSearchResulsInfo(stringSearched, numResults) {
@@ -381,8 +319,6 @@ function showSurroundingsResulsInfo(numResults) {
 }
 
 
-
-
 $(document).ready(function () {
     $("#search-alert").hide();
 
@@ -401,15 +337,3 @@ $(document).ready(function () {
 
     });
 });
-
-// DEMO
-
-// Add element to the list
-//searchByInput(jsondataURI, "Ke");
-
-
-// Shows the results of the search on the map
-//showMarkersOnMap(jsondataURI);
-
-// Try the flying animation
-//tryFly();

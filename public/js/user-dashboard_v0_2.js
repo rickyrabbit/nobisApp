@@ -1,4 +1,3 @@
-
 let occupancyThreshold = {
     "medium": 0.40,
     "high": 0.80
@@ -17,7 +16,7 @@ async function clearResults() {
 async function inSurroundings() {
 
     let mcb = mapCurrentBounds();
-    
+
     const par = {
         coorXmin: mcb._southWest.lng,
         coorYmin: mcb._southWest.lat,
@@ -25,13 +24,12 @@ async function inSurroundings() {
         coorYmax: mcb._northEast.lat,
     };
 
-    //console.log(par);
     const url = `mapInfo/findPlacesinMap?coorXmin=${par.coorXmin}&coorYmin=${par.coorYmin}&coorXmax=${par.coorXmax}&coorYmax=${par.coorYmax}`;
-    
+
     let response = await fetch(url);
     let places = await response.json();
 
-    if(!checkNewPlaces(places)){
+    if (!checkNewPlaces(places)) {
         return;
     }
 
@@ -74,21 +72,21 @@ async function inSurroundings() {
 
 function checkNewPlaces(places) {
     let newPlace = false;
-    places.forEach(function(place) {
-        if(!lastPlaces.includes(place.puuid)){
+    places.forEach(function (place) {
+        if (!lastPlaces.includes(place.puuid)) {
             newPlace = true;
         }
     })
 
-    if(places.length != lastPlaces.length){
+    if (places.length != lastPlaces.length) {
         newPlace = true;
     }
 
-    if(!newPlace)
+    if (!newPlace)
         return false;
     else {
         lastPlaces = [];
-        places.forEach(function(place) {
+        places.forEach(function (place) {
             lastPlaces.push(place.puuid);
         })
         return true;
@@ -97,7 +95,7 @@ function checkNewPlaces(places) {
 
 
 async function searchByInput(searchstring) {
-    
+
     let response = await fetch(`mapInfo/searchPlaces?searchInput=${searchstring}`);
     //let response = await fetch(url);
     let places = await response.json();
@@ -194,10 +192,10 @@ function addToList(placeObj, listitemid) {
 
     let sit = computePlaceSituation(placeObj.occ);
 
-    if(!placeObj.isopen){
+    if (!placeObj.isopen) {
         badge.class = badge.class + "badge-secondary";
         badge.text = "Chiuso";
-    } else{
+    } else {
         if (sit === 0) {
             badge.class = badge.class + "badge-success";
             badge.text = "Bassa Occupazione*";
@@ -220,7 +218,7 @@ function addToList(placeObj, listitemid) {
 
     lic.appendTo(lip);
     lip.appendTo(li);
-    bname_cont.appendTo(li);    
+    bname_cont.appendTo(li);
 
 
 
@@ -235,23 +233,15 @@ function addToList(placeObj, listitemid) {
     }
     ).appendTo(li);
 
-
-    /* li.append("p").addClass("mb-1").html(`${placeObj.description}`);
-    li.append("small").html(`prova prova prova prova`); */
-
-
-
     li.appendTo("#groupSearchResults");
-
-
 }
 
-function computeMaxFeedback(placeObj){
+function computeMaxFeedback(placeObj) {
     let low = placeObj.lowfeedback;
     let medium = placeObj.mediumfeedback;
     let high = placeObj.highfeedback;
-    if(placeObj.isopen){
-        if(high > low && high > medium) {
+    if (placeObj.isopen) {
+        if (high > low && high > medium) {
             return `<strong>${high}</strong> persone hanno segnalato questo luogo come <strong>alta occupazione</strong>`;
         } else if (medium > low) {
             return `<strong>${medium}</strong> persone hanno segnalato questo luogo come <strong>media occupazione</strong>`;
@@ -302,8 +292,6 @@ function showSurroundingsResulsInfo(numResults) {
 }
 
 
-
-
 $(document).ready(function () {
     $("#search-alert").hide();
 
@@ -321,15 +309,3 @@ $(document).ready(function () {
     });
     inSurroundings();
 });
-
-// DEMO
-
-// Add element to the list
-//searchByInput(jsondataURI, "Ke");
-
-
-// Shows the results of the search on the map
-//showMarkersOnMap(jsondataURI);
-
-// Try the flying animation
-//tryFly();

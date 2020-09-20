@@ -31,11 +31,6 @@ app.use('/pickerjs', express.static(__dirname + '/node_modules/pickerjs/dist/'))
 
 mountRoutes(app);
 
-// simple route
-/* app.get("/", (req, res) => {
-  res.json({ message: "CIAOOO mammina" });
-}); */
-
 // set port, listen for requests
 const PORT = process.env.NOBIS_APP_PORT || 3000;
 app.listen(PORT, () => {

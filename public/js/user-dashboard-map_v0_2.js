@@ -19,7 +19,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 
 map.on("moveend", function () {
-    if(map.getZoom() > 15) {
+    if (map.getZoom() > 15) {
         inSurroundings();
         $("#searchsurr-btn").fadeOut(500);
     } else {
@@ -45,8 +45,8 @@ const toGeoCoordArray = (geoCoordString) => {
 
     const x = geoCoordString.slice(6, indexOfFirst);
     const y = geoCoordString.slice(indexOfFirst + 1, -1);
-    
-    return [y,x];
+
+    return [y, x];
 }
 
 function removeCurrentMapMarkers() {
@@ -55,7 +55,6 @@ function removeCurrentMapMarkers() {
     });
     currentMapMarkers.clear();
 
-    //console.log(`bau`);
     return;
 }
 
@@ -64,7 +63,7 @@ async function showMarkersOnMap(placesJSONArray) {
     let places = placesJSONArray;
 
     places.forEach(place => {
-       
+
         place.geocoord = toGeoCoordArray(place.geocoord);
         // Add the place coordinates to the array of bounds
         setBoundCoord.add(place.geocoord);
@@ -98,32 +97,3 @@ async function zoomOnPlace(placesJSONArray, placeuuid) {
 
 
 }
-
-/* async function zoomOnBuilding(placesJSONArray, buildingid) {
-    // read JSON of results
-    let places = placesJSONArray;
-    let buildings = objs.buildings;
-
-
-    let found = buildings.find(bl => {
-        return bl.id == buildingid;
-    });
-
-    if (found === undefined) return;
-
-    let places = objs.places;
-
-    let placesOfBuilding = places.filter((p) => {
-        return p.building == buildingid;
-    });
-
-    if (placesOfBuilding.length === 0) return;
-
-    let setBound = new Set();
-    placesOfBuilding.forEach((p) => {
-        setBound.add(p.geometry);
-    });
-
-    map.flyToBounds([...setBound]);
-
-} */

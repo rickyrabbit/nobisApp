@@ -62,6 +62,9 @@ $(document).ready(function () {
 
 });
 
+/**
+ * Stops the countdown if the user do not want to check-out
+ */
 function stopCountdown() {
 	clearInterval(countdownInterval);
 	$("#stop-check-out").remove();
@@ -69,6 +72,9 @@ function stopCountdown() {
 	$("#countdown").remove();
 }
 
+/**
+ * Function called to handle the check-out process
+ */
 function checkOut() {
 	let placeUUID = $("#place").attr("place-uuid");
 

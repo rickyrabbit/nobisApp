@@ -70,6 +70,9 @@ $(document).ready(function () {
 
 });
 
+/**
+ * Stops the countdown if the user do not want to check-in
+ */
 function stopCountdown() {
 	clearInterval(countdownInterval);
 	$("#stop-check-in").remove();
@@ -77,6 +80,9 @@ function stopCountdown() {
 	$("#countdown").remove();
 }
 
+/**
+ * Function called to handle the check-in process
+ */
 function checkIn() {
 	let placeUUID = $("#place").attr("place-uuid");
 	// Chiamata per il check-in
@@ -100,5 +106,4 @@ function checkIn() {
 			}
 		}
 	});
-
 }

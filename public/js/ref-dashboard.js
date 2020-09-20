@@ -30,10 +30,10 @@ $(document).ready(function () {
 			url: `/place/${uuid}/${action}`,
 			method: "POST",
 			statusCode: {
-				200: function() {
+				200: function () {
 					$("#successToast").toast("show");
 				}
-			  }
+			}
 		});
 	})
 
@@ -85,7 +85,7 @@ $(document).ready(function () {
 		}, 400);
 	});
 
-	$(".edit-place-button").click(function() {
+	$(".edit-place-button").click(function () {
 		setTimeout(function () {
 			map.invalidateSize();
 		}, 400);
@@ -95,7 +95,7 @@ $(document).ready(function () {
 			url: `/place/${placeUUID}/get`,
 			method: "GET",
 			statusCode: {
-				200: function(res) {
+				200: function (res) {
 					$("#place-name").val(res.name);
 					$(`#place-building option[building-id='${res.building_id}']`).prop('selected', true);
 					$("#place-latitude").val(res.latitude);
@@ -109,11 +109,11 @@ $(document).ready(function () {
 					$("#place-visit-time").val(res.visit_time);
 					$(`#place-category option[category-id='${res.category_id}']`).prop('selected', true);
 				}
-			  }
+			}
 		});
 	})
 
-	$("#save-edit-place").click(function() {
+	$("#save-edit-place").click(function () {
 
 		if ($("#edit-place-form")[0].checkValidity()) {
 			let placeUUID = $("#edit-place").attr("place-uuid");
@@ -131,7 +131,7 @@ $(document).ready(function () {
 			$.ajax({
 				url: `/place/${placeUUID}/update`,
 				method: "POST",
-				data:{
+				data: {
 					placeName: placeName,
 					placeBuilding: placeBuilding,
 					placeLatitude: placeLatitude,
@@ -141,7 +141,7 @@ $(document).ready(function () {
 					placeCategory: placeCategory
 				},
 				statusCode: {
-					200: function() {
+					200: function () {
 						$('#edit-place').modal('hide');
 						tds[1].innerHTML = placeName;
 						tds[2].innerHTML = $(`#place-building option[building-id='${placeBuilding}']`).text();
@@ -153,12 +153,12 @@ $(document).ready(function () {
 			});
 		} else {
 			$("#edit-place-error").slideDown(500);
-			setTimeout(function() {$("#edit-place-error").slideUp(500)}, 3000)
+			setTimeout(function () { $("#edit-place-error").slideUp(500) }, 3000)
 		}
 
 	})
 
-	$("#delete-place").click(function() {
+	$("#delete-place").click(function () {
 
 		let placeUUID = $("#edit-place").attr("place-uuid");
 
@@ -166,11 +166,11 @@ $(document).ready(function () {
 			url: `/place/${placeUUID}`,
 			method: "DELETE",
 			statusCode: {
-				200: function() {
+				200: function () {
 					$(`#luoghi tr[place-uuid='${placeUUID}']`).remove();
 					$('#edit-place').modal('hide');
 				}
-			  }
+			}
 		});
 	})
 
@@ -199,15 +199,15 @@ $(document).ready(function () {
 			url: `/place/${placeUUID}/opening/get`,
 			method: "GET",
 			statusCode: {
-				200: function(openings) {
+				200: function (openings) {
 					let form = $("#edit-opening-form");
 					form.html("");
-					if(openings.length > 0) {
+					if (openings.length > 0) {
 						let rows = generateOpeningRows(openings.length);
 						rows.appendTo(form);
 						rows = $(".single-hour");
-						openings.forEach(function(opening, i) {
-							$(rows[i]).find('select[name="opening-week-day"] option[week-day-id="'+opening.weekday+'"]').prop('selected', true);
+						openings.forEach(function (opening, i) {
+							$(rows[i]).find('select[name="opening-week-day"] option[week-day-id="' + opening.weekday + '"]').prop('selected', true);
 							$(rows[i]).find('input[name="start-hour"]').val(opening.start_hour);
 							$(rows[i]).find('input[name="end-hour"]').val(opening.end_hour);
 						});
@@ -218,7 +218,7 @@ $(document).ready(function () {
 						attachTimePickerEvents();
 					}
 				}
-			  }
+			}
 		});
 
 		// Copy building id to modal
@@ -230,19 +230,19 @@ $(document).ready(function () {
 		let placeUUID = $('#edit-opening').attr("data-place-uuid");
 		let intervals = [];
 		let allFieldOk = true;
-		$(".single-hour").each(function(){
+		$(".single-hour").each(function () {
 			let weekday = $(this).find('select[name="opening-week-day"]').val();
 			let starthour = $(this).find('input[name="start-hour"]').val();
 			let endhour = $(this).find('input[name="end-hour"]').val();
-			let interval = {"weekday": weekday, "starthour": starthour, "endhour": endhour};
-			if(weekday == "" || starthour == "" || endhour == "" ) {
+			let interval = { "weekday": weekday, "starthour": starthour, "endhour": endhour };
+			if (weekday == "" || starthour == "" || endhour == "") {
 				$("#opening-error").slideDown(500);
-				setTimeout(function() {$("#opening-error").slideUp(500)}, 3000);
+				setTimeout(function () { $("#opening-error").slideUp(500) }, 3000);
 				allFieldOk = false;
 			}
 			intervals.push(interval);
 		});
-		if(allFieldOk) {
+		if (allFieldOk) {
 			$.ajax({
 				url: `/place/${placeUUID}/openings/replace`,
 				method: "POST",
@@ -250,30 +250,29 @@ $(document).ready(function () {
 					intervals: intervals
 				},
 				statusCode: {
-					200: function() {
+					200: function () {
 						$('#edit-opening').modal('hide');
 					}
-				  }
+				}
 			});
 		}
 	})
 
 	attachTimePickerEvents();
-	
 
-	$(".add-week-day").click(function() {
-		
+	$(".add-week-day").click(function () {
+
 		let form = $("#edit-opening-form");
-		
+
 		let row = generateOpeningRows(1);
 
 		row.appendTo(form);
 
 		attachTimePickerEvents();
-		
+
 	});
 
-	$("#create-place-button").click(function() {
+	$("#create-place-button").click(function () {
 		if (document.getElementById("create-place-form").checkValidity()) {
 			let placeName = $("#place-name-create").val();
 			let placeBuilding = $("#place-building-create option:selected").attr('building-id');
@@ -285,7 +284,7 @@ $(document).ready(function () {
 			$.ajax({
 				url: `/place/create`,
 				method: "POST",
-				data:{
+				data: {
 					placeName: placeName,
 					placeBuilding: placeBuilding,
 					placeLatitude: placeLatitude,
@@ -295,22 +294,22 @@ $(document).ready(function () {
 					placeCategory: placeCategory
 				},
 				statusCode: {
-					200: function() {
+					200: function () {
 						$('#create-place').modal('hide');
 						location.reload();
 					}
 				}
 			});
-			
+
 		} else {
 			$("#create-place-error").slideDown(500);
-			setTimeout(function() {$("#create-place-error").slideUp(500)}, 3000);
+			setTimeout(function () { $("#create-place-error").slideUp(500) }, 3000);
 		}
 	})
 
-	$("#create-building-button").click(function() {
+	$("#create-building-button").click(function () {
 		if ($("#create-building-form")[0].checkValidity()) {
-		
+
 			let buildingName = $("#building-name-create").val();
 			let buildingLatitude = $("#building-latitude-create").val();
 			let buildingLongitude = $("#building-longitude-create").val();
@@ -320,7 +319,7 @@ $(document).ready(function () {
 			$.ajax({
 				url: `/building/create`,
 				method: "POST",
-				data:{
+				data: {
 					buildingName: buildingName,
 					buildingLatitude: buildingLatitude,
 					buildingLongitude: buildingLongitude,
@@ -329,11 +328,11 @@ $(document).ready(function () {
 					buildingProvince: buildingProvince
 				},
 				statusCode: {
-					200: function() {
+					200: function () {
 						$('#create-building').modal('hide');
 						location.reload();
 					},
-					500: function() {
+					500: function () {
 						alert('Building creation didn\'t go as planned. Try again');
 
 					}
@@ -341,7 +340,7 @@ $(document).ready(function () {
 			});
 		} else {
 			$("#create-building-error").slideDown(500);
-			setTimeout(function() {$("#create-building-error").slideUp(500)}, 3000);
+			setTimeout(function () { $("#create-building-error").slideUp(500) }, 3000);
 		}
 	})
 
@@ -351,17 +350,17 @@ $(document).ready(function () {
 			url: `/building/${buildingIdToDelete}`,
 			method: "DELETE",
 			statusCode: {
-				200: function() {
+				200: function () {
 					$(`#buildings tr[building-id='${buildingIdToDelete}']`).remove();
 					// Add Building Delete
 					$('#deleteBuildingModal').modal('hide');
 					//location.reload();
 				},
-				401: function() {
+				401: function () {
 					$('#deleteBuildingModal').modal('hide');
 					//location.reload();
 				}
-			  }
+			}
 		});
 		location.reload();
 	});
@@ -379,19 +378,22 @@ $(document).ready(function () {
 			url: `/report/${reportIdToDelete}/resolve`,
 			method: "POST",
 			statusCode: {
-				200: function() {
+				200: function () {
 					$(`#reports tr[report-id='${reportIdToDelete}']`).remove();
 					// Add Building Delete
 					$('#resolveProblemModal').modal('hide');
 				}
-			  }
+			}
 		});
 	})
 
 });
 
+/**
+ * Function that attaches Time Picker events handler to new hour input
+ */
 function attachTimePickerEvents() {
-	$('.time-picker').each(function() {
+	$('.time-picker').each(function () {
 		console.log(this);
 		new Picker(this, {
 			format: 'HH:mm',
@@ -409,14 +411,17 @@ function attachTimePickerEvents() {
 				minute: 'Minuto',
 				second: 'Secondo',
 				millisecond: 'Millisecond',
-			  }
+			}
 		});
 	})
-	$(".remove-week-day").click(function() {
+	$(".remove-week-day").click(function () {
 		$(this).parent().parent().remove();
 	})
 }
 
+/**
+ * Function that generates new Opening Time rows
+ */
 function generateOpeningRows(num) {
 
 	let rows = $("<div></div>");
@@ -429,7 +434,7 @@ function generateOpeningRows(num) {
 
 		$("<div></div>", {
 			"class": "col",
-			html: 	`<select class="form-control" id="opening-week-day" name="opening-week-day" required>
+			html: `<select class="form-control" id="opening-week-day" name="opening-week-day" required>
 						<option week-day-id="" value="">-</option>
 						<option week-day-id="1" value="1">Lunedì</option>
 						<option week-day-id="2" value="2">Martedì</option>
@@ -444,30 +449,35 @@ function generateOpeningRows(num) {
 
 		$("<div></div>", {
 			"class": "col",
-			html: 	`<input type="text" name="start-hour" class="form-control time-picker start">`
+			html: `<input type="text" name="start-hour" class="form-control time-picker start">`
 		}
 		).appendTo(row);
 
 		$("<div></div>", {
 			"class": "col",
-			html: 	`<input type="text" name="end-hour" class="form-control time-picker">`
+			html: `<input type="text" name="end-hour" class="form-control time-picker">`
 		}
 		).appendTo(row);
 
 		$("<div></div>", {
 			"class": "col",
-			html: 	`<button type="button"  class="btn btn-danger remove-week-day">Elimina</button>`
+			html: `<button type="button"  class="btn btn-danger remove-week-day">Elimina</button>`
 		}
 		).appendTo(row);
 
 		row.appendTo(rows);
-		
+
 	}
 
 	return rows;
 
 }
 
+/**
+ * Function that manage the click on the edit place map
+ *
+ * @param {*} e Map event
+ */
 function onMapClick(e) {
 	lat = e.latlng.lat;
 	lon = e.latlng.lng;
@@ -480,6 +490,11 @@ function onMapClick(e) {
 	map.addLayer(userPosMarker);
 }
 
+/**
+ * Function that manage the click on the create place map
+ *
+ * @param {*} e Map event
+ */
 function onMapCreateClick(e) {
 	lat = e.latlng.lat;
 	lon = e.latlng.lng;
@@ -492,6 +507,11 @@ function onMapCreateClick(e) {
 	mapCreate.addLayer(userPosMarkerCreate);
 }
 
+/**
+ * Function that manage the click on the create building map
+ *
+ * @param {*} e Map event
+ */
 function onMapCreateBuildingClick(e) {
 	lat = e.latlng.lat;
 	lon = e.latlng.lng;
