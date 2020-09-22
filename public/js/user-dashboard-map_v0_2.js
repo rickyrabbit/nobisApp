@@ -8,8 +8,13 @@ let mapProperties = {
 
 let map = L.map('interactive_map').setView([mapProperties.latitude, mapProperties.longitude], mapProperties.zooming);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+let mapStyleUrl = "https://api.mapbox.com/styles/v1/ava8c/ckfdsp2ls5jfv19ocyienrt21/tiles/{z}/{x}/{y}";
+let mapBox_accessToken = "pk.eyJ1IjoiYXZhOGMiLCJhIjoiY2s5MXJ3eDNkMDBwMzNmb3lod3EzbTYzYiJ9.ZztuSpL_L1iy10DaeODVhQ";
+
+L.tileLayer(`${mapStyleUrl}`+ (L.Browser.retina ? '@2x': '')+`?access_token=${mapBox_accessToken}`, {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    tileSize: 512,
+    zoomOffset: -1
 }).addTo(map);
 
 //let initialMarker = L.marker([mapProperties.latitude, mapProperties.longitude]);
