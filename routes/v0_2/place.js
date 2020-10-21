@@ -457,7 +457,8 @@ router.post('/:placeUUID/check-out', wrap(async (req, res, next) => {
             let personUUID;
             if (req.cookies.person_identifier == undefined) { // Person wants to check-out without a UUID
                 personUUID = uuidv4();
-                let res = await persondb.createPerson(personUUID); // throws InsertError
+                let scp = await persondb.createPerson(personUUID); // throws InsertError
+                console.debug(`person creation has been successful: ${JSON.stringify(scp)}`);
                 var d = new Date();
                 d.setHours(24, 0, 0, 0);
                 // JWT Cookie Generation
