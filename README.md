@@ -1,5 +1,5 @@
 # **[NoBis](https://nobis.dei.unipd.it)**
-## A REST-based Node.js Web Application to Monitor Room Crowding in Covid-19 Era
+# A REST-based Node.js Web Application to Monitor Room Crowding in Covid-19 Era
 
 **Design and Developed with by** 
 * Avanzi Mattia
