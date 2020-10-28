@@ -57,13 +57,13 @@ The **``routes``** folder contains all the routes needed to resolve all REST API
 
 The **``views``** folder contains templates to create dynamic HTML pages using Handlebars
 
-[Go back to index](#markdown-header-index)
+[Go back to index](#index)
 
 ***
 ## REST API Documentation
 [Go to the REST Docs](REST.md)
 
-[Go back to index](#markdown-header-index)
+[Go back to index](#index)
 
 ***
 
@@ -75,7 +75,7 @@ The **``views``** folder contains templates to create dynamic HTML pages using H
 
 ***500*** Internal Server Error. (SQL or Node error)
 
-[Go back to index](#markdown-header-index)
+[Go back to index](#index)
 
 ***
 
