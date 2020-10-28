@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Mattia Avanzi, Riccardo Coniglio
+ * Copyright 2020 Mattia Avanzi, Riccardo Coniglio, Università degli Studi di Padova
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -500,7 +500,6 @@ async function sendMail(email, subject, text) {
  */
 router.use(function (err, req, res, next) {
     if (err instanceof UnAuthenticatedError) {
-        console.log(`arriva qui?UnAuthenticatedError`);
         res.clearCookie("referent_token");
         res.status(err.statusCode);
         if (err.reason == 'REFNOTENABLED') {
@@ -508,7 +507,6 @@ router.use(function (err, req, res, next) {
             res.redirect(`/referent/login?error=${message2}`);
         }
         else if (err.reason == 'JWTERROR') {
-            console.debug('quiiiiiiiiiii');
             res.redirect('/referent/login');
         }
         else if (err.reason == 'WRONGREFCREDENTIALS') {
@@ -521,7 +519,6 @@ router.use(function (err, req, res, next) {
     }
     else if (err instanceof InternalServerError) {
         res.status(err.statusCode);
-        console.log(`arriva qui?InternalServerError`);
         console.log(`Internal server error: error ${err.statusCode}`);
         if (err.reason == 'CREATEREF' || err.reason == 'REFNOTCREATED') {
             res.redirect(`/referent/register`);

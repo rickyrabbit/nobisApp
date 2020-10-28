@@ -1,7 +1,30 @@
+/*
+ * Copyright 2020 Mattia Avanzi, Riccardo Coniglio, Università degli Studi di Padova
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 const db = require(`./config`);
+
+// Errors Management
 const { QueryError, InsertError, DeleteError, UpdateError } = require("../../routes/errors");
 
-
+/**
+ * List referent attributes by email
+ *
+ * @param {*} email Referent Email
+ * @return {*} Referent Firstname, Lastname etc
+ */
 const getReferentByEmail = async (email) => {
     try {
         let query = await db.pool.query(
@@ -19,13 +42,20 @@ const getReferentByEmail = async (email) => {
     }
 }
 
+/**
+ * Check if email and password are correct
+ *
+ * @param {*} email Referent Email
+ * @param {*} password Referent Password
+ * @return {*} true if credentials are valid, false otherwise
+ */
 const checkReferentCredentials = async (email, password) => {
     try {
         let query = await db.pool.query(
             "SELECT id, enable, (password = crypt($2, password)) AS valid FROM referent WHERE email = $1",
             [email, password]
         );
-        ///console.log(`vediamo cos'è => checkReferentCredentials: ${JSON.stringify(query.rows[0])}`);
+
         if(query.rows[0] !== undefined){
             return query.rows[0];
         }else{
@@ -39,6 +69,12 @@ const checkReferentCredentials = async (email, password) => {
     }
 }
 
+/**
+ * Check if a referent is altready registered with the provided email
+ *
+ * @param {*} email Referent Email
+ * @return {*} true if email is present in the table, false otherwise
+ */
 const checkEmailPresence = async (email) => {
     try {
         let query = await db.pool.query(
@@ -54,7 +90,13 @@ const checkEmailPresence = async (email) => {
     }
 }
 
-
+/**
+ * Change the referent password 
+ *
+ * @param {*} id Referent Id
+ * @param {*} password Referent Password
+ * @return {*} 
+ */
 const updatePassword = async (id, password) => {
 
     try {
@@ -68,7 +110,15 @@ const updatePassword = async (id, password) => {
     }
 }
 
-
+/**
+ * Create a new referent
+ *
+ * @param {*} firstname Referent Firstname
+ * @param {*} lastname Referent Lastname
+ * @param {*} email Referent Email
+ * @param {*} password Referent Password
+ * @return {*} 
+ */
 const createReferent = async (firstname, lastname, email, password) => {
     try {
         let query = await db.pool.query(
@@ -84,7 +134,11 @@ const createReferent = async (firstname, lastname, email, password) => {
     }
 }
 
-
+/**
+ * List all the referents that are not been already enabled
+ *
+ * @return {*} list of referents
+ */
 const listNewReferents = async () => {
 
     try {
@@ -98,7 +152,11 @@ const listNewReferents = async () => {
     }
 }
 
-
+/**
+ * List all the referents that are been already enabled once
+ *
+ * @return {*} list of referents
+ */
 const listOldReferents = async () => {
 
     try {
@@ -112,7 +170,12 @@ const listOldReferents = async () => {
     }
 }
 
-
+/**
+ * Check wheather a provided referent is enabled
+ *
+ * @param {*} id Referent identifier 
+ * @return {*} true if enabled, false otherwise
+ */
 const isReferentEnabled = async (id) => {
 
     try {
@@ -126,7 +189,12 @@ const isReferentEnabled = async (id) => {
     }
 }
 
-
+/**
+ * Enable a referent
+ *
+ * @param {*} id Referent identifier 
+ * @return {*} 
+ */
 const enableReferent = async (id) => {
 
     try {
@@ -140,7 +208,12 @@ const enableReferent = async (id) => {
     }
 }
 
-
+/**
+ * Disable a referent
+ *
+ * @param {*} id Referent identifier 
+ * @return {*} 
+ */
 const disableReferent = async (id) => {
 
     try {
@@ -154,7 +227,12 @@ const disableReferent = async (id) => {
     }
 }
 
-
+/**
+ * Get the email of the referent provided by identifier
+ *
+ * @param {*} id Referent identifier 
+ * @return {*} Referent Email
+ */
 const getEmailByReferentId = async (id) => {
     try {
         let query = await db.pool.query("SELECT email FROM referent WHERE id = $1;", [id]);

@@ -1,7 +1,31 @@
+/*
+ * Copyright 2020 Mattia Avanzi, Riccardo Coniglio, Università degli Studi di Padova
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 const db = require(`./config`);
 const { v4: uuidv4 } = require('uuid');
+
+// Errors Management
 const { UpdateError, DeleteError, InsertError, QueryError } = require('../../routes/errors');
 
+/**
+ * Get place name given its UUID
+ *
+ * @param {*} uuid Place identifier
+ * @return {*} Place Name
+ */
 const getPlaceNameByUUID = async (uuid) => {
     try {
         let query = await db.pool.query("SELECT name FROM place WHERE uuid = $1", [uuid]);
@@ -14,6 +38,12 @@ const getPlaceNameByUUID = async (uuid) => {
     }
 }
 
+/**
+ * Get all place attributes given its UUID
+ *
+ * @param {*} uuid place identifier
+ * @return {*} place uuid, name, longitude, latitude, capacity, visit time, building id and category id
+ */
 const getPlaceByUUID = async (uuid) => {
     try {
         let query = await db.pool.query("SELECT p.uuid, p.name, ST_Y(p.geometry) AS latitude, ST_X(p.geometry) AS longitude, p.capacity, p.visit_time, p.building_id, h.category_id FROM place AS p LEFT JOIN have AS h ON h.place_uuid = p.uuid WHERE uuid = $1", [uuid]);
@@ -26,6 +56,13 @@ const getPlaceByUUID = async (uuid) => {
     }
 }
 
+
+/**
+ * Get all places linked to a specific referent
+ *
+ * @param {*} refId Referent Identifier
+ * @return {*} place uuid, name, longitude, latitude, capacity, visit time, building id and category id
+ */
 const listPlacesByReferentId = async (refId) => {
     try {
         // TODO: check INNER or LEFT
@@ -39,6 +76,19 @@ const listPlacesByReferentId = async (refId) => {
     }
 }
 
+/**
+ * Create a new Place
+ *
+ * @param {*} name Place Name
+ * @param {*} lon Place Longitude
+ * @param {*} lat Place Latitude 
+ * @param {*} capacity Capacity Name
+ * @param {*} visitTime Place Visit Time
+ * @param {*} buildingId Buildind id related to the place
+ * @param {*} categoryId Category id related to the place
+ * @param {*} refId Referent id related to the place
+ * @return {*} 
+ */
 const createPlace = async (name, lon, lat, capacity, visitTime, buildingId, categoryId, refId) => {
     let uuid = uuidv4();
     try {
@@ -55,6 +105,19 @@ const createPlace = async (name, lon, lat, capacity, visitTime, buildingId, cate
     }
 }
 
+/**
+ * Update a new Place
+ *
+ * @param {*} name Place Name
+ * @param {*} lon Place Longitude
+ * @param {*} lat Place Latitude 
+ * @param {*} capacity Capacity Name
+ * @param {*} visitTime Place Visit Time
+ * @param {*} buildingId Buildind id related to the place
+ * @param {*} categoryId Category id related to the place
+ * @param {*} uuid Place uuid
+ * @return {*} 
+ */
 const updatePlace = async (name, lon, lat, capacity, visitTime, buildingId, categoryId, uuid) => {
     try {
         let queryPlace = await db.pool.query("UPDATE place SET name = $1, geometry = ST_SetSRID(ST_MakePoint($2, $3), 4326), capacity = $4, visit_time = $5, building_id = $6 WHERE uuid = $7;", [name, lon, lat, capacity, visitTime, buildingId, uuid]);
@@ -69,6 +132,12 @@ const updatePlace = async (name, lon, lat, capacity, visitTime, buildingId, cate
     }
 }
 
+/**
+ * Delete a place
+ *
+ * @param {*} uuid Place uuid
+ * @return {*} 
+ */
 const deletePlace = async (uuid) => {
     try {
         // TODO: maybe a transaction?
@@ -88,6 +157,12 @@ const deletePlace = async (uuid) => {
     }
 }
 
+/**
+ * Enable a place
+ *
+ * @param {*} uuid Place uuid
+ * @return {*} 
+ */
 const enablePlace = async (uuid) => {
     try {
         let query = await db.pool.query("UPDATE place SET enable = true WHERE uuid = $1;", [uuid]);
@@ -100,6 +175,12 @@ const enablePlace = async (uuid) => {
     }
 }
 
+/**
+ * Check if a place is enabled
+ *
+ * @param {*} uuid Place uuid
+ * @return {*} True if enabled, false otherwise
+ */
 const isEnabled = async (uuid) => {
     try {
         let query = await db.pool.query("SELECT enable FROM place WHERE uuid = $1;", [uuid]);
@@ -112,6 +193,12 @@ const isEnabled = async (uuid) => {
     }
 }
 
+/**
+ * Disable a place
+ *
+ * @param {*} uuid Place uuid
+ * @return {*} 
+ */
 const disablePlace = async (uuid) => {
     try {
         let query = await db.pool.query("UPDATE place SET enable = false WHERE uuid = $1;", [uuid]);
@@ -124,16 +211,16 @@ const disablePlace = async (uuid) => {
     }
 }
 
+/**
+ * Check-in operation in a place
+ *
+ * @param {*} personUUID Person Identifier
+ * @param {*} placeUUID Place Identifier
+ * @return {*} True if successful, false otherwise
+ */
 const checkIn = async (personUUID, placeUUID) => {
-    //const client = await db.pool.connect();
     try{
-        //let now = Date.now()/1000.0;
-        //await client.query("CALL handlecheckin($1,$2);",[personUUID,placeUUID]);
         let handlecheckIn = await db.pool.query("CALL handlecheckin($1,$2);",[personUUID,placeUUID]);
-        //let handlecheckIn = await db.pool.query("CALL handlecheckin($1,$2);",[personUUID,placeUUID]);
-        /* let queryPlace = await db.pool.query("UPDATE place SET counter = counter + 1 WHERE uuid = $1;", [placeUUID]);
-        let queryLog = await db.pool.query("INSERT INTO log (is_in, timestamp, assumption) VALUES (true, to_timestamp($1),$2) RETURNING id;", [now,assumption]);
-        let queryVisit = await db.pool.query("INSERT INTO visit (place_uuid, log_id, person_uuid) VALUES ($1, $2, $3);", [placeUUID, queryLog.rows[0].id, personUUID]); */
         if(handlecheckIn.rows.length==0){
             return true;
         }else{
@@ -144,11 +231,16 @@ const checkIn = async (personUUID, placeUUID) => {
         let ie = new InsertError();
         ie.setReason("PERSONCHECKINPLACE");
         throw ie;
-    }finally{
-        //client.release();
     }
 }
 
+/**
+ * Check-out operation from a place
+ *
+ * @param {*} personUUID Person Identifier
+ * @param {*} placeUUID Place Identifier
+ * @return {*} True if successful, false otherwise
+ */
 const checkOut = async (personUUID, placeUUID) => {
     try {
         //let now = Date.now()/1000.0;
@@ -169,7 +261,14 @@ const checkOut = async (personUUID, placeUUID) => {
     }
 }
 
-
+/**
+ * Create a new feedback related to a place (1 = low crowding, 2 = medium crowding and 3 = high crowding)
+ *
+ * @param {*} personUUID Person indentifier
+ * @param {*} placeUUID Place indentifier
+ * @param {*} feedback Feedback value (1, 2 or 3)
+ * @return {*} True if successful, false otherwise
+ */
 const createFeedback = async (personUUID, placeUUID, feedback) => {
     try {
         let queryLog = await db.pool.query("SELECT MAX(log_id) FROM visit WHERE place_uuid = $1 AND person_uuid = $2;", [placeUUID, personUUID]);
@@ -185,6 +284,13 @@ const createFeedback = async (personUUID, placeUUID, feedback) => {
     }
 }
 
+/**
+ * Create or replace opening hours for a place
+ *
+ * @param {*} placeUUID Place Identifier
+ * @param {*} intervals Array of weekday, start_hour and end_hour
+ * @return {*} 
+ */
 const replaceIntervals = async (placeUUID, intervals) => {
     try {
         let queryDelete = await db.pool.query("DELETE FROM opening WHERE place_uuid = $1;", [placeUUID]);
@@ -202,6 +308,12 @@ const replaceIntervals = async (placeUUID, intervals) => {
     }
 }
 
+/**
+ * Retrieve opening hours about a place
+ *
+ * @param {*} placeUUID Place Identifier
+ * @return {*} Array of weekday, start_hour and end_hour
+ */
 const getOpeningTimeByUUID = async (placeUUID) => {
     try {
         let query = await db.pool.query("SELECT * FROM opening WHERE place_uuid = $1 ORDER BY weekday;", [placeUUID]);
