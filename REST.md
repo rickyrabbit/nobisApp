@@ -11,7 +11,7 @@
 The following list devides the resources according the route they follow inside the web application
 
 * ### Admin
-	* [Show Login Admin](#**login-admin**)
+	* [Show Login Admin](#login-admin)
 * ### Referent
 	* [Show Login Referent](#**login-referent**)
 	* [Show Create Referent](#**create-referent**)
