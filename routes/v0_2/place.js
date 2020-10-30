@@ -341,12 +341,14 @@ router.get('/check-in', async (req, res) => {
     let placeUUID = req.query.placeUUID;
     let placeName = await placedb.getPlaceNameByUUID(placeUUID);
     let buildingName = await buildingdb.getBuildingNameByPlaceUUID(placeUUID);
+    let buildingBrand = await buildingdb.getBrandByPlaceUUID(placeUUID);
 
     res.render('check-in', {
         layout: 'check.handlebars',
         pageTitle: 'Check-In',
         placeName: placeName,
         buildingName: buildingName,
+        brand: buildingBrand,
         placeUUID: placeUUID
     });
 });
@@ -364,12 +366,14 @@ router.get('/check-out', async (req, res) => {
     let placeUUID = req.query.placeUUID;
     let placeName = await placedb.getPlaceNameByUUID(placeUUID);
     let buildingName = await buildingdb.getBuildingNameByPlaceUUID(placeUUID);
+    let buildingBrand = await buildingdb.getBrandByPlaceUUID(placeUUID);
 
     res.render('check-out', {
         layout: 'check.handlebars',
         pageTitle: 'Check-Out',
         placeName: placeName,
         buildingName: buildingName,
+        brand: buildingBrand,
         placeUUID: placeUUID
     });
 });

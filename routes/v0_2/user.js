@@ -53,6 +53,50 @@ router.get("/", async (req, res) => {
 });
 
 /**
+ * Route serving Cookie Policy.
+ * @name get
+ * @function
+ * @memberof module:routers/user
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.get("/cookie-policy", async (req, res) => {
+    try {
+        res.render('cookie-policy', {
+            nobisName: "NoBis",
+            pageTitle: 'Cookie Policy',
+            css: ['user-dashboard']
+        });
+    } catch (err) {
+        console.debug(err);
+        res.sendStatus(500);
+    }
+});
+
+/**
+ * Route serving Privacy Policy.
+ * @name get
+ * @function
+ * @memberof module:routers/user
+ * @inner
+ * @param {string} path - Express path
+ * @param {callback} middleware - Express middleware.
+ */
+router.get("/privacy-policy", async (req, res) => {
+    try {
+        res.render('privacy-policy', {
+            nobisName: "NoBis",
+            pageTitle: 'Privacy Policy',
+            css: ['user-dashboard']
+        });
+    } catch (err) {
+        console.debug(err);
+        res.sendStatus(500);
+    }
+});
+
+/**
  * Route that allows to find places given a Bounding Box.
  * @name get/mapInfo/findPlacesinMap
  * @function

@@ -18,15 +18,13 @@ body {
 }
 
 .unipd-logo{
-  width: 200px;
   height: 200px;
   margin: 0px auto;
   display: block;
 }
 
 .unipd-logo.small-img{
-  width: 100px;
-  height: 100px;
+  height: 120px;
 }
 
 #countdown {

@@ -11,7 +11,9 @@ const mountRoutes = require(`./routes/handler`);
 const app = express();
 
 // Handlebars
-app.engine('handlebars', exphbs( {defaultLayout: 'default'} ));
+app.engine('handlebars', exphbs( {
+  defaultLayout: 'default'
+}));
 app.set('view engine', 'handlebars');
 
 // allow access to static files

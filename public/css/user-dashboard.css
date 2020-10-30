@@ -38,6 +38,10 @@ header h3{
   margin-bottom: 8px;
 }
 
+.policy-text{
+  text-align: justify;
+}
+
 .form-inline{
   width: inherit;
 }
@@ -49,7 +53,12 @@ header h3{
 }
 
 .unipd-logo.small-img{
-  height: 100px;
+  height: 80px;
+  margin-top: 20px;
+}
+
+footer .unipd-logo.small-img{
+  margin-top: 10px;
 }
 
 .building-name{
@@ -100,6 +109,10 @@ header h3{
 
 footer {
   background-color: #fff;
+}
+
+footer p{
+  margin-top: 10px;
 }
 
 #info{

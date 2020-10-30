@@ -232,6 +232,16 @@
           </div>
           <div class="row">
             <div class="col">
+              <label for="building-brand-create">Brand</label>
+              <select class="form-control" id="building-brand-create" name="building-brand-create" required>
+                <option value="">-</option>
+                <option value="unipd">Università degli Studi di Padova</option>
+                <option value="abano">Comune di Abano</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
               <div id="building-modal-map-create"></div>
               <small class="text-center">Seleziona sulla mappa la posizione del Luogo.</small>
             </div>
@@ -458,10 +468,11 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Nome</th>
-            <th scope="col">Coordinate</th>
+            <th scope="col">Posizione</th>
             <th scope="col">Indirizzo</th>
             <th scope="col">Civico</th>
             <th scope="col">Città</th>
+            <th scope="col">Brand</th>
             <th scope="col">Elimina</th>
           </tr>
         </thead>
@@ -470,10 +481,11 @@
           <tr building-id="{{id}}">
             <th scope="row">{{@index}}</th>
             <td>{{name}}</td>
-            <td>({{lon}}, {{lat}})</td>
+            <td><a href="https://www.google.com/maps/search/?api=1&query={{lat}},{{lon}}" target="_blank">Visualizza</a></td>
             <td>{{address}}</td>
             <td>{{addr_num}}</td>
             <td>{{city}}</td>
+            <td>{{brand}}</td>
             <td><button type="button" class="btn btn-danger btn-sm openDeleteBuildingModal"
                 data-building-id="{{id}}">Elimina</button></td>
           </tr>

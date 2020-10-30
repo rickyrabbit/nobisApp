@@ -316,6 +316,8 @@ $(document).ready(function () {
 			let buildingAddress = $("#building-address-create").val();
 			let buildingNumber = $("#building-number-create").val();
 			let buildingProvince = $("#building-province-create").val();
+			let buildingBrand = $("#building-brand-create").val();
+			console.log(buildingBrand);
 			$.ajax({
 				url: `/building/create`,
 				method: "POST",
@@ -325,7 +327,8 @@ $(document).ready(function () {
 					buildingLongitude: buildingLongitude,
 					buildingAddress: buildingAddress,
 					buildingNumber: buildingNumber,
-					buildingProvince: buildingProvince
+					buildingProvince: buildingProvince,
+					buildingBrand: buildingBrand
 				},
 				statusCode: {
 					200: function () {

@@ -238,6 +238,17 @@ router.get('/dashboard', wrap(async (req, res, next) => {
             let places = await placedb.listPlacesByReferentId(id);
             let categories = await categorydb.listCategories();
             let buildings = await buildingdb.listBuildings();
+
+            buildings.forEach(building => {
+                if (building.brand == "unipd") {
+                    building.brand = "Università degli Studi di Padova";
+                  } else if (building.brand == "abano") {
+                    building.brand = "Comune di Abano Terme";
+                  } else {
+                    building.brand = "-";
+                  }
+            });
+
             let reports = await reportdb.listReports(id);
             res.render('ref-dashboard', {
                 nobisName: "NoBis",

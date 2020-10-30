@@ -1,7 +1,7 @@
 let mapProperties = {
-    "latitude": 45.408,
-    "longitude": 11.894,
-    "zooming": 16,
+    "latitude": 45.39145846355706,
+    "longitude": 11.837768554687502,
+    "zooming": 12,
     "placeZooming": 18
 }
 

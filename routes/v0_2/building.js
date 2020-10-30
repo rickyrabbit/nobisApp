@@ -47,7 +47,8 @@ router.post('/create', wrap(async (req, res, next) => {
             req.body.buildingLatitude,
             req.body.buildingAddress,
             req.body.buildingNumber,
-            req.body.buildingProvince
+            req.body.buildingProvince,
+            req.body.buildingBrand
         );
         console.debug(`Result Print: ${result}`);
 
