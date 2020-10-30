@@ -155,7 +155,7 @@ const saveQRPDFtoPath = (dirpath, filenameNoExtension, pdfGraphicalDetails, chec
                 doc.font("public/fonts/Roboto-Bold.ttf");
                 doc.fontSize(45).text(details.TITLE, 72, 175, { align: 'center' });
                 doc.font("public/fonts/Roboto-Italic.ttf");
-                doc.fontSize(16).text("NoBis è un servizio completamente anonimo per il monitoraggio in tempo reale del livello di affollamento di un locale", 72, 235, { align: 'center',   });
+                doc.fontSize(16).text("NoBis è un servizio completamente anonimo per il monitoraggio in tempo reale del livello di affollamento di locali", 72, 235, { align: 'center',   });
                 doc.font("public/fonts/Roboto-Bold.ttf");
                 doc.fontSize(50).text(`CHECK-${typeCheckOperation}`, 72, 300, { align: 'center' });
                 doc.fontSize(28).text(details.PLACENAME, 72, 370, { align: 'center' });
