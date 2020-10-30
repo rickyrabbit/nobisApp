@@ -271,6 +271,7 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
 
         let placeName = await placedb.getPlaceNameByUUID(req.params.uuid);
         let buildingName = await buildingdb.getBuildingNameByPlaceUUID(req.params.uuid);
+        let buildingBrand = await buildingdb.getBrandByPlaceUUID(req.params.uuid);
 
         // PDF Generation
         const options = { unsafeCleanup: true };
@@ -287,10 +288,14 @@ router.get('/:uuid/qrcodes', wrap(async (req, res, next) => {
         let checkinFilePath = await saveQRImagetoPath(tmppath, req.params.uuid, "CHECKIN");
         let checkoutFilePath = await saveQRImagetoPath(tmppath, req.params.uuid, "CHECKOUT");
 
+        if (buildingBrand == "unipd") {
+            buildingBrand = "unipd-dei";
+        }
+
         let pdfGD = pdfGraphicalDetails('public/fonts/Roboto-Medium.ttf',
-            'public/img/logo_unipd_dei.png',
+            `public/brand/${buildingBrand}.png`,
             'NoBis',
-            'Inquadra il codice QR con la fotocamera per effettuare il Check-XXXXX da questo luogo',
+            'Inquadra il codice QR con la fotocamera per effettuare il Check-XXXXX questo luogo',
             placeName,
             buildingName
         );

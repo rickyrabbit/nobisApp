@@ -124,10 +124,10 @@ const saveQRPDFtoPath = (dirpath, filenameNoExtension, pdfGraphicalDetails, chec
                 let helpText = details.HELPTEXT;
                 if (typeCheckOperation === "IN") {
                     imgPath = checkinFilePath;
-                    helpText = helpText.replace('XXXXX', 'In');
+                    helpText = helpText.replace('XXXXX', 'In in');
                 } else {
                     imgPath = checkoutFilePath;
-                    helpText = helpText.replace('XXXXX', 'Out');
+                    helpText = helpText.replace('XXXXX', 'Out da');
                 }
                 doc.addPage({
                     margins: {
@@ -138,14 +138,24 @@ const saveQRPDFtoPath = (dirpath, filenameNoExtension, pdfGraphicalDetails, chec
                     }
                   });
                 doc.font(details.FONTPATH);
-                doc.image(details.LOGOPATH, 146, 50, { fit: [320, 85] });
+                let logoWidth, logoHeight, logoX;
+                if(details.LOGOPATH.indexOf("abano") !== -1){
+                    logoWidth = 63;
+                    logoHeight = 85;
+                    logoX = 274;
+                } else {
+                    logoWidth = 320;
+                    logoHeight = 85;
+                    logoX = 146;
+                }
+                doc.image(details.LOGOPATH, logoX, 50, { fit: [logoWidth, logoHeight] });
                 // TODO: Add in details if they became final
                 doc.font("public/fonts/Roboto-Regular.ttf");
                 doc.fontSize(26).text("Sperimentazione di", 72, 150, { align: 'center',  });
                 doc.font("public/fonts/Roboto-Bold.ttf");
                 doc.fontSize(45).text(details.TITLE, 72, 175, { align: 'center' });
                 doc.font("public/fonts/Roboto-Italic.ttf");
-                doc.fontSize(16).text("NoBis è un servizio completamente anonimo di conteggio in tempo reale del livello di affollamento di un locale universitario", 72, 235, { align: 'center',   });
+                doc.fontSize(16).text("NoBis è un servizio completamente anonimo per il monitoraggio in tempo reale del livello di affollamento di un locale", 72, 235, { align: 'center',   });
                 doc.font("public/fonts/Roboto-Bold.ttf");
                 doc.fontSize(50).text(`CHECK-${typeCheckOperation}`, 72, 300, { align: 'center' });
                 doc.fontSize(28).text(details.PLACENAME, 72, 370, { align: 'center' });
