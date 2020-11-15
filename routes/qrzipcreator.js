@@ -140,33 +140,38 @@ const saveQRPDFtoPath = (dirpath, filenameNoExtension, pdfGraphicalDetails, chec
                 doc.font(details.FONTPATH);
                 let logoWidth, logoHeight, logoX;
                 if(details.LOGOPATH.indexOf("abano") !== -1){
-                    logoWidth = 63;
+                    logoWidth = 135;
                     logoHeight = 85;
-                    logoX = 274;
+                    logoX = 120;
+                    doc.image(details.LOGOPATH, logoX, 50, { fit: [logoWidth, logoHeight] });
+                    doc.image("public/brand/unipd-dei.png", 320, 60, { fit: [240, 63] });
                 } else {
                     logoWidth = 320;
                     logoHeight = 85;
                     logoX = 146;
+                    doc.image(details.LOGOPATH, logoX, 50, { fit: [logoWidth, logoHeight] });
                 }
-                doc.image(details.LOGOPATH, logoX, 50, { fit: [logoWidth, logoHeight] });
                 // TODO: Add in details if they became final
-                doc.font("public/fonts/Roboto-Regular.ttf");
+                doc.font("public/fonts/FiraSans-Regular.ttf");
                 doc.fontSize(26).text("Sperimentazione di", 72, 150, { align: 'center',  });
-                doc.font("public/fonts/Roboto-Bold.ttf");
-                doc.fontSize(45).text(details.TITLE, 72, 175, { align: 'center' });
-                doc.font("public/fonts/Roboto-Italic.ttf");
-                doc.fontSize(16).text("NoBis è un servizio completamente anonimo per il monitoraggio in tempo reale del livello di affollamento di locali", 72, 235, { align: 'center',   });
-                doc.font("public/fonts/Roboto-Bold.ttf");
-                doc.fontSize(50).text(`CHECK-${typeCheckOperation}`, 72, 300, { align: 'center' });
-                doc.fontSize(28).text(details.PLACENAME, 72, 370, { align: 'center' });
+                doc.font("public/fonts/FiraSans-Bold.ttf");
+                doc.fontSize(45).text(details.TITLE, 72, 180, { align: 'center' });
+                doc.font("public/fonts/FiraSans-Italic.ttf");
+                doc.fontSize(16).text("NoBis è un servizio", 72, 240, {align: 'left', continued: true});
+                doc.fontSize(16).font("public/fonts/FiraSans-BoldItalic.ttf").text(" anonimo ", 72, 240, {align: 'left',  continued: true});
+                doc.fontSize(16).font("public/fonts/FiraSans-Italic.ttf").text("di verifica in tempo reale del livello di affollamento di un luogo pubblico", 72, 240, {align: 'center'});
+                doc.font("public/fonts/FiraSans-Bold.ttf");
+                doc.fontSize(48).text(`CHECK-${typeCheckOperation}`, 72, 305, { align: 'center' });
+                doc.fontSize(36).text(details.PLACENAME, 72, 360, { align: 'center' });
                 doc.font(details.FONTPATH);
                 doc.fontSize(24).text(details.BUILDINGNAME, 72, 400, { align: 'center' });
-                doc.image(imgPath, 206, 430, { width: 190 });
-                doc.font("public/fonts/Roboto-Regular.ttf");
+                doc.image(imgPath, 210, 430, { width: 190 });
+                doc.font("public/fonts/FiraSans-Regular.ttf");
                 doc.fontSize(20).text(helpText, 72, 630, { align: 'center' });
-                doc.fontSize(13).text("nobis.dei.unipd.it", 72, 700, { align: 'center' });
-                doc.fontSize(12).text("Giulia Cisotto (giulia.cisotto@dei.unipd.it)", 72, 725, { align: 'left', continued: true});
-                doc.fontSize(12).text("Marco Giordani (giordani@dei.unipd.it)", 72, 725, { align: 'right'});
+                doc.fontSize(13).text("Per maggiori informazioni: nobis.dei.unipd.it", 72, 700, { align: 'center' });
+                doc.fontSize(12).text("Contatti: nobis.team@gmail.com", 72, 725, { align: 'center'});
+                //doc.fontSize(12).text("Giulia Cisotto (giulia.cisotto@dei.unipd.it)", 72, 725, { align: 'left', continued: true});
+                //doc.fontSize(12).text("Marco Giordani (giordani@dei.unipd.it)", 72, 725, { align: 'right'});
             };
 
             doc.pipe(out);
