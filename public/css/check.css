@@ -27,6 +27,53 @@ body {
   height: 120px;
 }
 
+.row.semaphore{
+  background-color: #444;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.row.semaphore.hide{
+  display: none;
+}
+
+.single-semaphore{
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+  margin: 0 auto;
+  cursor: pointer;
+  transition: all 0.1s;
+}
+
+.single-semaphore span{
+  display: none;
+  width: 65px;
+  color: #444;
+  line-height: 40px;
+}
+
+.single-semaphore:hover{
+  width: 65px;
+  border-radius: 65px;
+}
+
+.single-semaphore:hover span{
+  display: block;
+}
+
+.single-semaphore.green{
+  background-color: greenyellow;
+}
+
+.single-semaphore.orange{
+  background-color: orange;
+}
+
+.single-semaphore.red{
+  background-color: red;
+}
+
 #countdown {
   position: relative;
   margin: 20px auto;
@@ -82,6 +129,10 @@ body {
   display: none;
 }
 
+.row.brand{
+  margin: 0 40px;
+}
+
 h3{
   width: 200px;
   margin: 0 auto;
@@ -89,8 +140,8 @@ h3{
 }
 
 h4{
-  width: 200px;
   margin: 0 auto;
+  padding-bottom: 10px;
 }
 
 h5{

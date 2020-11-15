@@ -347,15 +347,27 @@ router.get('/check-in', async (req, res) => {
     let placeName = await placedb.getPlaceNameByUUID(placeUUID);
     let buildingName = await buildingdb.getBuildingNameByPlaceUUID(placeUUID);
     let buildingBrand = await buildingdb.getBrandByPlaceUUID(placeUUID);
-
-    res.render('check-in', {
-        layout: 'check.handlebars',
-        pageTitle: 'Check-In',
-        placeName: placeName,
-        buildingName: buildingName,
-        brand: buildingBrand,
-        placeUUID: placeUUID
-    });
+    if (buildingBrand != "unipd") {
+        let unipdBrand = "unipd";
+        res.render('check-in', {
+            layout: 'check.handlebars',
+            pageTitle: 'Check-In',
+            placeName: placeName,
+            buildingName: buildingName,
+            brand: buildingBrand,
+            unipdBrand: unipdBrand,
+            placeUUID: placeUUID
+        });
+    } else{
+        res.render('check-in', {
+            layout: 'check.handlebars',
+            pageTitle: 'Check-In',
+            placeName: placeName,
+            buildingName: buildingName,
+            brand: buildingBrand,
+            placeUUID: placeUUID
+        });
+    }
 });
 
 /**
@@ -373,14 +385,27 @@ router.get('/check-out', async (req, res) => {
     let buildingName = await buildingdb.getBuildingNameByPlaceUUID(placeUUID);
     let buildingBrand = await buildingdb.getBrandByPlaceUUID(placeUUID);
 
-    res.render('check-out', {
-        layout: 'check.handlebars',
-        pageTitle: 'Check-Out',
-        placeName: placeName,
-        buildingName: buildingName,
-        brand: buildingBrand,
-        placeUUID: placeUUID
-    });
+    if (buildingBrand != "unipd") {
+        let unipdBrand = "unipd";
+        res.render('check-out', {
+            layout: 'check.handlebars',
+            pageTitle: 'Check-Out',
+            placeName: placeName,
+            buildingName: buildingName,
+            unipdBrand: unipdBrand,
+            brand: buildingBrand,
+            placeUUID: placeUUID
+        });
+    } else {
+        res.render('check-out', {
+            layout: 'check.handlebars',
+            pageTitle: 'Check-Out',
+            placeName: placeName,
+            buildingName: buildingName,
+            brand: buildingBrand,
+            placeUUID: placeUUID
+        });
+    }
 });
 
 /**

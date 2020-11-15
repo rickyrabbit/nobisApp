@@ -2,8 +2,11 @@
 	<div class="container">
 		<div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
 			<div class="card">
-				<div class="row">
+				<div class="row brand">
 					<img class="unipd-logo small-img" src="../brand/{{brand}}.png">
+					{{#if unipdBrand}}
+					<img class="unipd-logo small-img" src="../brand/{{unipdBrand}}.png">
+					{{/if}}
 				</div>
 				<div class="row">
 					<h5>{{placeName}}</h5>
@@ -41,28 +44,28 @@
 				<hr class="showCheckIn">
 				<div id="feedback">
 					<div class="row">
-						<h4 class="showCheckIn">Feedback</h4>
+						<h4 class="showCheckIn">Come valuti lo stato di affollamento del luogo?</h4>
 					</div>
-					<div class="row question">
-						<p class="showCheckIn">Come valuti lo stato di affollamento del luogo?</p>
-					</div>
-					<div class="row">
+					<div class="row semaphore hide">
 						<div class="col">
 							<div class="showCheckIn">
-								<button type="button" data-feedback="1"
-									class="btn btn-secondary btn-sm send-feedback">Basso</button>
+								<div class="single-semaphore green send-feedback" data-feedback="1"><span>Basso</span></div>
+								<!--<button type="button" data-feedback="1"
+									class="btn btn-secondary btn-sm send-feedback">Basso</button>-->
 							</div>
 						</div>
 						<div class="col">
 							<div class="showCheckIn">
-								<button type="button" data-feedback="2"
-									class="btn btn-secondary btn-sm send-feedback">Medio</button>
+								<div class="single-semaphore orange send-feedback" data-feedback="2"><span>Medio</span></div>
+								<!--<button type="button" data-feedback="2"
+									class="btn btn-secondary btn-sm send-feedback">Medio</button>-->
 							</div>
 						</div>
 						<div class="col">
 							<div class="showCheckIn">
-								<button type="button" data-feedback="3"
-									class="btn btn-secondary btn-sm send-feedback">Alto</button>
+								<div class="single-semaphore red send-feedback" data-feedback="3"><span>Alto</span></div>
+								<!--<button type="button" data-feedback="3"
+									class="btn btn-secondary btn-sm send-feedback">Alto</button>-->
 							</div>
 						</div>
 					</div>

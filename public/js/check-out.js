@@ -91,6 +91,7 @@ function checkOut() {
 				localStorage.removeItem("checkinTimestampBF");
 				stopCountdown();
 				$(".showCheckIn").show();
+				$(".row.semaphore").removeClass("hide");
 			},
 			500: function() {
 				stopCountdown();

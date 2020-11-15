@@ -165,10 +165,17 @@ footer p{
 
   .unipd-logo.small-img{
     height: 60px;
+    left: 50%;
+    position: relative;
+    margin-left: -113px;
   }
 
   .col.map, .col.search{
     flex: none;
+  }
+
+  #contacts .col{
+    flex-basis: unset;
   }
 
   #interactive_map{
