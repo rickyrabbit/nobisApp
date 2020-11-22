@@ -273,11 +273,11 @@ $(document).ready(function () {
 	});
 
 	$("#create-place-button").click(function () {
-		if (document.getElementById("create-place-form").checkValidity()) {
+		let placeLatitude = $("#place-latitude-create").val();
+		let placeLongitude = $("#place-longitude-create").val();
+		if (document.getElementById("create-place-form").checkValidity() && placeLatitude != "" && placeLongitude != "") {
 			let placeName = $("#place-name-create").val();
 			let placeBuilding = $("#place-building-create option:selected").attr('building-id');
-			let placeLatitude = $("#place-latitude-create").val();
-			let placeLongitude = $("#place-longitude-create").val();
 			let placeCapacity = $("#place-capacity-create").val();
 			let placeVisitTime = $("#place-visit-time-create").val();
 			let placeCategory = $("#place-category-create option:selected").attr('category-id');
