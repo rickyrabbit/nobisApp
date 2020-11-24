@@ -279,3 +279,10 @@ h6{
   }
 }
 
+@media (max-width: 768px) {
+
+  .unipd-logo.small-img{
+    height: 56px;
+    padding: 0 6px;
+  }
+}
