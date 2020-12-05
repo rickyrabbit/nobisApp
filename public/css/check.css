@@ -25,6 +25,7 @@ body {
 
 .unipd-logo.small-img{
   height: 80px;
+  border-radius: 5px;
 }
 
 .row.semaphore{

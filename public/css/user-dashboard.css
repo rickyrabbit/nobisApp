@@ -54,6 +54,7 @@ header h3{
 .unipd-logo.small-img{
   height: 80px;
   margin-top: 20px;
+  border-radius: 5px;
 }
 
 footer .unipd-logo.small-img{

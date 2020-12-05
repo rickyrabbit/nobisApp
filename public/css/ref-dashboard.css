@@ -60,6 +60,7 @@ header h3{
 
 .unipd-logo.small-img{
   height: 80px;
+  border-radius: 5px;
 }
 
 table td, table th{
