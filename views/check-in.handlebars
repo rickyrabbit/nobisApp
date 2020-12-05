@@ -2,11 +2,8 @@
 	<div class="container">
 		<div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
 			<div class="card">
-				<div class="row brand">
-					<img class="unipd-logo small-img" src="../brand/{{brand}}.png">
-					{{#if unipdBrand}}
-					<img class="unipd-logo small-img" src="../brand/{{unipdBrand}}.png">
-					{{/if}}
+				<div class="row logo">
+					<img class="unipd-logo small-img" src="../img/logo_nobis.png">
 				</div>
 				<div class="row">
 					<h5>{{placeName}}</h5>
@@ -42,7 +39,7 @@
 					<h3 class="showCheckInStopped">Check-in Annullato</h3>
 				</div>
 				<div class="row">
-					<p id="info">Entro 5 secondi il check-in sarà permanente. Premi sul bottone per annullare.</p>
+					<p id="info">In 5 secondi il check-in sarà permanente. Premi sul bottone per annullare.</p>
 				</div>
 				<div class="row">
 					<div id="countdown">
@@ -78,6 +75,12 @@
 							<button id="send-problem" type="button" class="btn btn-secondary btn-sm">Invia</button>
 						</div>
 					</form>
+				</div>
+				<div class="row brand">
+					<img class="unipd-logo small-img" src="../brand/{{brand}}.png">
+					{{#if unipdBrand}}
+					<img class="unipd-logo small-img" src="../brand/{{unipdBrand}}.png">
+					{{/if}}
 				</div>
 			</div>
 		</div>

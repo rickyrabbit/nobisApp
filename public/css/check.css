@@ -24,7 +24,7 @@ body {
 }
 
 .unipd-logo.small-img{
-  height: 120px;
+  height: 80px;
 }
 
 .row.semaphore{
@@ -129,8 +129,17 @@ body {
   display: none;
 }
 
-.row.brand{
+.row.logo{
   margin: 0 40px;
+}
+
+.row.brand{
+  margin: 40px 40px 0;
+}
+
+#place .col-sm-9.col-md-7.col-lg-5.mx-auto{
+  padding-right: 0;
+  padding-left: 0;
 }
 
 h3{
