@@ -123,3 +123,19 @@ footer {
 footer p{
   margin-top: 10px;
 }
+
+#contacts{
+  font-size: 14px;
+}
+#contacts .col{
+  text-align: center;
+}
+
+#contacts{
+  padding: 10px 0;
+}
+
+#contacts span{
+  margin: 5px 0;
+  display: block;
+}
