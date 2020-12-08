@@ -179,3 +179,10 @@ header h3{
   }
 }
 
+footer {
+  background-color: #fff;
+}
+
+footer p{
+  margin-top: 10px;
+}
