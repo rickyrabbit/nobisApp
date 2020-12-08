@@ -39,15 +39,14 @@ header h3{
 }
 
 .unipd-logo{
-  width: 200px;
-  height: 200px;
+  border-radius: 5px;
+  height: 100px;
   float: left;
   margin: 10px;
 }
 
 .unipd-logo.small-img{
-  width: 100px;
-  height: 100px;
+  height: 80px;
 }
 
 .table td{

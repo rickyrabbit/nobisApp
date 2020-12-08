@@ -7,8 +7,15 @@ body {
   background-color: #f5f5f5 !important;
 }
 
+#nobis-logo{
+  width: 250px;
+  margin: 0 auto 20px;
+  border-radius: 5px;
+  display: block;
+}
+
 #unipd-logo{
-  width: 200px;
+  width: 300px;
   margin: 0 auto 20px;
   display: block;
 }
