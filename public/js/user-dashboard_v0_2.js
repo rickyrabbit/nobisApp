@@ -242,11 +242,26 @@ function computeMaxFeedback(placeObj) {
     let high = placeObj.highfeedback;
     if (placeObj.isopen) {
         if (high > low && high > medium) {
-            return `<strong>${high}</strong> persone hanno segnalato questo luogo come <strong>alta occupazione</strong>`;
+            let text;
+            if(high>1)
+                text = "persone hanno";
+            else
+                text = "persona ha";
+            return `<strong>${high}</strong> ${text} segnalato questo luogo come <strong>alta occupazione</strong>`;
         } else if (medium > low) {
-            return `<strong>${medium}</strong> persone hanno segnalato questo luogo come <strong>media occupazione</strong>`;
+            let text;
+            if(medium>1)
+                text = "persone hanno";
+            else
+                text = "persona ha";
+            return `<strong>${medium}</strong> ${text} segnalato questo luogo come <strong>media occupazione</strong>`;
         } else if (medium < low) {
-            return `<strong>${low}</strong> persone hanno segnalato questo luogo come <strong>bassa occupazione</strong>`;
+            let text;
+            if(low>1)
+                text = "persone hanno";
+            else
+                text = "persona ha";
+            return `<strong>${low}</strong> ${text} segnalato questo luogo come <strong>bassa occupazione</strong>`;
         } else {
             return "";
         }
