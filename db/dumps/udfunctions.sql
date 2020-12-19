@@ -26,7 +26,7 @@ ON place.uuid = have.place_uuid
 LEFT JOIN category
 ON have.category_id = category.id
 WHERE st_intersects(st_makeenvelope(xmin,ymin,xmax,ymax,4326), place.geometry) AND place.enable = TRUE
-ORDER BY occ DESC;
+ORDER BY isOpen DESC;
 
 $$ LANGUAGE SQL VOLATILE; -- END FUNCTION
 
